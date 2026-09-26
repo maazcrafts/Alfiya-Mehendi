@@ -146,6 +146,23 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 
+CREATE TABLE IF NOT EXISTS support_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  reference VARCHAR(120),
+  topic VARCHAR(40) NOT NULL DEFAULT 'Other',
+  message TEXT NOT NULL,
+  status VARCHAR(30) NOT NULL DEFAULT 'new'
+    CHECK (status IN ('new', 'in_progress', 'resolved')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_support_requests_status ON support_requests(status);
+CREATE INDEX IF NOT EXISTS idx_support_requests_created ON support_requests(created_at DESC);
+
 CREATE TABLE IF NOT EXISTS password_reset_tokens (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
