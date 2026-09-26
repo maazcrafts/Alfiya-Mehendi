@@ -22,6 +22,10 @@ export async function query(text, params) {
   return pool.query(text, params)
 }
 
+export async function getClient() {
+  return pool.connect()
+}
+
 export async function checkDatabaseConnection() {
   const result = await pool.query('SELECT NOW() AS now')
   return result.rows[0]
