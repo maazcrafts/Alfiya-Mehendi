@@ -11,6 +11,7 @@ import Services from './pages/services/Services.jsx'
 import Booking from './pages/booking/Booking.jsx'
 import AdminBookings from './pages/admin/AdminBookings.jsx'
 import AdminOrders from './pages/admin/AdminOrders.jsx'
+import AdminSupport from './pages/admin/AdminSupport.jsx'
 import Orders from './pages/orders/Orders.jsx'
 import Cart from './pages/cart/Cart.jsx'
 import Contact from './pages/contact/Contact.jsx'
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin/support" element={<AdminSupport />} />
         <Route path="/account" element={<Placeholder title="My Account" />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
