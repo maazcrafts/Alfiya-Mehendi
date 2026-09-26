@@ -243,21 +243,21 @@ export default function Contact() {
               <p>Use the support form and include your order or booking reference when relevant. It helps us understand the issue faster.</p>
             </div>
             <div className="contact-direct-actions">
-              <a href="#contact-form" className="direct-card">
+              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
                 <span className="direct-icon">WA</span>
-                <div><strong>WhatsApp</strong><small>Message support</small></div>
+                <div><strong>Message support</strong><small>Start a support request</small></div>
                 <b>→</b>
-              </a>
-              <a href="#contact-form" className="direct-card">
+              </button>
+              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
                 <span className="direct-icon">@</span>
-                <div><strong>Email</strong><small>Send a support request</small></div>
+                <div><strong>Email support</strong><small>Send a detailed request</small></div>
                 <b>→</b>
-              </a>
-              <a href="#contact-form" className="direct-card">
+              </button>
+              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
                 <span className="direct-icon">☎</span>
-                <div><strong>Call back</strong><small>Request help from the team</small></div>
+                <div><strong>Request a callback</strong><small>Leave your details for the team</small></div>
                 <b>→</b>
-              </a>
+              </button>
             </div>
           </section>
 
