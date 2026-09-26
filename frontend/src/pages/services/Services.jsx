@@ -12,6 +12,9 @@ const serviceImages = {
   // Intermediate — both palms with clearly visible, detailed mehndi.
   intermediate: 'https://images.pexels.com/photos/11925938/pexels-photo-11925938.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
+  // Five Finger Hand — dedicated finger-focused reference.
+  fiveFinger: 'https://i.pinimg.com/736x/7b/74/90/7b7490e13b18da7287b0a9c28dda612e.jpg',
+
   // Advanced — full hands and arms, matching the full-length service.
   advanced: 'https://images.pexels.com/photos/4711086/pexels-photo-4711086.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
@@ -116,7 +119,7 @@ export default function Services() {
                 {group.services.map((service) => (
                   <article className={`service-card service-card-${group.level}`} key={service.id}>
                     <div className="service-card-image">
-                      <img src={serviceImages[group.level]} alt={service.name} loading="lazy" />
+                      <img src={serviceImages[service.slug === 'intermediate-five-finger-hand' ? 'fiveFinger' : group.level]} alt={service.name} loading="lazy" />
                       <span>{levelMeta[group.level].label}</span>
                     </div>
                     <div className="service-card-top">
