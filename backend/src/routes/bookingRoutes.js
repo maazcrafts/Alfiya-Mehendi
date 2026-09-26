@@ -5,6 +5,7 @@ import {
   findPendingDuplicate,
   listAdminBookings,
   listBookedTimes,
+  cancelUserBooking,
   listUserBookings,
   updateBookingStatus,
 } from '../models/bookingModel.js'
@@ -93,6 +94,35 @@ router.get('/mine', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Load user bookings error:', error)
     return res.status(500).json({ message: 'Unable to load your bookings.' })
+  }
+})
+
+router.patch('/:id/cancel', requireAuth, async (req, res) => {
+  try {
+    const result = await cancelUserBooking({
+      bookingId: req.params.id,
+      userId: req.auth.userId || req.auth.sub,
+    })
+
+    if (result.kind === 'not_found') {
+      return res.status(404).json({ message: 'Booking request not found.' })
+    }
+
+    if (result.kind === 'invalid_status') {
+      return res.status(409).json({
+        message: result.currentStatus === 'confirmed'
+          ? 'This appointment is already confirmed and cannot be cancelled from a pending request.'
+          : `This booking is already ${result.currentStatus}.`,
+      })
+    }
+
+    return res.json({
+      message: 'Booking request cancelled.',
+      booking: result.booking,
+    })
+  } catch (error) {
+    console.error('Cancel user booking error:', error)
+    return res.status(500).json({ message: 'Unable to cancel this booking right now.' })
   }
 })
 
