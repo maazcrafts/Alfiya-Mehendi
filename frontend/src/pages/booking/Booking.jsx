@@ -2,338 +2,64 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-
-const timeSlots = Array.from({ length: 21 }, (_, index) => {
-  const totalMinutes = 10 * 60 + index * 30
-  const hour24 = Math.floor(totalMinutes / 60)
-  const minute = totalMinutes % 60
-  const hour12 = hour24 % 12 || 12
-  const suffix = hour24 >= 12 ? 'PM' : 'AM'
-  const value = `${String(hour24).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
-  return { value, label: `${hour12}:${String(minute).padStart(2, '0')} ${suffix}` }
+const slots = Array.from({ length: 21 }, (_, i) => {
+  const minutes = 600 + i * 30, h = Math.floor(minutes / 60), m = minutes % 60
+  return { value: `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`, label: `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}` }
 })
-
-function getUser() {
-  try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
-}
-
-function getToken() {
-  return localStorage.getItem('alfiya_auth_token') || ''
-}
-
-function formatPrice(paise) {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format((paise || 0) / 100)
-}
-
-function formatDate(value) {
-  if (!value) return ''
-  return new Intl.DateTimeFormat('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(`${value}T00:00:00`))
-}
-
-function formatTime(value) {
-  if (!value) return ''
-  const [hour, minute] = value.slice(0, 5).split(':').map(Number)
-  const suffix = hour >= 12 ? 'PM' : 'AM'
-  const hour12 = hour % 12 || 12
-  return `${hour12}:${String(minute).padStart(2, '0')} ${suffix}`
-}
-
-function todayString() {
-  const now = new Date()
-  const offset = now.getTimezoneOffset()
-  return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10)
-}
-
 const statusMeta = {
-  requested: { label: 'Pending admin approval', tone: 'pending' },
-  confirmed: { label: 'Booked successfully', tone: 'confirmed' },
-  rejected: { label: 'Request rejected', tone: 'rejected' },
-  completed: { label: 'Completed', tone: 'confirmed' },
-  cancelled: { label: 'Cancelled', tone: 'rejected' },
+  requested: ['Pending approval','pending'],
+  confirmed: ['Booked successfully','confirmed'],
+  rejected: ['Request rejected','rejected'],
+  completed: ['Completed','confirmed'],
+  cancelled: ['Cancelled','rejected'],
 }
+function user(){try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
+function token(){return localStorage.getItem('alfiya_auth_token')||''}
+function today(){return new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function price(p){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((p||0)/100)}
+function dateLabel(v){return v?new Intl.DateTimeFormat('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00')):''}
+function timeLabel(v){if(!v)return '';const [h,m]=v.slice(0,5).split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
 
-export default function Booking() {
-  const [searchParams] = useSearchParams()
-  const serviceSlug = searchParams.get('service') || ''
-  const [service, setService] = useState(null)
-  const [bookings, setBookings] = useState([])
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('')
-  const [note, setNote] = useState('')
-  const [loadingService, setLoadingService] = useState(Boolean(serviceSlug))
-  const [loadingBookings, setLoadingBookings] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const user = useMemo(getUser, [])
-  const firstName = user?.name?.split(' ')?.[0] || 'there'
-  const isLoggedIn = Boolean(getToken())
+export default function Booking(){
+  const [params]=useSearchParams(), serviceSlug=params.get('service')||''
+  const u=useMemo(user,[]), first=u?.name?.split(' ')?.[0]||'there', logged=Boolean(token())
+  const [service,setService]=useState(null),[bookings,setBookings]=useState([]),[booked,setBooked]=useState([])
+  const [date,setDate]=useState(''),[time,setTime]=useState(''),[note,setNote]=useState('')
+  const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
+  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(false)
 
-  useEffect(() => {
-    if (!serviceSlug) {
-      setLoadingService(false)
-      return
-    }
-
-    let cancelled = false
-    fetch(`${apiBase}/api/services/${encodeURIComponent(serviceSlug)}`)
-      .then(async (response) => {
-        const data = await response.json()
-        if (!response.ok) throw new Error(data.message || 'Unable to load the selected service.')
-        if (!cancelled) setService(data.service)
-      })
-      .catch((err) => !cancelled && setError(err.message))
-      .finally(() => !cancelled && setLoadingService(false))
-
-    return () => { cancelled = true }
-  }, [serviceSlug])
-
-  const loadBookings = async () => {
-    if (!isLoggedIn) {
-      setLoadingBookings(false)
-      return
-    }
-
-    try {
-      const response = await fetch(`${apiBase}/api/bookings/mine`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.message || 'Unable to load your bookings.')
-      setBookings(data.bookings || [])
-    } catch (err) {
-      setError(err.message || 'Unable to load your bookings.')
-    } finally {
-      setLoadingBookings(false)
-    }
+  async function loadBookings(){
+    if(!logged)return
+    try{const r=await fetch(apiBase+'/api/bookings/mine',{headers:{Authorization:'Bearer '+token()}});const d=await r.json();if(!r.ok)throw Error(d.message);setBookings(d.bookings||[])}
+    catch(e){setError(e.message||'Unable to load bookings.')}
   }
+  useEffect(()=>{if(!serviceSlug){setLoading(false);return} fetch(apiBase+'/api/services/'+encodeURIComponent(serviceSlug)).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setService(d.service)}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[serviceSlug])
+  useEffect(()=>{loadBookings()},[])
+  useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
+  const available=slots.filter(s=>!booked.includes(s.value))
+  const canNext=step===1?Boolean(date):step===2?Boolean(time):true
+  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await r.json();if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
-  useEffect(() => {
-    loadBookings()
-  }, [])
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setError('')
-    setMessage('')
-
-    if (!isLoggedIn) {
-      setError('Please log in before requesting a mehendi appointment.')
-      return
-    }
-
-    if (!serviceSlug || !date || !time) {
-      setError('Please choose a date and time slot.')
-      return
-    }
-
-    setSubmitting(true)
-    try {
-      const response = await fetch(`${apiBase}/api/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({
-          serviceSlug,
-          bookingDate: date,
-          bookingTime: time,
-          customerNote: note,
-        }),
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.message || 'Unable to send your booking request.')
-
-      setMessage('Your request has been sent to Alfiya Mehendi. It will remain pending until the admin confirms the date and time.')
-      setDate('')
-      setTime('')
-      setNote('')
-      await loadBookings()
-    } catch (err) {
-      setError(err.message || 'Unable to send your booking request.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <main className="shop-dashboard booking-dashboard">
-      <aside className="dashboard-sidebar">
-        <Link to="/products" className="dashboard-brand">
-          <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
-          <span><strong>Alfiya</strong><small>MEHENDI</small></span>
-        </Link>
-
-        <div className="dashboard-section-label">Workspace</div>
-        <nav className="dashboard-nav" aria-label="Dashboard navigation">
-          <Link to="/products" className="dashboard-nav-item"><span aria-hidden="true"></span>Shop</Link>
-          <Link to="/services" className="dashboard-nav-item"><span aria-hidden="true"></span>Mehendi Services</Link>
-          <Link to="/orders" className="dashboard-nav-item"><span aria-hidden="true"></span>My Orders</Link>
-          <Link to="/booking" className="dashboard-nav-item active"><span aria-hidden="true"></span>My Bookings</Link>
-          {user?.role === 'admin' && <Link to="/admin/bookings" className="dashboard-nav-item"><span aria-hidden="true"></span>Admin Bookings</Link>}
-        </nav>
-
-        <div className="dashboard-section-label">Account</div>
-        <nav className="dashboard-nav">
-          <Link to="/account" className="dashboard-nav-item"><span aria-hidden="true"></span>Profile</Link>
-          <Link to="/contact" className="dashboard-nav-item"><span aria-hidden="true"></span>Help & Contact</Link>
-        </nav>
-
-        <div className="dashboard-sidebar-bottom">
-          <div className="dashboard-user-mini">
-            <div className="dashboard-avatar">
-              {user?.picture ? <img src={user.picture} alt="" /> : firstName.charAt(0).toUpperCase()}
-            </div>
-            <div><strong>{user?.name || 'Guest'}</strong><small>{user?.email || 'Explore Alfiya Mehendi'}</small></div>
-          </div>
-        </div>
-      </aside>
-
-      <section className="dashboard-main">
-        <header className="dashboard-topbar">
-          <div>
-            <p className="dashboard-kicker">Mehendi booking</p>
-            <h1>{service ? 'Request your appointment.' : 'My bookings.'}</h1>
-          </div>
-          <div className="dashboard-top-actions">
-            <Link to="/services" className="services-shop-link">Back to services</Link>
-          </div>
-        </header>
-
-        <div className="dashboard-content booking-content">
-          {!isLoggedIn && (
-            <div className="booking-login-card">
-              <p className="dashboard-kicker">Account required</p>
-              <h2>Log in to request a booking.</h2>
-              <p>Your appointment request needs to be connected to your Alfiya account so you can track the admin's decision.</p>
-              <Link to="/login" className="service-book-button">Log in</Link>
-            </div>
-          )}
-
-          {serviceSlug && loadingService && <div className="services-state">Loading your selected service…</div>}
-          {error && <div className="booking-alert booking-alert-error">{error}</div>}
-          {message && <div className="booking-alert booking-alert-success">{message}</div>}
-
-          {isLoggedIn && serviceSlug && !loadingService && service && (
-            <section className="booking-request-grid">
-              <div className="booking-service-summary">
-                <p className="dashboard-kicker">Selected service</p>
-                <h2>{service.name}</h2>
-                <p>{service.description}</p>
-                <strong>{formatPrice(service.price_paise)}</strong>
-                <div className="booking-process">
-                  <span><b>01</b> You choose a date & slot</span>
-                  <span><b>02</b> Admin reviews the request</span>
-                  <span><b>03</b> You see confirmed or rejected status</span>
-                </div>
-              </div>
-
-              <form className="booking-form-card" onSubmit={handleSubmit}>
-                <p className="dashboard-kicker">Request a slot</p>
-                <h2>When should we book you?</h2>
-
-                <label className="booking-field">
-                  <span>Preferred date</span>
-                  <input type="date" min={todayString()} value={date} onChange={(event) => setDate(event.target.value)} required />
-                </label>
-
-                <div className="booking-field">
-                  <span>Preferred time slot</span>
-                  <div className="booking-time-grid">
-                    {timeSlots.map((slot) => (
-                      <button
-                        type="button"
-                        key={slot.value}
-                        className={`booking-time-slot ${time === slot.value ? 'selected' : ''}`}
-                        onClick={() => setTime(slot.value)}
-                      >
-                        {slot.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <label className="booking-field">
-                  <span>Message to admin <small>(optional)</small></span>
-                  <textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Tell us anything important about your appointment." maxLength={500} />
-                </label>
-
-                <button type="submit" className="booking-submit" disabled={submitting}>
-                  {submitting ? 'Sending request…' : 'Send booking request'}
-                </button>
-                <p className="booking-disclaimer">Your selected time is not reserved until the admin confirms it.</p>
-              </form>
-            </section>
-          )}
-
-          {isLoggedIn && !serviceSlug && (
-            <div className="booking-empty-state">
-              <p className="dashboard-kicker">No service selected</p>
-              <h2>Choose a mehendi service first.</h2>
-              <Link to="/services" className="service-book-button">Browse services</Link>
-            </div>
-          )}
-
-          {isLoggedIn && (
-            <section className="booking-history-section">
-              <div className="booking-section-heading">
-                <div>
-                  <p className="dashboard-kicker">Appointment history</p>
-                  <h2>Your booking requests</h2>
-                </div>
-                <span>{bookings.length} total</span>
-              </div>
-
-              {loadingBookings ? (
-                <div className="services-state">Loading bookings…</div>
-              ) : bookings.length === 0 ? (
-                <div className="booking-empty-state compact">
-                  <h3>No booking requests yet.</h3>
-                  <p>Your pending, confirmed and rejected appointment requests will appear here.</p>
-                </div>
-              ) : (
-                <div className="booking-list">
-                  {bookings.map((booking) => {
-                    const meta = statusMeta[booking.status] || statusMeta.requested
-                    return (
-                      <article className="booking-history-card" key={booking.id}>
-                        <div className="booking-history-main">
-                          <div>
-                            <p className="dashboard-kicker">{booking.level}</p>
-                            <h3>{booking.service_name}</h3>
-                          </div>
-                          <span className={`booking-status booking-status-${meta.tone}`}>{meta.label}</span>
-                        </div>
-                        <div className="booking-history-details">
-                          <span><b>Date</b>{formatDate(booking.booking_date)}</span>
-                          <span><b>Time</b>{formatTime(booking.booking_time)}</span>
-                          <span><b>Price</b>{formatPrice(booking.price_paise)}</span>
-                        </div>
-                        {booking.status === 'requested' && <p className="booking-status-note">Waiting for admin approval. Your slot is only confirmed after acceptance.</p>}
-                        {booking.status === 'confirmed' && <p className="booking-status-note success">Your appointment is booked successfully for the selected date and time.</p>}
-                        {booking.status === 'rejected' && (
-                          <p className="booking-status-note rejected">
-                            This request was rejected{booking.admin_note ? `: ${booking.admin_note}` : '.'} Please choose another slot and submit a new request.
-                          </p>
-                        )}
-                      </article>
-                    )
-                  })}
-                </div>
-              )}
-            </section>
-          )}
-        </div>
-      </section>
-    </main>
-  )
+  return <main className="shop-dashboard booking-dashboard">
+    <aside className="dashboard-sidebar"><Link to="/products" className="dashboard-brand"><img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi"/><span><strong>Alfiya</strong><small>MEHENDI</small></span></Link><div className="dashboard-section-label">Workspace</div><nav className="dashboard-nav"><Link to="/products" className="dashboard-nav-item"><span/>Shop</Link><Link to="/services" className="dashboard-nav-item active"><span/>Mehendi Services</Link><Link to="/orders" className="dashboard-nav-item"><span/>My Orders</Link><Link to="/booking" className="dashboard-nav-item"><span/>My Bookings</Link>{u?.role==='admin'&&<Link to="/admin/bookings" className="dashboard-nav-item"><span/>Admin Bookings</Link>}</nav><div className="dashboard-section-label">Account</div><nav className="dashboard-nav"><Link to="/account" className="dashboard-nav-item"><span/>Profile</Link><Link to="/contact" className="dashboard-nav-item"><span/>Help & Contact</Link></nav><div className="dashboard-sidebar-bottom"><div className="dashboard-user-mini"><div className="dashboard-avatar">{u?.picture?<img src={u.picture} alt=""/>:first.charAt(0).toUpperCase()}</div><div><strong>{u?.name||'Guest'}</strong><small>{u?.email||'Explore Alfiya Mehendi'}</small></div></div></div></aside>
+    <section className="dashboard-main"><header className="dashboard-topbar"><div><p className="dashboard-kicker">Alfiya appointment studio</p><h1>{success?'Request received.':'Build your appointment.'}</h1></div><Link to="/services" className="services-shop-link">Back to services</Link></header>
+    <div className="dashboard-content booking-content">
+      {!logged&&<div className="booking-login-card"><p className="dashboard-kicker">Account required</p><h2>Log in to book.</h2><p>Your appointment stays connected to your account so you can follow every decision.</p><Link to="/login" className="service-book-button">Log in</Link></div>}
+      {error&&<div className="booking-alert booking-alert-error">{error}</div>}
+      {loading&&<div className="services-state">Preparing your appointment…</div>}
+      {!loading&&logged&&!service&&serviceSlug&&<div className="booking-empty-state"><h2>We couldn't load that service.</h2><Link to="/services" className="service-book-button">Choose another service</Link></div>}
+      {logged&&service&&serviceSlug&&!success&&<form onSubmit={submit}>
+        <div className="booking-wizard-head"><div><p className="dashboard-kicker">Step {step} of 3</p><h2>{service.name}</h2><p>{service.description}</p></div><strong>{price(service.price_paise)}</strong></div>
+        <div className="booking-progress">{[1,2,3].map(n=><button type="button" key={n} className={step>=n?'active':''} onClick={()=>n<step&&setStep(n)}><b>0{n}</b><span>{n===1?'Date':n===2?'Time':'Review'}</span></button>)}</div>
+        <section className="booking-wizard-card">
+          {step===1&&<div><p className="dashboard-kicker">01 · Pick your day</p><h2>When would you like us?</h2><label className="booking-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{setDate(e.target.value);setTime('')}} required/></label>{date&&<div className="booking-selected-banner"><strong>{dateLabel(date)}</strong><span>Next, choose a time that works for you.</span></div>}</div>}
+          {step===2&&<div><p className="dashboard-kicker">02 · Pick your time</p><h2>Choose an available slot.</h2>{loadingSlots?<div className="services-state">Checking availability…</div>:<div className="booking-time-grid upgraded">{slots.map(s=><button type="button" key={s.value} disabled={booked.includes(s.value)} className={time===s.value?'selected':''} onClick={()=>setTime(s.value)}>{s.label}<small>{booked.includes(s.value)?'Booked':time===s.value?'Selected':'Available'}</small></button>)}</div>}</div>}
+          {step===3&&<div><p className="dashboard-kicker">03 · Review</p><h2>One last look.</h2><div className="booking-review"><div><small>Service</small><strong>{service.name}</strong></div><div><small>Date</small><strong>{dateLabel(date)}</strong></div><div><small>Time</small><strong>{timeLabel(time)}</strong></div><div><small>Price</small><strong>{price(service.price_paise)}</strong></div></div><label className="booking-field"><span>Message to Alfiya <small>(optional)</small></span><textarea value={note} onChange={e=>setNote(e.target.value)} maxLength={500} placeholder="Anything we should know about your appointment?"/></label><p className="booking-disclaimer">This sends a request. The slot becomes confirmed only after admin approval.</p></div>}
+          <div className="booking-wizard-actions">{step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>Back</button>:<span/>}{step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={()=>setStep(step+1)}>Continue</button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Request appointment'}</button>}</div>
+        </section>
+      </form>}
+      {logged&&success&&<section className="booking-success-panel"><div className="booking-success-mark">✓</div><p className="dashboard-kicker">Request sent</p><h2>Your appointment is now pending.</h2><p>Alfiya Mehendi has received your request for <strong>{dateLabel(date)}</strong> at <strong>{timeLabel(time)}</strong>. You will see the final decision in your booking history.</p><div><Link to="/booking" className="service-book-button">View my bookings</Link><Link to="/services" className="services-shop-link">Browse other services</Link></div></section>}
+      {logged&&<section className="booking-history-section"><div className="booking-section-heading"><div><p className="dashboard-kicker">Your timeline</p><h2>Booking history</h2></div><span>{bookings.length} requests</span></div>{bookings.length===0?<div className="booking-empty-state compact"><h3>No requests yet.</h3><p>Your appointment timeline will appear here.</p></div>:<div className="booking-list">{bookings.map(b=>{const m=statusMeta[b.status]||statusMeta.requested;return <article className="booking-history-card" key={b.id}><div className="booking-history-main"><div><p className="dashboard-kicker">{b.level}</p><h3>{b.service_name}</h3></div><span className={'booking-status booking-status-'+m[1]}>{m[0]}</span></div><div className="booking-history-details"><span><b>Date</b>{dateLabel(String(b.booking_date).slice(0,10))}</span><span><b>Time</b>{timeLabel(b.booking_time)}</span><span><b>Price</b>{price(b.price_paise)}</span></div>{b.status==='requested'&&<p className="booking-status-note">Waiting for admin approval. Your slot is not confirmed yet.</p>}{b.status==='confirmed'&&<p className="booking-status-note success">Confirmed. Your appointment is booked.</p>}{b.status==='rejected'&&<p className="booking-status-note rejected">Rejected{b.admin_note?': '+b.admin_note:'.'} Choose another slot to try again.</p>}</article>})}</div>}</section>}
+    </div></section>
+  </main>
 }
