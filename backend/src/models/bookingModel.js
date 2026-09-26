@@ -46,6 +46,14 @@ export async function findPendingDuplicate({ userId, bookingDate, bookingTime, s
   return result.rows[0] || null
 }
 
+export async function listBookedTimes(bookingDate) {
+  const result = await query(
+    'SELECT booking_time FROM bookings WHERE booking_date = $1 AND status = \'confirmed\' ORDER BY booking_time ASC',
+    [bookingDate],
+  )
+  return result.rows.map((row) => String(row.booking_time).slice(0, 5))
+}
+
 export async function listUserBookings(userId) {
   const result = await query(
     `
