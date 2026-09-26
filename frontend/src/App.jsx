@@ -15,6 +15,7 @@ import AdminSupport from './pages/admin/AdminSupport.jsx'
 import Orders from './pages/orders/Orders.jsx'
 import Cart from './pages/cart/Cart.jsx'
 import Contact from './pages/contact/Contact.jsx'
+import NetworkStatus from './components/NetworkStatus.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -23,6 +24,7 @@ function Placeholder({ title }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <NetworkStatus />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
