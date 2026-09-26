@@ -17,12 +17,13 @@ const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
 function isValidDate(date) {
   if (!DATE_PATTERN.test(date)) return false
-  const parsed = new Date(`${date}T00:00:00`)
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date
+  const [year, month, day] = date.split('-').map(Number)
+  const parsed = new Date(year, month - 1, day)
+  return parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day
 }
 
 function isPastDateTime(date, time) {
-  const requested = new Date(`${date}T${time}:00`)
+  const requested = new Date(`${date}T${time}:00+05:30`)
   return requested.getTime() <= Date.now()
 }
 
