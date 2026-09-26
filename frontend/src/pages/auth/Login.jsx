@@ -68,7 +68,9 @@ export default function Login() {
   };
 
   return (
-    <main className="signup-page auth-split-page">
+    <>
+      {showSuccess && <AuthSuccessOverlay mode="login" onDone={() => navigate("/products")} />}
+      <main className="signup-page auth-split-page">
       <section className="signup-shell">
         <div className="signup-story">
           <div className="story-image" aria-hidden="true" />
@@ -161,6 +163,7 @@ export default function Login() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
