@@ -23,14 +23,15 @@ app.post('/api/auth/google', async (req, res) => {
       return res.status(400).json({ message: 'Google credential is required.' })
     }
 
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.JWT_SECRET) {
+    if (!(process.env.GOOGLE_CLIENT_ID || "37574893420-so4mu6u3uuunkil58nek24nardjm46q4.apps.googleusercontent.com") || !process.env.JWT_SECRET) {
       return res.status(500).json({ message: 'Google authentication is not configured on the server.' })
     }
 
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+    const googleClientId = process.env.GOOGLE_CLIENT_ID || "37574893420-so4mu6u3uuunkil58nek24nardjm46q4.apps.googleusercontent.com"
+    const client = new OAuth2Client(googleClientId)
     const ticket = await client.verifyIdToken({
       idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: googleClientId,
     })
 
     const payload = ticket.getPayload()
