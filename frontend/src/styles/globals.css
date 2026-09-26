@@ -2171,3 +2171,35 @@ a { color: inherit; }
 .support-form{display:grid;gap:18px}.support-form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.support-form label{display:grid;gap:8px}.support-form label>span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#826f60;font-weight:800}.support-form label em{font-style:normal;text-transform:none;letter-spacing:0;color:#a49485;font-weight:500}.support-form input,.support-form select,.support-form textarea{width:100%;border:1px solid #d1bfac;border-radius:9px;background:#fffdf9;color:#44352c;outline:0;padding:0 15px;font-size:13px}.support-form input,.support-form select{height:52px}.support-form textarea{padding:15px;resize:vertical;min-height:170px}.support-form input:focus,.support-form select:focus,.support-form textarea:focus{border-color:#81906f;box-shadow:0 0 0 4px #e8ede2}.support-feedback{padding:15px 17px;border-radius:10px;font-size:12px;line-height:1.5}.support-feedback.success{background:#e4eadf;color:#526346;border:1px solid #c5d1bb}.support-feedback.error{background:#f2e3de;color:#8c5140;border:1px solid #dfc0b4}.support-submit{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 23px;border:0;border-radius:10px;background:#6e7b5d;color:#fff;font-size:12px;font-weight:800}.support-submit:hover{background:#5f6d50}.support-submit:disabled{opacity:.65;cursor:wait}
 @media(max-width:950px){.contact-hero{grid-template-columns:1fr;min-height:700px}.contact-guide-scene{min-height:330px}.contact-direct,.contact-form-section{grid-template-columns:1fr}.quick-help-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.contact-content{padding:28px 18px 70px!important}.contact-topbar{padding:24px 18px!important}.contact-topbar h1{font-size:31px!important}.contact-topbar .contact-shop-link{display:none}.contact-hero{padding:38px 25px;min-height:780px;border-radius:20px}.contact-hero-copy h2{font-size:49px}.contact-hero-copy>p:not(.dashboard-kicker){font-size:14px}.contact-guide{transform:scale(.86);transform-origin:center bottom}.contact-guide-speech{right:0;top:0}.contact-section{margin-top:52px}.contact-section-heading{align-items:flex-start;flex-direction:column;gap:14px}.contact-section-heading h2{font-size:36px}.quick-help-card{min-height:175px;padding:24px;grid-template-columns:45px 1fr}.quick-help-card strong{grid-column:2}.faq-item{grid-template-columns:38px 1fr 38px;gap:10px;padding:24px 3px}.faq-copy strong{font-size:19px}.faq-answer{font-size:13px}.contact-direct,.contact-form-section{padding:28px 22px}.contact-direct h2,.contact-form-intro h2{font-size:35px}.support-form-row{grid-template-columns:1fr}.direct-card{min-height:84px}}
+
+
+/* Support ticket history + admin support workspace */
+.faq-search-wrap{margin:-8px 0 22px}
+.faq-search-wrap input{width:100%;height:54px;padding:0 17px;border:1px solid #d1bfac;border-radius:10px;background:#fffaf3;color:#44352c;font-size:13px;outline:0}
+.faq-search-wrap input:focus{border-color:#81906f;box-shadow:0 0 0 4px #e8ede2}
+.support-history-section{margin-top:72px}
+.support-history-list{display:grid;gap:15px}
+.support-history-card{display:flex;justify-content:space-between;gap:30px;padding:28px 32px;border:1px solid #d2bfaa;border-radius:18px;background:#fffaf3;box-shadow:0 12px 28px rgba(70,49,32,.05)}
+.support-ticket-id{font-size:9px;letter-spacing:.16em;color:#a08068;font-weight:800}
+.support-history-card h3{margin:7px 0 8px;font:500 24px Georgia,serif;color:#46362c}
+.support-history-card p{margin:0;max-width:780px;color:#76675b;font-size:13px;line-height:1.65}
+.support-ticket-status{display:inline-flex;align-items:center;justify-content:center;min-width:112px;min-height:38px;padding:0 14px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap}
+.support-ticket-status.new{background:#f2e4c5;color:#89672b}.support-ticket-status.in_progress{background:#e5eadf;color:#59684c}.support-ticket-status.resolved{background:#dce9d7;color:#4f6947}
+.support-ticket-status small{display:block;margin-top:5px;color:#8b7969;font-size:9px;font-weight:500;text-align:right}
+.support-history-empty{padding:42px;text-align:center;border:1px dashed #cdbba7;border-radius:18px;background:#f8f0e6;color:#806f61;font-size:13px}
+.admin-support-list{display:grid;gap:18px}
+.admin-support-card{overflow:hidden;border:1px solid #d2bfaa;border-radius:18px;background:#fffaf3;box-shadow:0 14px 32px rgba(70,49,32,.06)}
+.admin-support-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:25px;padding:29px 32px;border:0;background:transparent;text-align:left;color:inherit;cursor:pointer}
+.admin-support-head>div:first-child>span{font-size:9px;letter-spacing:.16em;color:#a08068;font-weight:800}
+.admin-support-head h3{margin:8px 0 5px;font:500 27px Georgia,serif;color:#46362c}
+.admin-support-head p{margin:0;color:#887668;font-size:12px}
+.admin-support-head-right{display:flex;align-items:center;gap:16px}
+.admin-support-head-right>strong{width:38px;height:38px;display:grid;place-items:center;border:1px solid #d2bfac;border-radius:50%;color:#6e7b5d;font-size:20px}
+.admin-support-details{padding:0 32px 30px;border-top:1px solid #e4d7c9}
+.admin-support-meta{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #e4d7c9}
+.admin-support-meta span{display:grid;gap:7px;padding:20px 18px 20px 0;color:#514239;font-size:14px;border-right:1px solid #e4d7c9}
+.admin-support-meta span:not(:first-child){padding-left:18px}.admin-support-meta span:last-child{border-right:0}
+.admin-support-meta b{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#a08068}
+.admin-support-message{padding:24px 0;border-bottom:1px solid #e4d7c9}.admin-support-message small{font-size:9px;letter-spacing:.14em;color:#a08068;font-weight:800}.admin-support-message p{margin:10px 0 0;color:#66584d;font-size:14px;line-height:1.75;white-space:pre-wrap}
+.admin-support-actions{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:22px}.admin-support-actions>span{font-size:11px;color:#806f61}.admin-support-actions>div{display:flex;gap:8px}.admin-support-actions button{min-height:42px;padding:0 14px;border:1px solid #d1bfac;border-radius:9px;background:#fffaf3;color:#76675b;font-size:10px;font-weight:700}.admin-support-actions button.active{background:#6e7b5d;border-color:#6e7b5d;color:#fff}.admin-support-actions button:disabled{opacity:.5}
+@media(max-width:700px){.support-history-card{flex-direction:column}.support-ticket-status{align-self:flex-start}.admin-support-head{align-items:flex-start;flex-direction:column;padding:24px}.admin-support-head-right{width:100%;justify-content:space-between}.admin-support-details{padding:0 24px 24px}.admin-support-meta{grid-template-columns:1fr}.admin-support-meta span,.admin-support-meta span:not(:first-child){padding:15px 0;border-right:0;border-bottom:1px solid #e4d7c9}.admin-support-meta span:last-child{border-bottom:0}.admin-support-actions{align-items:flex-start;flex-direction:column}.admin-support-actions>div{flex-wrap:wrap}}
