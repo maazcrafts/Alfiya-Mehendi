@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import GoogleButton from "./GoogleButton.jsx";
+import AuthSuccessOverlay from "./AuthSuccessOverlay.jsx";
 
 const Icon = ({ type }) => {
   const common = {
@@ -36,6 +37,7 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -57,7 +59,7 @@ export default function Login() {
       localStorage.setItem("alfiya_user", JSON.stringify(data.user));
       if (rememberMe) localStorage.setItem("alfiya_remember_me", "true");
       else localStorage.removeItem("alfiya_remember_me");
-      navigate("/account");
+      setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to log in.");
     } finally {
