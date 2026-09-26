@@ -10,6 +10,7 @@ import ProductDetails from './pages/products/ProductDetails.jsx'
 import Services from './pages/services/Services.jsx'
 import Booking from './pages/booking/Booking.jsx'
 import AdminBookings from './pages/admin/AdminBookings.jsx'
+import AdminOrders from './pages/admin/AdminOrders.jsx'
 import Orders from './pages/orders/Orders.jsx'
 
 function Placeholder({ title }) {
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/account" element={<Placeholder title="My Account" />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
