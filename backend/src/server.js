@@ -10,7 +10,6 @@ import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.
 import { hashPassword, verifyPassword } from './services/passwordService.js'
 import { createPasswordResetToken, resetPasswordWithToken } from './services/passwordResetService.js'
 import productRoutes from './routes/productRoutes.js'
-import productRoutes from './routes/productRoutes.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -20,8 +19,6 @@ app.use(cors({
   credentials: true,
 }))
 app.use(express.json())
-app.use('/api/products', productRoutes)
-
 app.use('/api/products', productRoutes)
 
 app.get('/api/health', async (_req, res) => {
