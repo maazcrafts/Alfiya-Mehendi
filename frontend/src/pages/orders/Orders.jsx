@@ -80,7 +80,7 @@ export default function Orders(){
           </section>
           <section className="orders-controls">
             <label><span>Search</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search orders or products"/></label>
-            <div><button className={filter==='all'?'active':''} onClick={()=>setFilter('all')}>All</button>{['pending','processing','shipped','delivered','cancelled'].map(s=><button key={s} className={filter===s?'active':''} onClick={()=>setFilter(s)}>{statusMeta[s][0]}</button>)}</div>
+            <div><button type="button" className={filter==='all'?'active':''} onClick={()=>setFilter('all')}>All</button>{['pending','confirmed','processing','shipped','delivered','cancelled','refunded'].map(s=><button type="button" key={s} className={filter===s?'active':''} onClick={()=>setFilter(s)}>{statusMeta[s][0]}</button>)}</div>
           </section>
           {filtered.length===0?<div className="orders-filter-empty"><h3>No orders match this view.</h3><p>Try another status or search term.</p></div>:<section className="orders-list">{filtered.map(o=>{const meta=statusMeta[o.status]||statusMeta.pending;const isOpen=open===o.id;return <article className="order-card" key={o.id}>
             <button className="order-card-head" type="button" onClick={()=>setOpen(isOpen?null:o.id)}>
