@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
@@ -13,6 +13,9 @@ function formatPrice(paise) {
 
 export default function ProductDetails() {
   const { slug } = useParams()
+  const navigate = useNavigate()
+  const [adding, setAdding] = useState(false)
+  const [cartMessage, setCartMessage] = useState('')
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -46,6 +49,31 @@ export default function ProductDetails() {
   if (error) return <main className="product-details-page"><div className="catalog-state catalog-error">{error}</div></main>
   if (!product) return null
 
+  async function addToCart() {
+    const authToken = localStorage.getItem('alfiya_auth_token') || ''
+    if (!authToken) {
+      navigate('/login', { state: { from: `/products/${slug}` } })
+      return
+    }
+    setAdding(true)
+    setCartMessage('')
+    try {
+      const response = await fetch(`${apiBase}/api/cart/items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
+        body: JSON.stringify({ productId: product.id, quantity: 1 }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'Unable to add this product.')
+      window.dispatchEvent(new Event('alfiya-cart-updated'))
+      setCartMessage('Added to your cart.')
+    } catch (err) {
+      setCartMessage(err.message || 'Unable to add this product.')
+    } finally {
+      setAdding(false)
+    }
+  }
+
   const image = product.images?.[0]?.image_url
 
   return (
@@ -68,10 +96,11 @@ export default function ProductDetails() {
             <p className={product.stockQuantity > 0 ? 'stock-note available' : 'stock-note'}>
               {product.stockQuantity > 0 ? `${product.stockQuantity} available` : 'Currently out of stock'}
             </p>
-            <button type="button" className="product-primary-action" disabled={product.stockQuantity === 0}>
-              Add to Cart
+            <button type="button" className="product-primary-action" disabled={product.stockQuantity === 0 || adding} onClick={addToCart}>
+              {adding ? 'Adding…' : 'Add to Cart'}
             </button>
-            <p className="product-next-note">Cart functionality will be connected in the next commerce step.</p>
+            {cartMessage && <p className="product-cart-message">{cartMessage}</p>}
+            <Link to="/cart" className="product-cart-link">View cart →</Link>
           </div>
         </section>
       </div>
