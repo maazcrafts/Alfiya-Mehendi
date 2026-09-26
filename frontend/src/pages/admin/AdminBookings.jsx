@@ -51,7 +51,6 @@ export default function AdminBookings() {
   async function loadBookings() {
     setLoading(true)
     setError('')
-    setNotice('')
     try {
       const response = await fetch(`${apiBase}/api/bookings/admin?status=${filter}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
