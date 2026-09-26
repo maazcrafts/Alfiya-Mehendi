@@ -88,7 +88,7 @@ export default function Products() {
     <main className="shop-dashboard">
       <aside className="dashboard-sidebar">
         <Link to="/" className="dashboard-brand">
-          <span className="dashboard-brand-mark">A</span>
+          <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
           <span>
             <strong>Alfiya</strong>
             <small>MEHENDI</small>
