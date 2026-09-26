@@ -118,6 +118,9 @@ export default function Login() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    required
                   />
                   <button type="button" className="eye-button" onClick={() => setShowPassword(!showPassword)}>
                     <Icon type="eye" />
@@ -127,17 +130,18 @@ export default function Login() {
 
               <div className="login-options">
                 <label className="remember-row">
-                  <input type="checkbox" />
+                  <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
                   <span>Remember me</span>
                 </label>
                 <a href="#forgot">Forgot password?</a>
               </div>
 
-              <button type="submit" className="signup-submit">
-                <span>Login</span>
+              <button type="submit" className="signup-submit" disabled={loading}>
+                <span>{loading ? "Logging in..." : "Login"}</span>
                 <Icon type="arrow" />
               </button>
             </form>
+            {error && <p className="auth-form-error" role="alert">{error}</p>}
 
             <div className="auth-divider"><span>OR</span></div>
 
