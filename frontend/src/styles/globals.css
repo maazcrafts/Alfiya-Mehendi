@@ -2434,3 +2434,13 @@ a { color: inherit; }
   .profile-danger-zone{margin-top:42px;padding:28px 24px}
   .profile-danger-zone h3{font-size:24px}
 }
+
+/* Sidebar customer identity — larger and easier to read */
+.dashboard-sidebar .dashboard-sidebar-bottom{padding:26px 18px 30px}
+.dashboard-sidebar .dashboard-user-mini{min-height:76px;gap:15px;padding:10px 12px;border-radius:14px;background:#f7efe3;border:1px solid #e2d3c1}
+.dashboard-sidebar .dashboard-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:50%;font-size:18px;font-weight:700}
+.dashboard-sidebar .dashboard-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.dashboard-sidebar .dashboard-user-mini>div:last-child{min-width:0;display:flex;flex-direction:column;gap:5px}
+.dashboard-sidebar .dashboard-user-mini strong{color:#3c2920;font-size:14px;line-height:1.2;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dashboard-sidebar .dashboard-user-mini small{color:#75665b;font-size:10.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+@media(max-width:700px){.dashboard-sidebar .dashboard-sidebar-bottom{padding:20px 14px 24px}.dashboard-sidebar .dashboard-user-mini{min-height:70px}.dashboard-sidebar .dashboard-avatar{width:44px;height:44px;flex-basis:44px}}
