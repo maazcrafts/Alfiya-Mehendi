@@ -1,4 +1,4 @@
-import { query } from '../config/pool.js'
+import { pool, query } from '../config/pool.js'
 
 const productSelect = `
   SELECT
@@ -103,7 +103,7 @@ export async function createProduct({
   isActive = true,
   images = [],
 }) {
-  const client = await (await import('../config/pool.js')).pool.connect()
+  const client = await pool.connect()
 
   try {
     await client.query('BEGIN')
