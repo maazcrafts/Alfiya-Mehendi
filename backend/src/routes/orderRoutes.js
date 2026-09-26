@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/authMiddleware.js'
-import { listUserOrders } from '../models/orderModel.js'
+import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js'
+import { listAdminOrders, listUserOrders } from '../models/orderModel.js'
 
 const router = Router()
 
@@ -15,3 +15,16 @@ router.get('/mine', requireAuth, async (req, res) => {
 })
 
 export default router
+
+
+router.get('/admin', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const allowed = ['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded']
+    const status = allowed.includes(req.query.status) ? req.query.status : 'all'
+    const orders = await listAdminOrders(status)
+    return res.json({ orders })
+  } catch (error) {
+    console.error('Load admin orders error:', error)
+    return res.status(500).json({ message: 'Unable to load customer orders.' })
+  }
+})
