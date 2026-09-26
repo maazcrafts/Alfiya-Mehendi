@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/auth/Login.jsx'
 import Signup from './pages/auth/Signup.jsx'
+import Terms from './pages/legal/Terms.jsx'
+import Privacy from './pages/legal/Privacy.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -20,6 +22,8 @@ export default function App() {
         <Route path="/services" element={<Placeholder title="Mehendi Services" />} />
         <Route path="/booking" element={<Placeholder title="Booking" />} />
         <Route path="/account" element={<Placeholder title="My Account" />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="/orders" element={<Placeholder title="Orders & Bookings" />} />
         <Route path="/about" element={<Placeholder title="About" />} />
         <Route path="/contact" element={<Placeholder title="Contact" />} />
