@@ -105,6 +105,32 @@ export async function listAdminBookings(status = 'all') {
   return result.rows
 }
 
+export async function cancelUserBooking({ bookingId, userId }) {
+  const result = await query(
+    `
+      UPDATE bookings
+      SET status = 'cancelled', updated_at = NOW()
+      WHERE id = $1
+        AND user_id = $2
+        AND status = 'requested'
+      RETURNING id, booking_date, booking_time, status, customer_note, admin_note, updated_at
+    `,
+    [bookingId, userId],
+  )
+
+  if (!result.rows[0]) {
+    const existing = await query(
+      'SELECT id, user_id, status FROM bookings WHERE id = $1 LIMIT 1',
+      [bookingId],
+    )
+    if (!existing.rows[0]) return { kind: 'not_found' }
+    if (existing.rows[0].user_id !== userId) return { kind: 'not_found' }
+    return { kind: 'invalid_status', currentStatus: existing.rows[0].status }
+  }
+
+  return { kind: 'cancelled', booking: result.rows[0] }
+}
+
 export async function updateBookingStatus({ bookingId, status, adminNote }) {
   const client = await getClient()
 
