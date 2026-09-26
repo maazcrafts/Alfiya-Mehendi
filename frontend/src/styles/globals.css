@@ -653,3 +653,37 @@ a { color: inherit; }
     min-height: 680px;
   }
 }
+
+
+.google-auth-wrap {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.google-auth-button {
+  width: 100%;
+  min-height: 45px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.google-auth-button > div {
+  max-width: 100%;
+}
+
+.google-auth-error {
+  margin: 7px 0 0;
+  color: #9a4034;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@media (max-width: 620px) {
+  .google-auth-button {
+    width: 100%;
+  }
+}
