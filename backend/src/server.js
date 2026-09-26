@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
 import { checkDatabaseConnection } from './config/pool.js'
 import { initializeDatabase } from './config/database.js'
+import { upsertGoogleUser } from './models/userModel.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -59,16 +60,24 @@ app.post('/api/auth/google', async (req, res) => {
       return res.status(401).json({ message: 'Invalid Google account information.' })
     }
 
-    const user = {
-      id: payload.sub,
+    const dbUser = await upsertGoogleUser({
+      googleId: payload.sub,
       name: payload.name || '',
       email: payload.email,
-      picture: payload.picture || '',
+      avatarUrl: payload.picture || '',
+    })
+
+    const user = {
+      id: dbUser.id,
+      name: dbUser.name,
+      email: dbUser.email,
+      picture: dbUser.avatar_url || '',
+      role: dbUser.role,
       provider: 'google',
     }
 
     const token = jwt.sign(
-      { sub: user.id, email: user.email, provider: user.provider },
+      { sub: user.id, email: user.email, role: user.role, provider: user.provider },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     )
