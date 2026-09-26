@@ -39,8 +39,11 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
             <Link to="/services" className="dashboard-nav-item">
               <span className="dashboard-nav-icon">{icons.services}</span>Customer view
             </Link>
-            <Link to="/admin/bookings" className="dashboard-nav-item active">
-              <span className="dashboard-nav-icon">{icons.admin}</span>Booking requests
+            <Link to="/admin/bookings" className="dashboard-nav-item">
+              <span className="dashboard-nav-icon">{icons.bookings}</span>Appointments
+            </Link>
+            <Link to="/admin/orders" className="dashboard-nav-item">
+              <span className="dashboard-nav-icon">{icons.orders}</span>Customer Orders
             </Link>
           </>
         ) : (
