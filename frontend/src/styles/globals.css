@@ -1902,3 +1902,18 @@ a { color: inherit; }
 
 /* Admin bookings uses a distinct shield/calendar treatment when present */
 .dashboard-nav-item:nth-child(5) span::after{mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 19 6v5c0 4.8-2.8 8.2-7 10-4.2-1.8-7-5.2-7-10V6l7-3Z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 19 6v5c0 4.8-2.8 8.2-7 10-4.2-1.8-7-5.2-7-10V6l7-3Z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E")}
+
+/* Shared dashboard icon system — transparent, scalable SVG icons */
+.dashboard-nav-item{gap:14px!important;min-height:58px!important;padding:0 16px!important;font-size:15px!important}
+.dashboard-nav-item .dashboard-nav-icon{width:28px!important;height:28px!important;flex:0 0 28px!important;display:grid!important;place-items:center!important;background:transparent!important;color:#88796c!important;font-size:0!important}
+.dashboard-nav-item .dashboard-nav-icon::after{display:none!important;content:none!important}
+.dashboard-nav-item .dashboard-nav-icon svg{width:27px!important;height:27px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.65!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.dashboard-nav-item.active .dashboard-nav-icon{color:#fffdf8!important}
+.dashboard-nav-item:hover .dashboard-nav-icon{color:#6d422f!important}
+.dashboard-nav-item.active:hover .dashboard-nav-icon{color:#fffdf8!important}
+.dashboard-section-label{font-size:10px!important;margin-top:22px!important}
+@media(max-width:760px){
+ .dashboard-nav-item{min-height:54px!important;font-size:14px!important}
+ .dashboard-nav-item .dashboard-nav-icon{width:26px!important;height:26px!important;flex-basis:26px!important}
+ .dashboard-nav-item .dashboard-nav-icon svg{width:25px!important;height:25px!important}
+}
