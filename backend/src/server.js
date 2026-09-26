@@ -12,6 +12,7 @@ import { createPasswordResetToken, resetPasswordWithToken } from './services/pas
 import serviceRoutes from './routes/serviceRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -35,6 +36,7 @@ app.use(express.json())
 app.use('/api/products', productRoutes)
 app.use('/api/services', serviceRoutes)
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/orders', orderRoutes)
 
 app.use('/api', (_req, res) => {
   return res.status(404).json({ message: 'API route not found.' })
