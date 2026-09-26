@@ -36,6 +36,10 @@ app.use('/api/products', productRoutes)
 app.use('/api/services', serviceRoutes)
 app.use('/api/bookings', bookingRoutes)
 
+app.use('/api', (_req, res) => {
+  return res.status(404).json({ message: 'API route not found.' })
+})
+
 app.get('/api/health', async (_req, res) => {
   try {
     const database = await checkDatabaseConnection()
