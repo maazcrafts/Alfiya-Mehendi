@@ -18,7 +18,6 @@ const Icon = ({ type }) => {
   const paths = {
     user: <><circle cx="12" cy="8" r="3.5" /><path d="M5 20c.7-3.3 3-5 7-5s6.3 1.7 7 5" /></>,
     mail: <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></>,
-    phone: <><path d="M7 3.8 9.5 6 8 9c1.1 2.3 2.8 4.1 5 5.1l3-1.5 2.2 2.5-1.7 2.5c-.6.8-1.6 1.1-2.6.8C8.2 16.3 5 13.1 2.9 7.4c-.3-1 0-2 .8-2.6L7 3.8Z" /></>,
     lock: <><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,
     leaf: <><path d="M20 4C11 4 5 8 5 14c0 3.3 2.4 6 6 6 6 0 9-7 9-16Z" /><path d="M4 20c3.5-4.2 7.1-7.1 11-9" /></>,
     shield: <><path d="M12 3 20 6v5c0 5-3.3 8.5-8 10-4.7-1.5-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.3 2.3 4.8-5" /></>,
@@ -100,13 +99,6 @@ export default function Signup() {
                 </div>
               </label>
 
-              <label className="input-group">
-                <span>Phone Number</span>
-                <div className="input-shell">
-                  <Icon type="phone" />
-                  <input type="tel" placeholder="Enter your phone number" autoComplete="tel" />
-                </div>
-              </label>
 
               <label className="input-group">
                 <span>Password</span>
@@ -155,10 +147,6 @@ export default function Signup() {
 
             <div className="social-actions">
               <GoogleButton mode="signup" />
-              <button type="button" className="social-button">
-                <Icon type="phone" />
-                Sign up with Phone
-              </button>
             </div>
 
             <p className="login-prompt">
