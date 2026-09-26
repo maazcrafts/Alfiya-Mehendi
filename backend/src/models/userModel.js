@@ -18,3 +18,32 @@ export async function upsertGoogleUser({ googleId, name, email, avatarUrl }) {
 
   return result.rows[0]
 }
+
+
+export async function findUserById(userId) {
+  const result = await query(
+    `
+      SELECT id, name, email, avatar_url, role, google_id, password_hash, created_at, updated_at
+      FROM users
+      WHERE id = $1
+      LIMIT 1
+    `,
+    [userId],
+  )
+
+  return result.rows[0] || null
+}
+
+export async function updateUserName({ userId, name }) {
+  const result = await query(
+    `
+      UPDATE users
+      SET name = $1, updated_at = NOW()
+      WHERE id = $2
+      RETURNING id, name, email, avatar_url, role, google_id, password_hash, created_at, updated_at
+    `,
+    [name, userId],
+  )
+
+  return result.rows[0] || null
+}
