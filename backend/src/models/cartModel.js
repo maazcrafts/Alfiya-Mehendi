@@ -15,10 +15,10 @@ function normalizeCart(row) {
   }
 }
 
-export async function getOrCreateCart(userId) {
-  const existing = await query('SELECT id FROM carts WHERE user_id = $1 LIMIT 1', [userId])
+async function getOrCreateCartWithClient(client, userId) {
+  const existing = await client.query('SELECT id FROM carts WHERE user_id = $1 LIMIT 1', [userId])
   if (existing.rows[0]) return existing.rows[0].id
-  const created = await query(
+  const created = await client.query(
     'INSERT INTO carts (user_id) VALUES ($1) ON CONFLICT (user_id) DO UPDATE SET updated_at = NOW() RETURNING id',
     [userId],
   )
@@ -57,7 +57,7 @@ export async function addCartItem({ userId, productId, quantity }) {
     if (!product.rows[0].is_active) { await client.query('ROLLBACK'); return { kind: 'inactive' } }
     if (product.rows[0].stock_quantity < quantity) { await client.query('ROLLBACK'); return { kind: 'stock', available: product.rows[0].stock_quantity } }
 
-    const cartId = await getOrCreateCart(userId)
+    const cartId = await getOrCreateCartWithClient(client, userId)
     const current = await client.query(
       'SELECT quantity FROM cart_items WHERE cart_id = $1 AND product_id = $2 FOR UPDATE',
       [cartId, productId],
