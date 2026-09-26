@@ -78,6 +78,7 @@ export default function Services() {
           <Link to="/services" className="dashboard-nav-item active"><span aria-hidden="true"></span>Mehendi Services</Link>
           <Link to="/orders" className="dashboard-nav-item"><span aria-hidden="true"></span>My Orders</Link>
           <Link to="/booking" className="dashboard-nav-item"><span aria-hidden="true"></span>My Bookings</Link>
+          {user?.role === 'admin' && <Link to="/admin/bookings" className="dashboard-nav-item"><span aria-hidden="true"></span>Admin Bookings</Link>}
         </nav>
 
         <div className="dashboard-section-label">Account</div>
