@@ -56,7 +56,7 @@ export default function GoogleButton({ mode = "signin" }) {
 
               localStorage.setItem("alfiya_auth_token", data.token);
               localStorage.setItem("alfiya_user", JSON.stringify(data.user));
-              navigate("/account");
+              navigate("/products");
             } catch (err) {
               setError(err.message);
             }
