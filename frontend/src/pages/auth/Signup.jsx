@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import GoogleButton from "./GoogleButton.jsx";
 
 const Icon = ({ type }) => {
@@ -33,6 +34,49 @@ const Icon = ({ type }) => {
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", accepted: false });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const updateField = (field) => (event) => {
+    const value = field === "accepted" ? event.target.checked : event.target.value;
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
+    if (!form.accepted) {
+      setError("Please accept the Terms & Conditions and Privacy Policy.");
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const response = await fetch(apiBase + "/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Unable to create your account.");
+
+      localStorage.setItem("alfiya_auth_token", data.token);
+      localStorage.setItem("alfiya_user", JSON.stringify(data.user));
+      navigate("/account");
+    } catch (err) {
+      setError(err.message || "Unable to create your account.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="signup-page">
@@ -82,12 +126,12 @@ export default function Signup() {
               Create your account to start shopping and booking mehendi services.
             </p>
 
-            <form className="signup-form">
+            <form className="signup-form" onSubmit={handleSubmit}>
               <label className="input-group">
                 <span>Full Name</span>
                 <div className="input-shell">
                   <Icon type="user" />
-                  <input type="text" placeholder="Enter your full name" autoComplete="name" />
+                  <input type="text" placeholder="Enter your full name" autoComplete="name" value={form.name} onChange={updateField("name")} required />
                 </div>
               </label>
 
@@ -95,7 +139,7 @@ export default function Signup() {
                 <span>Email Address</span>
                 <div className="input-shell">
                   <Icon type="mail" />
-                  <input type="email" placeholder="Enter your email address" autoComplete="email" />
+                  <input type="email" placeholder="Enter your email address" autoComplete="email" value={form.email} onChange={updateField("email")} required />
                 </div>
               </label>
 
