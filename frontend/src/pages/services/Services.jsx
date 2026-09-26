@@ -3,6 +3,13 @@ import { useEffect, useMemo, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
+const serviceImages = {
+  basic: 'https://images.pexels.com/photos/12584788/pexels-photo-12584788.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  intermediate: 'https://images.pexels.com/photos/8232427/pexels-photo-8232427.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  advanced: 'https://images.pexels.com/photos/6716575/pexels-photo-6716575.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  bridal: 'https://images.pexels.com/photos/7802182/pexels-photo-7802182.jpeg?auto=compress&cs=tinysrgb&w=1400',
+}
+
 const levelMeta = {
   basic: { label: 'Basic', intro: 'Simple, elegant designs for everyday occasions.' },
   intermediate: { label: 'Intermediate', intro: 'More detail and coverage for special occasions.' },
@@ -106,6 +113,7 @@ export default function Services() {
 
         <div className="dashboard-content services-content">
           <section className="services-hero">
+            <img className="services-hero-image" src={serviceImages.bridal} alt="Bridal mehendi" />
             <div className="services-hero-copy">
               <p className="dashboard-kicker">Made for your occasion</p>
               <h2>From a little detail to full bridal coverage.</h2>
@@ -132,6 +140,10 @@ export default function Services() {
               <div className="service-card-grid">
                 {group.services.map((service) => (
                   <article className={`service-card service-card-${group.level}`} key={service.id}>
+                    <div className="service-card-image">
+                      <img src={serviceImages[group.level]} alt={service.name} loading="lazy" />
+                      <span>{levelMeta[group.level].label}</span>
+                    </div>
                     <div className="service-card-top">
                       <span className="service-number">{String(group.services.indexOf(service) + 1).padStart(2, '0')}</span>
                       <span className="service-level-label">{levelMeta[group.level].label}</span>
