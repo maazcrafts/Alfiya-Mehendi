@@ -15,6 +15,7 @@ import bookingRoutes from './routes/bookingRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
 import supportRoutes from './routes/supportRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -41,6 +42,7 @@ app.use('/api/bookings', bookingRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/support', supportRoutes)
+app.use('/api/users', userRoutes)
 
 app.get('/api/health', async (_req, res) => {
   try {
