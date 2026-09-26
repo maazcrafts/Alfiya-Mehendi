@@ -2342,3 +2342,95 @@ a { color: inherit; }
   .profile-section-heading>p{text-align:left}
   .profile-danger-zone{align-items:flex-start;flex-direction:column;padding:24px}
 }
+
+/* Profile scale + interaction refinement */
+.account-dashboard .dashboard-main{min-width:0}
+.account-dashboard .profile-content{padding:58px 58px 130px}
+.account-dashboard .profile-topbar{min-height:140px;padding-left:54px;padding-right:54px}
+.profile-back-shop{font-size:13px;padding:16px 21px;border-radius:12px;transition:all .2s ease}
+.profile-back-shop:hover{background:#3c2920;color:#fffaf3;border-color:#3c2920;transform:translateY(-2px)}
+.profile-hero{min-height:260px;padding:52px 56px;border-radius:28px;gap:42px}
+.profile-hero-main{gap:34px}
+.profile-avatar-large{width:150px;height:150px;flex-basis:150px}
+.profile-avatar-large span{font-size:52px}
+.profile-hero h2{font-size:52px;margin:9px 0 10px}
+.profile-hero-main>div>p:not(.dashboard-kicker){font-size:17px;margin-bottom:18px}
+.profile-member-badge{font-size:11px;padding:10px 15px}
+.profile-hero-side{padding:17px 21px;border-radius:16px}
+.profile-hero-side strong{font-size:14px}
+.profile-hero-side small{font-size:11px}
+.profile-grid{gap:30px;margin-top:34px}
+.profile-card{padding:42px 44px;min-height:400px;border-radius:25px}
+.profile-card-heading{padding-bottom:30px}
+.profile-card-heading h3{font-size:35px;margin-top:9px}
+.profile-edit-button{font-size:12px;padding:13px 18px;border-radius:10px}
+.profile-detail-list>div{padding:27px 0}
+.profile-detail-list span{font-size:12px}
+.profile-detail-list strong{font-size:17px}
+.profile-edit-form{padding-top:30px;gap:22px}
+.profile-edit-form label span{font-size:11px}
+.profile-edit-form input{height:56px;font-size:15px;padding:0 17px}
+.profile-cancel-button,.profile-save-button{min-height:52px;padding:0 21px;font-size:12px}
+.profile-security-row{gap:18px;padding:34px 0 30px}
+.profile-security-icon{width:50px;height:50px;flex-basis:50px;font-size:18px}
+.profile-security-row strong{font-size:16px;margin-bottom:8px}
+.profile-security-row p{font-size:13px}
+.profile-security-link{padding-top:22px;font-size:12px}
+.profile-quick-section{margin-top:86px}
+.profile-section-heading{margin-bottom:30px}
+.profile-section-heading h2{font-size:46px}
+.profile-section-heading>p{font-size:13px;max-width:390px}
+.profile-quick-grid{gap:20px}
+.profile-quick-card{min-height:175px;padding:31px 32px;grid-template-columns:52px 1fr auto;gap:22px;border-radius:20px}
+.profile-quick-card>span{font-size:20px}
+.profile-quick-card strong{font-size:18px;margin-bottom:9px}
+.profile-quick-card p{font-size:13px;line-height:1.65}
+.profile-quick-card b{font-size:24px}
+.profile-danger-zone{margin-top:58px;padding:36px 40px;border-radius:20px}
+.profile-danger-zone h3{font-size:28px;margin:7px 0 8px}
+.profile-danger-zone p:not(.dashboard-kicker){font-size:13px;line-height:1.6}
+.profile-danger-zone button{
+  min-height:58px;
+  min-width:155px;
+  padding:0 24px;
+  border:1px solid #b56f5d;
+  border-radius:12px;
+  background:#fff8f4;
+  color:#8a493d;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+  transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.profile-danger-zone button:hover{
+  background:#a34f3c;
+  border-color:#a34f3c;
+  color:#fff;
+  transform:translateY(-3px);
+  box-shadow:0 14px 28px rgba(134,67,50,.24);
+}
+.profile-danger-zone button:active{transform:translateY(0);box-shadow:0 6px 14px rgba(134,67,50,.18)}
+.profile-danger-zone button span{font-size:18px;margin-left:12px}
+@media(max-width:1100px){
+  .account-dashboard .profile-content{padding:44px 36px 100px}
+  .account-dashboard .profile-topbar{padding-left:36px;padding-right:36px}
+  .profile-hero{padding:42px}
+}
+@media(max-width:700px){
+  .account-dashboard .profile-content{padding:30px 20px 75px}
+  .account-dashboard .profile-topbar{padding-left:20px;padding-right:20px}
+  .profile-hero{min-height:0;padding:30px 24px}
+  .profile-hero-main{gap:20px}
+  .profile-avatar-large{width:92px;height:92px;flex-basis:92px}
+  .profile-avatar-large span{font-size:32px}
+  .profile-hero h2{font-size:34px}
+  .profile-hero-main>div>p:not(.dashboard-kicker){font-size:13px}
+  .profile-card{padding:28px 24px;min-height:0}
+  .profile-card-heading h3{font-size:29px}
+  .profile-detail-list strong{font-size:14px}
+  .profile-quick-section{margin-top:60px}
+  .profile-section-heading h2{font-size:34px}
+  .profile-quick-card{min-height:145px;padding:25px}
+  .profile-danger-zone{margin-top:42px;padding:28px 24px}
+  .profile-danger-zone h3{font-size:24px}
+}
