@@ -31,6 +31,39 @@ const Icon = ({ type }) => {
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const response = await fetch(apiBase + "/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Unable to log in.");
+
+      localStorage.setItem("alfiya_auth_token", data.token);
+      localStorage.setItem("alfiya_user", JSON.stringify(data.user));
+      if (rememberMe) localStorage.setItem("alfiya_remember_me", "true");
+      else localStorage.removeItem("alfiya_remember_me");
+      navigate("/account");
+    } catch (err) {
+      setError(err.message || "Unable to log in.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="signup-page auth-split-page">
@@ -68,12 +101,12 @@ export default function Login() {
               Sign in to continue shopping and managing your mehendi services.
             </p>
 
-            <form className="signup-form login-form">
+            <form className="signup-form login-form" onSubmit={handleSubmit}>
               <label className="input-group">
                 <span>Email Address</span>
                 <div className="input-shell">
                   <Icon type="mail" />
-                  <input type="text" placeholder="Enter your email address" autoComplete="username" />
+                  <input type="email" placeholder="Enter your email address" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} required />
                 </div>
               </label>
 
