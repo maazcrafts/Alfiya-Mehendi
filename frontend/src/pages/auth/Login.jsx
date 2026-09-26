@@ -133,7 +133,7 @@ export default function Login() {
                   <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
                   <span>Remember me</span>
                 </label>
-                <a href="#forgot">Forgot password?</a>
+                <Link to="/forgot-password">Forgot password?</Link>
               </div>
 
               <button type="submit" className="signup-submit" disabled={loading}>
