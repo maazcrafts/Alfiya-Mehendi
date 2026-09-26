@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import GoogleButton from "./GoogleButton.jsx";
 
 const Icon = ({ type }) => {
@@ -152,6 +151,9 @@ export default function Signup() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     autoComplete="new-password"
+                    value={form.password}
+                    onChange={updateField("password")}
+                    required
                   />
                   <button type="button" className="eye-button" onClick={() => setShowPassword(!showPassword)}>
                     <Icon type="eye" />
@@ -167,6 +169,9 @@ export default function Signup() {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     autoComplete="new-password"
+                    value={form.confirmPassword}
+                    onChange={updateField("confirmPassword")}
+                    required
                   />
                   <button type="button" className="eye-button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                     <Icon type="eye" />
@@ -175,17 +180,18 @@ export default function Signup() {
               </label>
 
               <label className="terms-row">
-                <input type="checkbox" />
+                <input type="checkbox" checked={form.accepted} onChange={updateField("accepted")} />
                 <span>
                   I agree to the <Link to="/terms">Terms & Conditions</Link> and <Link to="/privacy">Privacy Policy</Link>
                 </span>
               </label>
 
-              <button type="submit" className="signup-submit">
-                <span>Create Account</span>
+              <button type="submit" className="signup-submit" disabled={loading}>
+                <span>{loading ? "Creating..." : "Create Account"}</span>
                 <Icon type="arrow" />
               </button>
             </form>
+            {error && <p className="auth-form-error" role="alert">{error}</p>}
 
             <div className="auth-divider"><span>OR</span></div>
 
