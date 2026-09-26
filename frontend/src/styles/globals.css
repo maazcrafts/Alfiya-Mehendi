@@ -2222,3 +2222,37 @@ a { color: inherit; }
 
 @media(max-width:950px){.contact-email-section{grid-template-columns:1fr}}
 @media(max-width:700px){.contact-email-section{margin-top:52px;padding:28px 22px}.contact-email-copy h2{font-size:36px}.contact-email-address{font-size:17px}.contact-email-action{min-height:290px}}
+
+/* Global network status — adapted from Aerio's offline + slow-network UX */
+.network-status-banner{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:5000;
+  width:min(620px,calc(100vw - 28px));min-height:64px;display:flex;align-items:center;gap:14px;
+  padding:12px 18px;border:1px solid rgba(255,255,255,.2);border-radius:15px;
+  box-shadow:0 18px 45px rgba(60,41,32,.18);backdrop-filter:blur(16px);
+  animation:networkBannerIn .22s ease;
+}
+.network-status-banner>div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.network-status-banner strong{font-size:12px;font-weight:800}
+.network-status-banner span:not(.network-status-signal):not(.network-status-clock):not(.network-status-progress):not(.network-status-check){font-size:11px;line-height:1.45;opacity:.9}
+.network-status-offline{background:#6e332b;color:#fff7f2;border-color:#9a5b4d}
+.network-status-slow{background:#5f553b;color:#fffaf0;border-color:#91845d}
+.network-status-restored{background:#526346;color:#f8fff4;border-color:#7d906d}
+.network-status-signal{width:25px;height:25px;display:flex;align-items:flex-end;justify-content:center;gap:3px;flex-shrink:0}
+.network-status-signal i{display:block;width:4px;border-radius:5px;background:currentColor}
+.network-status-signal i:nth-child(1){height:7px;opacity:.55}
+.network-status-signal i:nth-child(2){height:14px;opacity:.78}
+.network-status-signal i:nth-child(3){height:21px}
+.network-status-clock{position:relative;width:25px;height:25px;border:2px solid currentColor;border-radius:50%;flex-shrink:0;opacity:.9}
+.network-status-clock:before{content:"";position:absolute;width:2px;height:7px;left:10px;top:4px;border-radius:2px;background:currentColor}
+.network-status-clock:after{content:"";position:absolute;width:6px;height:2px;left:10px;top:11px;border-radius:2px;background:currentColor;transform:rotate(28deg);transform-origin:left center}
+.network-status-check{width:25px;height:25px;display:grid!important;place-items:center;border:1px solid currentColor;border-radius:50%;font-size:14px!important;font-weight:800;flex-shrink:0}
+.network-status-progress{display:block;width:74px;height:4px;margin-left:auto;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden;flex-shrink:0}
+.network-status-progress i{display:block;width:35%;height:100%;border-radius:999px;background:currentColor;animation:networkProgress 1.25s ease-in-out infinite}
+@keyframes networkProgress{0%{transform:translateX(-120%)}50%{transform:translateX(100%)}100%{transform:translateX(300%)}}
+@keyframes networkBannerIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:600px){
+  .network-status-banner{top:9px;width:calc(100vw - 18px);min-height:58px;padding:10px 13px;border-radius:13px}
+  .network-status-progress{display:none}
+  .network-status-banner strong{font-size:11px}
+  .network-status-banner span:not(.network-status-signal):not(.network-status-clock):not(.network-status-progress):not(.network-status-check){font-size:10px}
+}
