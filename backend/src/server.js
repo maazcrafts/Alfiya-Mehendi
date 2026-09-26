@@ -3,6 +3,8 @@ import express from 'express'
 import cors from 'cors'
 import { OAuth2Client } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
+import { checkDatabaseConnection } from './config/pool.js'
+import { initializeDatabase } from './config/database.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -13,7 +15,24 @@ app.use(cors({
 }))
 app.use(express.json())
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'alfiya-mehendi-api' }))
+app.get('/api/health', async (_req, res) => {
+  try {
+    const database = await checkDatabaseConnection()
+    return res.json({
+      ok: true,
+      service: 'alfiya-mehendi-api',
+      database: 'connected',
+      databaseTime: database.now,
+    })
+  } catch (error) {
+    console.error('Database health check failed:', error)
+    return res.status(503).json({
+      ok: false,
+      service: 'alfiya-mehendi-api',
+      database: 'disconnected',
+    })
+  }
+})
 
 app.post('/api/auth/google', async (req, res) => {
   try {
@@ -61,4 +80,21 @@ app.post('/api/auth/google', async (req, res) => {
   }
 })
 
-app.listen(port, () => console.log("Alfiya Mehendi API listening on port " + port))
+async function startServer() {
+  try {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL is not configured.')
+    }
+
+    await checkDatabaseConnection()
+    await initializeDatabase()
+    console.log('PostgreSQL connected and schema initialized.')
+
+    app.listen(port, () => console.log('Alfiya Mehendi API listening on port ' + port))
+  } catch (error) {
+    console.error('Unable to start Alfiya Mehendi API:', error)
+    process.exit(1)
+  }
+}
+
+startServer()
