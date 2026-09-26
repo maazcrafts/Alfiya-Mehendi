@@ -96,9 +96,14 @@ export default function Contact() {
       return
     }
 
+    const token = localStorage.getItem('alfiya_auth_token') || ''
+    if (!token) {
+      setFeedback({ type: 'error', message: 'Please log in before sending a support request so you can track its status.' })
+      return
+    }
+
     setSubmitting(true)
     try {
-      const token = localStorage.getItem('alfiya_auth_token')
       const response = await fetch(`${apiBase}/api/support`, {
         method: 'POST',
         headers: {
