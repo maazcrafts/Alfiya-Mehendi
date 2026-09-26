@@ -210,12 +210,94 @@ a { color: inherit; }
 
 .story-image {
   position: absolute;
-  inset: 0;
+  inset: -2%;
   background-image: url("https://images.pexels.com/photos/10290204/pexels-photo-10290204.jpeg?auto=compress&cs=tinysrgb&w=1800");
   background-size: cover;
   background-position: center;
   filter: saturate(.88) contrast(1.08);
-  transform: scale(1.01);
+  transform: scale(1.04);
+  animation: storyBaseMotion 24s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+}
+
+.story-image::before,
+.story-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  will-change: opacity, transform, background-position;
+}
+
+.story-image::before {
+  background-image: url("https://images.pexels.com/photos/2583902/pexels-photo-2583902.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  animation: storyPhotoTwo 24s ease-in-out infinite;
+}
+
+.story-image::after {
+  background-image: url("https://images.pexels.com/photos/5602862/pexels-photo-5602862.jpeg?auto=compress&cs=tinysrgb&w=1800");
+  animation: storyPhotoThree 24s ease-in-out infinite;
+}
+
+@keyframes storyBaseMotion {
+  0% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+    background-position: 46% 50%;
+  }
+  50% {
+    transform: scale(1.09) translate3d(-1%, -0.5%, 0);
+    background-position: 54% 48%;
+  }
+  100% {
+    transform: scale(1.04) translate3d(0.5%, 0, 0);
+    background-position: 48% 52%;
+  }
+}
+
+@keyframes storyPhotoTwo {
+  0%, 25% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  35%, 58% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  68%, 100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes storyPhotoThree {
+  0%, 55% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  65%, 88% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-image,
+  .story-image::before,
+  .story-image::after {
+    animation: none;
+  }
+
+  .story-image::before,
+  .story-image::after {
+    opacity: 0;
+  }
 }
 
 .story-overlay {
