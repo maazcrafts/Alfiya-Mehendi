@@ -20,6 +20,9 @@ function today(){return new Date(Date.now()-new Date().getTimezoneOffset()*60000
 function price(p){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((p||0)/100)}
 function dateLabel(v){return v?new Intl.DateTimeFormat('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00')):''}
 function timeLabel(v){if(!v)return '';const [h,m]=v.slice(0,5).split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
+function readApiResponse(response){
+  return response.json().catch(() => ({ message: response.statusText || 'Unable to read server response.' }))
+}
 
 export default function Booking(){
   const [params]=useSearchParams(), serviceSlug=params.get('service')||''
