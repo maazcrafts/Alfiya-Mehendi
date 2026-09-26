@@ -123,6 +123,8 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password.' })
     }
 
+    user = await applyConfiguredAdminRole(user)
+
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role, provider: 'password' },
       process.env.JWT_SECRET,
