@@ -5,6 +5,8 @@ import Terms from './pages/legal/Terms.jsx'
 import Privacy from './pages/legal/Privacy.jsx'
 import ForgotPassword from './pages/auth/ForgotPassword.jsx'
 import ResetPassword from './pages/auth/ResetPassword.jsx'
+import Products from './pages/products/Products.jsx'
+import ProductDetails from './pages/products/ProductDetails.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -19,8 +21,8 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Placeholder title="Alfiya Mehendi" />} />
-        <Route path="/products" element={<Placeholder title="Products" />} />
-        <Route path="/products/:slug" element={<Placeholder title="Product Details" />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:slug" element={<ProductDetails />} />
         <Route path="/cart" element={<Placeholder title="Cart" />} />
         <Route path="/checkout" element={<Placeholder title="Checkout" />} />
         <Route path="/services" element={<Placeholder title="Mehendi Services" />} />
