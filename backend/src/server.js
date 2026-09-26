@@ -38,10 +38,6 @@ app.use('/api/services', serviceRoutes)
 app.use('/api/bookings', bookingRoutes)
 app.use('/api/orders', orderRoutes)
 
-app.use('/api', (_req, res) => {
-  return res.status(404).json({ message: 'API route not found.' })
-})
-
 app.get('/api/health', async (_req, res) => {
   try {
     const database = await checkDatabaseConnection()
@@ -258,6 +254,10 @@ app.post('/api/auth/google', async (req, res) => {
     console.error('Google authentication error:', error)
     return res.status(401).json({ message: 'Google authentication failed.' })
   }
+})
+
+app.use('/api', (_req, res) => {
+  return res.status(404).json({ message: 'API route not found.' })
 })
 
 async function startServer() {
