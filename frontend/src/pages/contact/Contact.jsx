@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
-const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const supportEmail = 'khanalfiya70399@gmail.com'
 
 const faqs = [
   {
@@ -42,97 +42,19 @@ const quickHelp = [
   { title: 'Appointment help', text: 'Check your booking status or cancel a pending request.', href: '/booking', label: 'Open My Bookings' },
   { title: 'Shopping help', text: 'Browse mehendi powders, oils, tools and supplies.', href: '/products', label: 'Go to Shop' },
   { title: 'Service help', text: 'Compare mehendi services and choose a design.', href: '/services', label: 'View Services' },
-  { title: 'Payment help', text: 'Need help with a payment or checkout issue?', href: '#contact-form', label: 'Contact support' },
+  { title: 'Payment help', text: 'Need help with a payment or checkout issue?', href: '#contact-email', label: 'Email us' },
   { title: 'Account help', text: 'Questions about login, password or your profile?', href: '/account', label: 'Open Profile' },
 ]
 
-function getUser() {
-  try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
-}
-
 export default function Contact() {
-  const user = useMemo(getUser, [])
   const [openFaq, setOpenFaq] = useState(0)
-  const [form, setForm] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    reference: '',
-    topic: 'Order',
-    message: '',
-  })
-  const [submitting, setSubmitting] = useState(false)
-  const [feedback, setFeedback] = useState({ type: '', message: '' })
-  const [requests, setRequests] = useState([])
-  const [requestLoading, setRequestLoading] = useState(true)
   const [faqSearch, setFaqSearch] = useState('')
 
-  useEffect(() => {
-    async function loadRequests() {
-      const token = localStorage.getItem('alfiya_auth_token') || ''
-      if (!token) { setRequestLoading(false); return }
-      try {
-        const response = await fetch(`${apiBase}/api/support/mine`, { headers: { Authorization: `Bearer ${token}` } })
-        if (!response.ok) throw new Error('Unable to load support history.')
-        const data = await response.json()
-        setRequests(data.requests || [])
-      } catch { setRequests([]) } finally { setRequestLoading(false) }
-    }
-    loadRequests()
-  }, [])
-
-  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }))
-  const focusSupport = (topic) => {
-    update('topic', topic)
-    requestAnimationFrame(() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
-  }
-  const filteredFaqs = faqs.filter((faq) => `${faq.category} ${faq.question} ${faq.answer}`.toLowerCase().includes(faqSearch.trim().toLowerCase()))
-
-  async function submitForm(event) {
-    event.preventDefault()
-    setFeedback({ type: '', message: '' })
-
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      setFeedback({ type: 'error', message: 'Please complete your name, email and message.' })
-      return
-    }
-
-    const token = localStorage.getItem('alfiya_auth_token') || ''
-    if (!token) {
-      setFeedback({ type: 'error', message: 'Please log in before sending a support request so you can track its status.' })
-      return
-    }
-
-    setSubmitting(true)
-    try {
-      const response = await fetch(`${apiBase}/api/support`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim(),
-          reference: form.reference.trim(),
-          topic: form.topic,
-          message: form.message.trim(),
-        }),
-      })
-      const contentType = response.headers.get('content-type') || ''
-      const data = contentType.includes('application/json') ? await response.json() : {}
-      if (!response.ok) throw new Error(data.message || 'Unable to send your request.')
-
-      setFeedback({
-        type: 'success',
-        message: 'Your support request has been received. We will review it and get back to you.',
-      })
-      setForm((current) => ({ ...current, reference: '', message: '' }))
-    } catch (error) {
-      setFeedback({ type: 'error', message: error.message || 'Unable to send your request right now.' })
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  const filteredFaqs = faqs.filter((faq) =>
+    `${faq.category} ${faq.question} ${faq.answer}`
+      .toLowerCase()
+      .includes(faqSearch.trim().toLowerCase())
+  )
 
   return (
     <main className="shop-dashboard contact-dashboard">
@@ -154,18 +76,18 @@ export default function Contact() {
               <h2>How can we help?</h2>
               <p>
                 Questions about your order, mehendi appointment, products or account?
-                Start with a quick answer below or send the Alfiya Mehendi team a message.
+                Find a quick answer below or contact the Alfiya Mehendi team by email.
               </p>
               <div className="contact-hero-actions">
                 <a href="#quick-help" className="contact-primary-action">Find an answer <span>↓</span></a>
-                <a href="#contact-form" className="contact-secondary-action">Contact support <span>→</span></a>
+                <a href="#contact-email" className="contact-secondary-action">Email support <span>→</span></a>
               </div>
             </div>
 
             <div className="contact-guide-scene" aria-label="Alfiya Mehendi support guide">
               <div className="contact-guide-speech">
                 <strong>Hi there.</strong>
-                <span>Tell me what you need help with.</span>
+                <span>Tell us what you need help with.</span>
               </div>
               <div className="contact-guide">
                 <div className="guide-hair"></div>
@@ -189,9 +111,9 @@ export default function Contact() {
               <span>Choose a path</span>
             </div>
             <div className="quick-help-grid">
-              {quickHelp.map((item) => (
+              {quickHelp.map((item, index) => (
                 <Link key={item.title} to={item.href} className="quick-help-card">
-                  <span className="quick-help-number">{String(quickHelp.indexOf(item) + 1).padStart(2, '0')}</span>
+                  <span className="quick-help-number">{String(index + 1).padStart(2, '0')}</span>
                   <div>
                     <h3>{item.title}</h3>
                     <p>{item.text}</p>
@@ -203,7 +125,14 @@ export default function Contact() {
           </section>
 
           <section className="contact-section faq-section">
-            <div className="faq-search-wrap"><input value={faqSearch} onChange={(e) => setFaqSearch(e.target.value)} placeholder="Search help topics…" aria-label="Search help topics" /></div>
+            <div className="faq-search-wrap">
+              <input
+                value={faqSearch}
+                onChange={(e) => setFaqSearch(e.target.value)}
+                placeholder="Search help topics…"
+                aria-label="Search help topics"
+              />
+            </div>
             <div className="contact-section-heading">
               <div>
                 <p className="dashboard-kicker">Frequently asked</p>
@@ -236,71 +165,37 @@ export default function Contact() {
             </div>
           </section>
 
-          <section className="contact-section support-history-section">
-            <div className="contact-section-heading"><div><p className="dashboard-kicker">Your support</p><h2>Track your requests.</h2></div><span>{requests.length} requests</span></div>
-            {requestLoading ? <div className="support-history-empty">Loading your support history…</div> : requests.length === 0 ? <div className="support-history-empty">No support requests yet. If you need help, send us a message below.</div> : <div className="support-history-list">{requests.map((request) => <article className="support-history-card" key={request.id}><div><span className="support-ticket-id">TICKET #{request.id.slice(0, 8).toUpperCase()}</span><h3>{request.topic} help</h3><p>{request.message}</p></div><div className={`support-ticket-status ${request.status}`}><b>{request.status === 'in_progress' ? 'In progress' : request.status === 'new' ? 'New' : 'Resolved'}</b><small>{new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(request.created_at))}</small></div></article>)}</div>}
-          </section>
-
-          <section className="contact-direct">
-            <div>
-              <p className="dashboard-kicker">Still need help?</p>
-              <h2>Talk to the Alfiya team.</h2>
-              <p>Use the support form and include your order or booking reference when relevant. It helps us understand the issue faster.</p>
-            </div>
-            <div className="contact-direct-actions">
-              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
-                <span className="direct-icon">WA</span>
-                <div><strong>Message support</strong><small>Start a support request</small></div>
-                <b>→</b>
-              </button>
-              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
-                <span className="direct-icon">@</span>
-                <div><strong>Email support</strong><small>Send a detailed request</small></div>
-                <b>→</b>
-              </button>
-              <button type="button" className="direct-card" onClick={() => focusSupport("Other")}>
-                <span className="direct-icon">☎</span>
-                <div><strong>Request a callback</strong><small>Leave your details for the team</small></div>
-                <b>→</b>
-              </button>
-            </div>
-          </section>
-
-          <section id="contact-form" className="contact-form-section">
-            <div className="contact-form-intro">
-              <p className="dashboard-kicker">Contact support</p>
-              <h2>Send us a message.</h2>
-              <p>Give us enough detail to identify your order or booking and we can route the request correctly.</p>
+          <section id="contact-email" className="contact-email-section">
+            <div className="contact-email-copy">
+              <p className="dashboard-kicker">Requests & complaints</p>
+              <h2>Contact us by email.</h2>
+              <p>
+                For any order request, appointment issue, product question, payment issue
+                or complaint, email the Alfiya Mehendi team directly.
+              </p>
+              <div className="contact-email-address">{supportEmail}</div>
               <div className="contact-form-note">
-                <span>01</span><p>Your request is saved securely in the support queue.</p>
+                <span>01</span><p>Include your order or booking ID when relevant.</p>
               </div>
               <div className="contact-form-note">
-                <span>02</span><p>Order or booking references are optional, but useful for faster help.</p>
+                <span>02</span><p>Describe the request or complaint clearly so the team can respond.</p>
               </div>
             </div>
 
-            <form className="support-form" onSubmit={submitForm}>
-              <div className="support-form-row">
-                <label><span>Your name</span><input value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Full name" /></label>
-                <label><span>Email address</span><input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@example.com" /></label>
-              </div>
-              <div className="support-form-row">
-                <label><span>Order / Booking ID <em>optional</em></span><input value={form.reference} onChange={(e) => update('reference', e.target.value)} placeholder="e.g. order or booking reference" /></label>
-                <label><span>What can we help with?</span>
-                  <select value={form.topic} onChange={(e) => update('topic', e.target.value)}>
-                    <option>Order</option><option>Appointment</option><option>Product</option><option>Payment</option><option>Account</option><option>Other</option>
-                  </select>
-                </label>
-              </div>
-              <label className="support-message-field"><span>Your message</span><textarea value={form.message} onChange={(e) => update('message', e.target.value)} placeholder="Tell us what happened or what you need help with…" rows="7" /></label>
-
-              {feedback.message && <div className={`support-feedback ${feedback.type}`}>{feedback.message}</div>}
-
-              <button className="support-submit" type="submit" disabled={submitting}>
-                {submitting ? 'Sending request…' : 'Send support request'}
-                <span>→</span>
-              </button>
-            </form>
+            <div className="contact-email-action">
+              <div className="email-symbol">@</div>
+              <p>Email support</p>
+              <a
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${supportEmail}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open Gmail <span>→</span>
+              </a>
+              <a className="email-text-link" href={`mailto:${supportEmail}`}>
+                Or use your email app
+              </a>
+            </div>
           </section>
         </div>
       </section>
