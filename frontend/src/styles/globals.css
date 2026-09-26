@@ -2507,3 +2507,8 @@ a { color: inherit; }
 .dashboard-sidebar .dashboard-sidebar-bottom{
   transform:translateY(12px);
 }
+
+/* Lower sidebar customer identity further */
+.dashboard-sidebar .dashboard-sidebar-bottom{
+  transform:translateY(28px);
+}
