@@ -1486,3 +1486,26 @@ a { color: inherit; }
 .services-error{color:#9a4034}
 @media(max-width:1100px){.service-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.services-hero-mark{right:10px;opacity:.2}}
 @media(max-width:760px){.services-hero{padding:32px;min-height:260px}.services-hero h2{font-size:39px}.services-top-actions{width:100%}.service-card-grid{grid-template-columns:1fr}.service-level-heading{align-items:flex-start;gap:12px;flex-direction:column}.services-hero-mark{display:none}}
+
+/* Service photography */
+.services-hero{isolation:isolate}
+.services-hero-image{position:absolute;inset:0 0 0 auto;width:38%;height:100%;object-fit:cover;object-position:center;opacity:.72;mix-blend-mode:multiply;mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.75) 30%,#000 100%);z-index:0}
+.services-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(239,217,189,.15) 0%,rgba(239,217,189,.05) 52%,rgba(111,91,67,.08) 100%);z-index:1;pointer-events:none}
+.services-hero-copy{z-index:3}
+.services-hero-mark{z-index:2}
+.service-card{overflow:hidden;padding:0}
+.service-card-image{position:relative;height:205px;overflow:hidden;background:#ded0bf}
+.service-card-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(39,26,19,.3))}
+.service-card-image img{width:100%;height:100%;display:block;object-fit:cover;transition:transform 500ms cubic-bezier(.2,.7,.2,1)}
+.service-card:hover .service-card-image img{transform:scale(1.045)}
+.service-card-image span{position:absolute;left:17px;bottom:14px;z-index:2;padding:6px 9px;border:1px solid rgba(255,250,242,.55);border-radius:4px;background:rgba(47,35,27,.48);backdrop-filter:blur(4px);color:#fffaf2;font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.service-card-top,.service-card h3,.service-card p,.service-card-bottom,.service-book-button{margin-left:25px;margin-right:25px}
+.service-card-top{margin-top:22px}
+.service-card h3{margin-top:28px}
+.service-card p{margin-bottom:0}
+.service-card-bottom{padding-top:25px}
+.service-book-button{margin-bottom:25px}
+@media(max-width:760px){
+ .services-hero-image{width:100%;opacity:.22;mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.3))}
+ .service-card-image{height:220px}
+}
