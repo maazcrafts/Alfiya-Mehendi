@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { OAuth2Client } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
-import { checkDatabaseConnection } from './config/pool.js'
+import { checkDatabaseConnection, query } from './config/pool.js'
 import { initializeDatabase } from './config/database.js'
 import { upsertGoogleUser } from './models/userModel.js'
 import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.js'
@@ -15,6 +15,17 @@ import bookingRoutes from './routes/bookingRoutes.js'
 
 const app = express()
 const port = process.env.PORT || 5000
+
+async function applyConfiguredAdminRole(user) {
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase()
+  if (!adminEmail || user.email?.trim().toLowerCase() !== adminEmail) return user
+
+  const result = await query(
+    `UPDATE users SET role = 'admin', updated_at = NOW() WHERE id = $1 RETURNING id, name, email, avatar_url, role`,
+    [user.id],
+  )
+  return result.rows[0] || user
+}
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || true,
@@ -66,11 +77,14 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 
     const passwordHash = await hashPassword(password)
-    const user = await createPasswordUser({
+    let user = await createPasswordUser({
       name: name.trim(),
       email: email.trim(),
       passwordHash,
     })
+    user = await applyConfiguredAdminRole(user)
+
+    user = await applyConfiguredAdminRole(user)
 
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role, provider: 'password' },
@@ -106,7 +120,7 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required.' })
     }
 
-    const user = await findUserByEmail(email)
+    let user = await findUserByEmail(email)
     if (!user || !user.password_hash || !(await verifyPassword(password, user.password_hash))) {
       return res.status(401).json({ message: 'Invalid email or password.' })
     }
@@ -217,12 +231,13 @@ app.post('/api/auth/google', async (req, res) => {
       avatarUrl: payload.picture || '',
     })
 
+    const adminUser = await applyConfiguredAdminRole(dbUser)
     const user = {
-      id: dbUser.id,
-      name: dbUser.name,
-      email: dbUser.email,
-      picture: dbUser.avatar_url || '',
-      role: dbUser.role,
+      id: adminUser.id,
+      name: adminUser.name,
+      email: adminUser.email,
+      picture: adminUser.avatar_url || '',
+      role: adminUser.role,
       provider: 'google',
     }
 
