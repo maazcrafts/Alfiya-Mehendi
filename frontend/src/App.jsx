@@ -15,6 +15,7 @@ import AdminSupport from './pages/admin/AdminSupport.jsx'
 import Orders from './pages/orders/Orders.jsx'
 import Cart from './pages/cart/Cart.jsx'
 import Contact from './pages/contact/Contact.jsx'
+import Account from './pages/account/Account.jsx'
 import NetworkStatus from './components/NetworkStatus.jsx'
 
 function Placeholder({ title }) {
@@ -40,7 +41,7 @@ export default function App() {
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/support" element={<AdminSupport />} />
-        <Route path="/account" element={<Placeholder title="My Account" />} />
+        <Route path="/account" element={<Account />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/orders" element={<Orders />} />
