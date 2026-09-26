@@ -216,7 +216,7 @@ a { color: inherit; }
   background-position: center;
   filter: saturate(.88) contrast(1.08);
   transform: scale(1.04);
-  animation: storyBaseMotion 24s ease-in-out infinite alternate;
+  animation: storyBaseMotion 18s ease-in-out infinite alternate;
   will-change: transform, background-position;
 }
 
@@ -234,12 +234,12 @@ a { color: inherit; }
 
 .story-image::before {
   background-image: url("https://images.pexels.com/photos/2583902/pexels-photo-2583902.jpeg?auto=compress&cs=tinysrgb&w=1800");
-  animation: storyPhotoTwo 24s ease-in-out infinite;
+  animation: storyPhotoTwo 18s ease-in-out infinite;
 }
 
 .story-image::after {
   background-image: url("https://images.pexels.com/photos/5602862/pexels-photo-5602862.jpeg?auto=compress&cs=tinysrgb&w=1800");
-  animation: storyPhotoThree 24s ease-in-out infinite;
+  animation: storyPhotoThree 18s ease-in-out infinite;
 }
 
 @keyframes storyBaseMotion {
