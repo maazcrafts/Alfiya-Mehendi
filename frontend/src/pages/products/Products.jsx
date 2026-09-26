@@ -34,9 +34,27 @@ export default function Products() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [user] = useState(getUser)
+  const [cartCount, setCartCount] = useState(0)
 
   const category = searchParams.get('category') || ''
   const search = searchParams.get('search') || ''
+
+  useEffect(() => {
+    async function loadCartCount() {
+      const authToken = localStorage.getItem('alfiya_auth_token') || ''
+      if (!authToken) { setCartCount(0); return }
+      try {
+        const response = await fetch(`${apiBase}/api/cart`, { headers: { Authorization: `Bearer ${authToken}` } })
+        if (!response.ok) return
+        const data = await response.json()
+        setCartCount((data.items || []).reduce((sum, item) => sum + item.quantity, 0))
+      } catch {}
+    }
+    loadCartCount()
+    const onCartUpdate = () => loadCartCount()
+    window.addEventListener('alfiya-cart-updated', onCartUpdate)
+    return () => window.removeEventListener('alfiya-cart-updated', onCartUpdate)
+  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -113,7 +131,7 @@ export default function Products() {
             </label>
             <Link to="/cart" className="dashboard-cart">
               <span className="dashboard-bag-mark" aria-hidden="true"></span>
-              <b>0</b>
+              <b>{cartCount}</b>
             </Link>
           </div>
         </header>
