@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import GoogleButton from "./GoogleButton.jsx";
+import AuthSuccessOverlay from "./AuthSuccessOverlay.jsx";
 
 const Icon = ({ type }) => {
   const common = {
@@ -36,6 +37,7 @@ export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", accepted: false });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   const updateField = (field) => (event) => {
@@ -69,7 +71,7 @@ export default function Signup() {
 
       localStorage.setItem("alfiya_auth_token", data.token);
       localStorage.setItem("alfiya_user", JSON.stringify(data.user));
-      navigate("/account");
+      setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to create your account.");
     } finally {
