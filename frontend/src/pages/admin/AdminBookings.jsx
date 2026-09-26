@@ -26,7 +26,9 @@ const filters = [
   ['all', 'All'],
   ['requested', 'Pending'],
   ['confirmed', 'Confirmed'],
+  ['completed', 'Completed'],
   ['rejected', 'Rejected'],
+  ['cancelled', 'Cancelled'],
 ]
 
 export default function AdminBookings() {
