@@ -6,10 +6,18 @@ import { useEffect, useMemo, useState } from 'react'
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const serviceImages = {
-  basic: 'https://images.pexels.com/photos/12584788/pexels-photo-12584788.jpeg?auto=compress&cs=tinysrgb&w=1200',
-  intermediate: 'https://images.pexels.com/photos/8232427/pexels-photo-8232427.jpeg?auto=compress&cs=tinysrgb&w=1200',
-  advanced: 'https://images.pexels.com/photos/6716575/pexels-photo-6716575.jpeg?auto=compress&cs=tinysrgb&w=1200',
-  bridal: 'https://images.pexels.com/photos/7802182/pexels-photo-7802182.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  // Basic — clean palm/application reference.
+  basic: 'https://images.pexels.com/photos/12584788/pexels-photo-12584788.jpeg?auto=compress&cs=tinysrgb&w=1400',
+
+  // Intermediate — both palms with clearly visible, detailed mehndi.
+  intermediate: 'https://images.pexels.com/photos/11925938/pexels-photo-11925938.jpeg?auto=compress&cs=tinysrgb&w=1400',
+
+  // Advanced — full hands and arms, matching the full-length service.
+  advanced: 'https://images.pexels.com/photos/4711086/pexels-photo-4711086.jpeg?auto=compress&cs=tinysrgb&w=1400',
+
+  // Bridal — Pakistani/South Asian bridal portrait with red traditional attire,
+  // jewelry and visible henna rather than another generic hand close-up.
+  bridal: 'https://images.pexels.com/photos/13779728/pexels-photo-13779728.jpeg?auto=compress&cs=tinysrgb&w=1600',
 }
 
 const levelMeta = {
