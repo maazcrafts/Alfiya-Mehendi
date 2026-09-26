@@ -75,7 +75,6 @@ export default function Services() {
           </div>
           <div className="dashboard-top-actions">
             <Link to="/products" className="services-shop-link">Shop supplies</Link>
-            <Link to="/booking" className="services-book-link">My bookings</Link>
           </div>
         </header>
 
