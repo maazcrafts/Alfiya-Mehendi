@@ -3,6 +3,8 @@ import Login from './pages/auth/Login.jsx'
 import Signup from './pages/auth/Signup.jsx'
 import Terms from './pages/legal/Terms.jsx'
 import Privacy from './pages/legal/Privacy.jsx'
+import ForgotPassword from './pages/auth/ForgotPassword.jsx'
+import ResetPassword from './pages/auth/ResetPassword.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -13,6 +15,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Placeholder title="Alfiya Mehendi" />} />
         <Route path="/products" element={<Placeholder title="Products" />} />
