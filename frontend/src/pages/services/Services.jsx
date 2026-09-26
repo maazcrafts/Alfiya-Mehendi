@@ -1,3 +1,4 @@
+import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import './services-premium.css'
 import { Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
@@ -64,42 +65,7 @@ export default function Services() {
 
   return (
     <main className="shop-dashboard services-dashboard">
-      <aside className="dashboard-sidebar">
-        <Link to="/products" className="dashboard-brand">
-          <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
-          <span>
-            <strong>Alfiya</strong>
-            <small>MEHENDI</small>
-          </span>
-        </Link>
-
-        <div className="dashboard-section-label">Workspace</div>
-        <nav className="dashboard-nav" aria-label="Dashboard navigation">
-          <Link to="/products" className="dashboard-nav-item"><span aria-hidden="true"></span>Shop</Link>
-          <Link to="/services" className="dashboard-nav-item active"><span aria-hidden="true"></span>Mehendi Services</Link>
-          <Link to="/orders" className="dashboard-nav-item"><span aria-hidden="true"></span>My Orders</Link>
-          <Link to="/booking" className="dashboard-nav-item"><span aria-hidden="true"></span>My Bookings</Link>
-          {user?.role === 'admin' && <Link to="/admin/bookings" className="dashboard-nav-item"><span aria-hidden="true"></span>Admin Bookings</Link>}
-        </nav>
-
-        <div className="dashboard-section-label">Account</div>
-        <nav className="dashboard-nav">
-          <Link to="/account" className="dashboard-nav-item"><span aria-hidden="true"></span>Profile</Link>
-          <Link to="/contact" className="dashboard-nav-item"><span aria-hidden="true"></span>Help & Contact</Link>
-        </nav>
-
-        <div className="dashboard-sidebar-bottom">
-          <div className="dashboard-user-mini">
-            <div className="dashboard-avatar">
-              {user?.picture ? <img src={user.picture} alt="" /> : firstName.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <strong>{user?.name || 'Guest'}</strong>
-              <small>{user?.email || 'Explore Alfiya Mehendi'}</small>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <DashboardSidebar active="services" />
 
       <section className="dashboard-main">
         <header className="dashboard-topbar">
