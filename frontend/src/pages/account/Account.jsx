@@ -109,6 +109,7 @@ export default function Account() {
     localStorage.removeItem('alfiya_auth_token')
     localStorage.removeItem('alfiya_user')
     localStorage.removeItem('alfiya_remember_me')
+    window.dispatchEvent(new Event('alfiya-auth-changed'))
     navigate('/login', { replace: true })
   }
 
