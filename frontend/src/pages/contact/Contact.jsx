@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
@@ -62,8 +62,30 @@ export default function Contact() {
   })
   const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState({ type: '', message: '' })
+  const [requests, setRequests] = useState([])
+  const [requestLoading, setRequestLoading] = useState(true)
+  const [faqSearch, setFaqSearch] = useState('')
+
+  useEffect(() => {
+    async function loadRequests() {
+      const token = localStorage.getItem('alfiya_auth_token') || ''
+      if (!token) { setRequestLoading(false); return }
+      try {
+        const response = await fetch(`${apiBase}/api/support/mine`, { headers: { Authorization: `Bearer ${token}` } })
+        if (!response.ok) throw new Error('Unable to load support history.')
+        const data = await response.json()
+        setRequests(data.requests || [])
+      } catch { setRequests([]) } finally { setRequestLoading(false) }
+    }
+    loadRequests()
+  }, [])
 
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }))
+  const focusSupport = (topic) => {
+    update('topic', topic)
+    requestAnimationFrame(() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+  const filteredFaqs = faqs.filter((faq) => `${faq.category} ${faq.question} ${faq.answer}`.toLowerCase().includes(faqSearch.trim().toLowerCase()))
 
   async function submitForm(event) {
     event.preventDefault()
@@ -76,7 +98,7 @@ export default function Contact() {
 
     setSubmitting(true)
     try {
-      const token = localStorage.getItem('alfiya_token')
+      const token = localStorage.getItem('alfiya_auth_token')
       const response = await fetch(`${apiBase}/api/support`, {
         method: 'POST',
         headers: {
@@ -176,16 +198,17 @@ export default function Contact() {
           </section>
 
           <section className="contact-section faq-section">
+            <div className="faq-search-wrap"><input value={faqSearch} onChange={(e) => setFaqSearch(e.target.value)} placeholder="Search help topics…" aria-label="Search help topics" /></div>
             <div className="contact-section-heading">
               <div>
                 <p className="dashboard-kicker">Frequently asked</p>
                 <h2>Answers before you ask.</h2>
               </div>
-              <span>{faqs.length} answers</span>
+              <span>{filteredFaqs.length} answers</span>
             </div>
 
             <div className="faq-list">
-              {faqs.map((faq, index) => {
+              {filteredFaqs.map((faq, index) => {
                 const open = openFaq === index
                 return (
                   <button
@@ -206,6 +229,11 @@ export default function Contact() {
                 )
               })}
             </div>
+          </section>
+
+          <section className="contact-section support-history-section">
+            <div className="contact-section-heading"><div><p className="dashboard-kicker">Your support</p><h2>Track your requests.</h2></div><span>{requests.length} requests</span></div>
+            {requestLoading ? <div className="support-history-empty">Loading your support history…</div> : requests.length === 0 ? <div className="support-history-empty">No support requests yet. If you need help, send us a message below.</div> : <div className="support-history-list">{requests.map((request) => <article className="support-history-card" key={request.id}><div><span className="support-ticket-id">TICKET #{request.id.slice(0, 8).toUpperCase()}</span><h3>{request.topic} help</h3><p>{request.message}</p></div><div className={`support-ticket-status ${request.status}`}><b>{request.status === 'in_progress' ? 'In progress' : request.status === 'new' ? 'New' : 'Resolved'}</b><small>{new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(request.created_at))}</small></div></article>)}</div>}
           </section>
 
           <section className="contact-direct">
