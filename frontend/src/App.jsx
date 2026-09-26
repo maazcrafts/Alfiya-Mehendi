@@ -10,6 +10,7 @@ import ProductDetails from './pages/products/ProductDetails.jsx'
 import Services from './pages/services/Services.jsx'
 import Booking from './pages/booking/Booking.jsx'
 import AdminBookings from './pages/admin/AdminBookings.jsx'
+import Orders from './pages/orders/Orders.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -34,7 +35,7 @@ export default function App() {
         <Route path="/account" element={<Placeholder title="My Account" />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
-        <Route path="/orders" element={<Placeholder title="Orders & Bookings" />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/about" element={<Placeholder title="About" />} />
         <Route path="/contact" element={<Placeholder title="Contact" />} />
       </Routes>
