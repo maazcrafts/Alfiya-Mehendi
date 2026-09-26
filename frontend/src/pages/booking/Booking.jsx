@@ -49,29 +49,79 @@ export default function Booking(){
       {loading&&<div className="services-state">Preparing your appointment…</div>}
       {!loading&&logged&&!service&&serviceSlug&&<div className="booking-empty-state"><h2>We couldn't load that service.</h2><Link to="/services" className="service-book-button">Choose another service</Link></div>}
       {logged&&service&&serviceSlug&&!success&&<form onSubmit={submit}>
-        <div className="booking-wizard-head"><div><p className="dashboard-kicker">Step {step} of 3</p><h2>{service.name}</h2><p>{service.description}</p></div><strong>{price(service.price_paise)}</strong></div>
-        <div className="booking-progress" aria-label="Appointment steps">
-          {[1,2,3].map(n=>{
-            const done=step>n, current=step===n, locked=n>step;
-            const label=n===1?'Date':n===2?'Time':'Review';
-            const hint=n===1?'Choose your day':n===2?'Pick a slot':'Check details';
-            return <button type="button" key={n} className={current?'current':done?'done':'upcoming'} disabled={locked} onClick={()=>done&&setStep(n)} aria-current={current?'step':undefined}>
-              <b>{done?'✓':('0'+n)}</b>
-              <span><strong>{label}</strong><small>{current?'You are here':done?'Completed':hint}</small></span>
-            </button>
-          })}
-        </div>
-        <div className="booking-step-status" aria-live="polite">
-          <span className="booking-step-dot"></span>
-          <strong>{step===1?'Choose your appointment date':step===2?'Choose an available time':'Review before sending'}</strong>
-          <span className="booking-step-arrow">→</span>
-          <span>{step===1?'Next: Time':step===2?'Next: Review':'Next: Request appointment'}</span>
-        </div>
-        <section className="booking-wizard-card">
-          {step===1&&<div><p className="dashboard-kicker">01 · Pick your day</p><h2>When would you like us?</h2><label className="booking-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{setDate(e.target.value);setTime('')}} required/></label>{date&&<div className="booking-selected-banner"><strong>{dateLabel(date)}</strong><span>Next, choose a time that works for you.</span></div>}</div>}
-          {step===2&&<div><p className="dashboard-kicker">02 · Pick your time</p><h2>Choose an available slot.</h2>{loadingSlots?<div className="services-state">Checking availability…</div>:<div className="booking-time-grid upgraded">{slots.map(s=><button type="button" key={s.value} disabled={booked.includes(s.value)} className={time===s.value?'selected':''} onClick={()=>setTime(s.value)}>{s.label}<small>{booked.includes(s.value)?'Booked':time===s.value?'Selected':'Available'}</small></button>)}</div>}</div>}
-          {step===3&&<div><p className="dashboard-kicker">03 · Review</p><h2>One last look.</h2><div className="booking-review"><div><small>Service</small><strong>{service.name}</strong></div><div><small>Date</small><strong>{dateLabel(date)}</strong></div><div><small>Time</small><strong>{timeLabel(time)}</strong></div><div><small>Price</small><strong>{price(service.price_paise)}</strong></div></div><label className="booking-field"><span>Message to Alfiya <small>(optional)</small></span><textarea value={note} onChange={e=>setNote(e.target.value)} maxLength={500} placeholder="Anything we should know about your appointment?"/></label><p className="booking-disclaimer">This sends a request. The slot becomes confirmed only after admin approval.</p></div>}
-          <div className="booking-wizard-actions">{step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>Back</button>:<span/>}{step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={()=>setStep(step+1)}>Continue</button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Request appointment'}</button>}</div>
+        <section className="booking-shell">
+          <div className="booking-service-strip">
+            <div>
+              <span className="booking-breadcrumb">MEHENDI SERVICES <b>/</b> APPOINTMENT</span>
+              <h2>{service.name}</h2>
+              <p>{service.description}</p>
+            </div>
+            <div className="booking-price"><small>Service price</small><strong>{price(service.price_paise)}</strong></div>
+          </div>
+
+          <div className="booking-journey">
+            <div className="booking-journey-heading">
+              <div>
+                <span className="dashboard-kicker">Your appointment</span>
+                <h3>{step===1?'Choose a date':step===2?'Choose a time':'Review your details'}</h3>
+              </div>
+              <span className="booking-count">Step {step} of 3</span>
+            </div>
+            <div className="booking-progress" aria-label="Appointment steps">
+              {[1,2,3].map(n=>{
+                const done=step>n, current=step===n, locked=n>step;
+                const label=n===1?'Date':n===2?'Time':'Review';
+                const hint=n===1?'Pick your day':n===2?'Select a slot':'Confirm details';
+                return <button type="button" key={n} className={current?'current':done?'done':'upcoming'} disabled={locked} onClick={()=>done&&setStep(n)} aria-current={current?'step':undefined}>
+                  <b>{done?'✓':('0'+n)}</b>
+                  <span><strong>{label}</strong><small>{current?'Current step':done?'Completed':hint}</small></span>
+                </button>
+              })}
+            </div>
+            <div className="booking-next-hint">
+              <span className="booking-step-dot"></span>
+              <span><strong>{step===1?'First, choose the day of your appointment.':step===2?'Now choose an available time.':'Everything looks right? Send your request.'}</strong></span>
+              <span className="booking-next-arrow">→</span>
+              <span>{step===1?'Then: Time':step===2?'Then: Review':'Then: Await approval'}</span>
+            </div>
+          </div>
+
+          <section className="booking-wizard-card">
+            {step===1&&<div>
+              <span className="booking-section-number">01</span>
+              <h2>When should we see you?</h2>
+              <p className="booking-help">Choose the day that works for you. You can change it later before sending the request.</p>
+              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{setDate(e.target.value);setTime('')}} required/></label>
+              {date&&<div className="booking-selected-banner"><div><small>Selected date</small><strong>{dateLabel(date)}</strong></div><span>✓ Date selected</span></div>}
+            </div>}
+
+            {step===2&&<div>
+              <span className="booking-section-number">02</span>
+              <h2>What time works for you?</h2>
+              <p className="booking-help">Only confirmed appointments are marked as booked. Select any available slot below.</p>
+              {loadingSlots?<div className="services-state">Checking availability…</div>:<div className="booking-time-grid upgraded">{slots.map(s=><button type="button" key={s.value} disabled={booked.includes(s.value)} className={time===s.value?'selected':''} onClick={()=>setTime(s.value)}><strong>{s.label}</strong><small>{booked.includes(s.value)?'Booked':time===s.value?'Selected':'Available'}</small></button>)}</div>}
+            </div>}
+
+            {step===3&&<div>
+              <span className="booking-section-number">03</span>
+              <h2>Check everything before you send.</h2>
+              <p className="booking-help">Review your appointment details. Your request will be sent to Alfiya for approval.</p>
+              <div className="booking-review">
+                <div><small>Service</small><strong>{service.name}</strong></div>
+                <div><small>Date</small><strong>{dateLabel(date)}</strong></div>
+                <div><small>Time</small><strong>{timeLabel(time)}</strong></div>
+                <div><small>Price</small><strong>{price(service.price_paise)}</strong></div>
+              </div>
+              <label className="booking-field"><span>Message to Alfiya <small>(optional)</small></span><textarea value={note} onChange={e=>setNote(e.target.value)} maxLength={500} placeholder="Anything we should know about your appointment?"/></label>
+              <div className="booking-confirm-note"><strong>What happens next?</strong><span>We send your request → Alfiya reviews it → You receive a confirmed or rejected status in your bookings.</span></div>
+            </div>}
+
+            <div className="booking-wizard-actions">
+              {step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>← Back</button>:<span/>}
+              {step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={()=>setStep(step+1)}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
+            </div>
+            {step===3&&<p className="booking-disclaimer">Your appointment is not confirmed until Alfiya approves the request.</p>}
+          </section>
         </section>
       </form>}
       {logged&&success&&<section className="booking-success-panel"><div className="booking-success-mark">✓</div><p className="dashboard-kicker">Request sent</p><h2>Your appointment is now pending.</h2><p>Alfiya Mehendi has received your request for <strong>{dateLabel(date)}</strong> at <strong>{timeLabel(time)}</strong>. You will see the final decision in your booking history.</p><div><Link to="/booking" className="service-book-button">View my bookings</Link><Link to="/services" className="services-shop-link">Browse other services</Link></div></section>}
