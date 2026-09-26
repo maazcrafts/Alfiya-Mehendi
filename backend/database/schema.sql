@@ -164,6 +164,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_bookings_user ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_confirmed_slot ON bookings(booking_date, booking_time) WHERE status = 'confirmed';
 CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_booking ON payments(booking_id);
 
