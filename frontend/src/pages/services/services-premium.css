@@ -1,0 +1,135 @@
+
+/* Premium Mehendi Services layout — intentional large editorial cards */
+.services-dashboard .services-content {
+  padding: 48px 56px 120px;
+}
+
+.services-dashboard .service-level-section {
+  margin-top: 72px;
+}
+
+.services-dashboard .service-level-heading {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ddcdbb;
+}
+
+.services-dashboard .service-level-heading .dashboard-kicker {
+  margin-bottom: 10px;
+  font-size: 11px;
+  letter-spacing: .18em;
+}
+
+.services-dashboard .service-level-heading h2 {
+  max-width: 920px;
+  font-size: 38px;
+  line-height: 1.14;
+}
+
+.services-dashboard .service-level-heading > span {
+  font-size: 12px;
+}
+
+.services-dashboard .service-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.services-dashboard .service-card {
+  min-height: 610px;
+  border-radius: 18px;
+  border-color: #d2bda8;
+  box-shadow: 0 12px 30px rgba(77,57,40,.07);
+}
+
+.services-dashboard .service-card-image {
+  height: 300px;
+}
+
+.services-dashboard .service-card-image span {
+  left: 22px;
+  bottom: 20px;
+  padding: 8px 11px;
+  font-size: 10px;
+}
+
+.services-dashboard .service-card-top {
+  margin: 27px 30px 0;
+}
+
+.services-dashboard .service-number {
+  font-size: 13px;
+}
+
+.services-dashboard .service-level-label {
+  font-size: 10px;
+}
+
+.services-dashboard .service-card h3 {
+  margin: 28px 30px 12px;
+  font-size: 35px;
+  line-height: 1.08;
+}
+
+.services-dashboard .service-card p {
+  margin: 0 30px;
+  max-width: 620px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.services-dashboard .service-card-bottom {
+  margin: auto 30px 0;
+  padding-top: 30px;
+}
+
+.services-dashboard .service-card-bottom strong {
+  font-size: 25px;
+}
+
+.services-dashboard .service-card-bottom span {
+  font-size: 11px;
+}
+
+.services-dashboard .service-book-button {
+  height: 52px;
+  margin: 20px 30px 30px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.services-dashboard .service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 46px rgba(77,57,40,.13);
+}
+
+.services-dashboard .services-hero {
+  min-height: 350px;
+  padding: 58px 64px;
+  border-radius: 20px;
+}
+
+.services-dashboard .services-hero h2 {
+  max-width: 900px;
+  font-size: clamp(48px, 4.3vw, 68px);
+}
+
+.services-dashboard .services-hero p:last-child {
+  max-width: 720px;
+  font-size: 16px;
+}
+
+@media (max-width: 1100px) {
+  .services-dashboard .services-content { padding: 38px 34px 100px; }
+  .services-dashboard .service-card-grid { grid-template-columns: 1fr; }
+  .services-dashboard .service-card { min-height: 0; }
+}
+
+@media (max-width: 760px) {
+  .services-dashboard .services-content { padding: 26px 20px 80px; }
+  .services-dashboard .service-level-section { margin-top: 52px; }
+  .services-dashboard .service-level-heading h2 { font-size: 30px; }
+  .services-dashboard .service-card-image { height: 260px; }
+  .services-dashboard .service-card h3 { font-size: 30px; }
+  .services-dashboard .services-hero { padding: 36px 30px; min-height: 300px; }
+}
