@@ -1,3 +1,4 @@
+import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -90,18 +91,7 @@ export default function AdminBookings() {
 
   return (
     <main className="shop-dashboard admin-dashboard">
-      <aside className="dashboard-sidebar">
-        <Link to="/products" className="dashboard-brand">
-          <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
-          <span><strong>Alfiya</strong><small>MEHENDI</small></span>
-        </Link>
-
-        <div className="dashboard-section-label">Admin workspace</div>
-        <nav className="dashboard-nav">
-          <Link to="/services" className="dashboard-nav-item"><span aria-hidden="true"></span>Customer view</Link>
-          <Link to="/admin/bookings" className="dashboard-nav-item active"><span aria-hidden="true"></span>Booking requests</Link>
-        </nav>
-      </aside>
+      <DashboardSidebar active="admin" adminOnly />
 
       <section className="dashboard-main">
         <header className="dashboard-topbar">
