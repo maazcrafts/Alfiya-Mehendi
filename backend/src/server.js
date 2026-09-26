@@ -84,8 +84,6 @@ app.post('/api/auth/signup', async (req, res) => {
     })
     user = await applyConfiguredAdminRole(user)
 
-    user = await applyConfiguredAdminRole(user)
-
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role, provider: 'password' },
       process.env.JWT_SECRET,
