@@ -4,6 +4,7 @@ import {
   findConfirmedSlot,
   findPendingDuplicate,
   listAdminBookings,
+  listBookedTimes,
   listUserBookings,
   updateBookingStatus,
 } from '../models/bookingModel.js'
