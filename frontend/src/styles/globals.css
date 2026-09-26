@@ -1835,3 +1835,43 @@ a { color: inherit; }
  .booking-time-grid.upgraded{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  .booking-submit{width:100%!important;min-width:0!important}
 }
+
+/* Full booking page scale pass — history and supporting UI */
+.booking-dashboard .dashboard-topbar{min-height:128px!important;padding:30px 52px!important}
+.booking-dashboard .dashboard-topbar h1{font-size:36px!important}
+.booking-dashboard .dashboard-topbar .dashboard-kicker{font-size:10px!important;margin-bottom:9px!important}
+.booking-dashboard .services-shop-link{min-height:48px!important;padding:0 18px!important;font-size:11px!important}
+
+.booking-dashboard .booking-history-section{margin-top:72px!important}
+.booking-dashboard .booking-section-heading{margin-bottom:24px!important}
+.booking-dashboard .booking-section-heading .dashboard-kicker{font-size:10px!important;margin-bottom:8px!important}
+.booking-dashboard .booking-section-heading h2{font-size:38px!important}
+.booking-dashboard .booking-section-heading>span{font-size:12px!important}
+
+.booking-dashboard .booking-list{gap:18px!important}
+.booking-dashboard .booking-history-card{padding:30px 32px!important;border-radius:16px!important;border-color:#d2bfaa!important;box-shadow:0 8px 24px rgba(70,49,32,.045)}
+.booking-dashboard .booking-history-main{gap:24px!important}
+.booking-dashboard .booking-history-main .dashboard-kicker{font-size:10px!important;margin-bottom:7px!important}
+.booking-dashboard .booking-history-main h3{font-size:29px!important;margin-top:7px!important}
+.booking-dashboard .booking-status{min-height:36px!important;padding:0 14px!important;font-size:10px!important}
+.booking-dashboard .booking-history-details{gap:55px!important;margin-top:26px!important;padding-top:21px!important}
+.booking-dashboard .booking-history-details span{gap:6px!important;font-size:14px!important}
+.booking-dashboard .booking-history-details b{font-size:10px!important;letter-spacing:.1em!important}
+.booking-dashboard .booking-status-note{margin-top:20px!important;font-size:13px!important;line-height:1.6!important}
+
+@media(max-width:800px){
+ .booking-dashboard .dashboard-topbar{padding:24px!important}
+ .booking-dashboard .dashboard-topbar h1{font-size:31px!important}
+ .booking-dashboard .booking-history-section{margin-top:55px!important}
+ .booking-dashboard .booking-section-heading h2{font-size:32px!important}
+ .booking-dashboard .booking-history-card{padding:24px!important}
+ .booking-dashboard .booking-history-main h3{font-size:25px!important}
+ .booking-dashboard .booking-history-details{gap:24px!important}
+ .booking-dashboard .booking-history-details span{font-size:13px!important}
+}
+@media(max-width:500px){
+ .booking-dashboard .dashboard-topbar h1{font-size:27px!important}
+ .booking-dashboard .booking-history-card{padding:21px!important}
+ .booking-dashboard .booking-history-main h3{font-size:22px!important}
+ .booking-dashboard .booking-history-details{gap:18px!important}
+}
