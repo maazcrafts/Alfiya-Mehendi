@@ -2444,3 +2444,61 @@ a { color: inherit; }
 .dashboard-sidebar .dashboard-user-mini strong{color:#3c2920;font-size:14px;line-height:1.2;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dashboard-sidebar .dashboard-user-mini small{color:#75665b;font-size:10.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
 @media(max-width:700px){.dashboard-sidebar .dashboard-sidebar-bottom{padding:20px 14px 24px}.dashboard-sidebar .dashboard-user-mini{min-height:70px}.dashboard-sidebar .dashboard-avatar{width:44px;height:44px;flex-basis:44px}}
+
+/* Sidebar customer identity — size only, no card background */
+.dashboard-sidebar .dashboard-sidebar-bottom{
+  padding:28px 12px 30px;
+}
+.dashboard-sidebar .dashboard-user-mini{
+  min-height:88px;
+  gap:17px;
+  padding:8px 4px;
+  background:transparent;
+  border:0;
+  border-radius:0;
+}
+.dashboard-sidebar .dashboard-avatar{
+  width:58px;
+  height:58px;
+  flex:0 0 58px;
+  border-radius:50%;
+  font-size:22px;
+  font-weight:800;
+}
+.dashboard-sidebar .dashboard-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+.dashboard-sidebar .dashboard-user-mini>div:last-child{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.dashboard-sidebar .dashboard-user-mini strong{
+  color:#3c2920;
+  font-size:17px;
+  line-height:1.2;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.dashboard-sidebar .dashboard-user-mini small{
+  color:#75665b;
+  font-size:12px;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:205px;
+}
+@media(max-width:700px){
+  .dashboard-sidebar .dashboard-sidebar-bottom{padding:22px 8px 26px}
+  .dashboard-sidebar .dashboard-user-mini{min-height:78px}
+  .dashboard-sidebar .dashboard-avatar{width:50px;height:50px;flex-basis:50px}
+  .dashboard-sidebar .dashboard-user-mini strong{font-size:15px}
+  .dashboard-sidebar .dashboard-user-mini small{font-size:11px}
+}
