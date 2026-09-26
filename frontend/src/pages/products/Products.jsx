@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const categories = [
-  { label: 'All Products', value: '', icon: '⌂' },
-  { label: 'Mehendi Powder', value: 'mehendi-powder', icon: '✦' },
-  { label: 'Oils', value: 'oils', icon: '◌' },
-  { label: 'Tools', value: 'tools', icon: '◇' },
-  { label: 'Cone & Cellophane', value: 'cone-cellophane-supplies', icon: '▱' },
+  { label: 'All Products', value: '', note: 'Everything in the shop' },
+  { label: 'Mehendi Powder', value: 'mehendi-powder', note: 'Filtered & fine powders' },
+  { label: 'Oils', value: 'oils', note: 'Aftercare & finishing oils' },
+  { label: 'Tools', value: 'tools', note: 'Everyday application tools' },
+  { label: 'Cone & Cellophane', value: 'cone-cellophane-supplies', note: 'Cones, sheets & supplies' },
 ]
 
 function formatPrice(paise) {
@@ -88,7 +88,7 @@ export default function Products() {
     <main className="shop-dashboard">
       <aside className="dashboard-sidebar">
         <Link to="/" className="dashboard-brand">
-          <span className="dashboard-brand-mark">✦</span>
+          <span className="dashboard-brand-mark">A</span>
           <span>
             <strong>Alfiya</strong>
             <small>MEHENDI</small>
@@ -99,16 +99,16 @@ export default function Products() {
 
         <nav className="dashboard-nav" aria-label="Dashboard navigation">
           <Link to="/products" className="dashboard-nav-item active">
-            <span>⌂</span> Shop
+            <span aria-hidden="true"></span>Shop
           </Link>
           <Link to="/services" className="dashboard-nav-item">
-            <span>✦</span> Mehendi Services
+            <span aria-hidden="true"></span>Mehendi Services
           </Link>
           <Link to="/orders" className="dashboard-nav-item">
-            <span>▤</span> My Orders
+            <span aria-hidden="true"></span>My Orders
           </Link>
           <Link to="/booking" className="dashboard-nav-item">
-            <span>◷</span> My Bookings
+            <span aria-hidden="true"></span>My Bookings
           </Link>
         </nav>
 
@@ -116,10 +116,10 @@ export default function Products() {
 
         <nav className="dashboard-nav">
           <Link to="/account" className="dashboard-nav-item">
-            <span>○</span> Profile
+            <span aria-hidden="true"></span>Profile
           </Link>
           <Link to="/contact" className="dashboard-nav-item">
-            <span>?</span> Help & Contact
+            <span aria-hidden="true"></span>Help & Contact
           </Link>
         </nav>
 
@@ -145,7 +145,7 @@ export default function Products() {
 
           <div className="dashboard-top-actions">
             <label className="dashboard-search">
-              <span>⌕</span>
+              <span className="dashboard-search-mark" aria-hidden="true"></span>
               <input
                 value={search}
                 onChange={(event) => {
@@ -159,7 +159,7 @@ export default function Products() {
               />
             </label>
             <Link to="/cart" className="dashboard-cart">
-              <span>🛍</span>
+              <span className="dashboard-bag-mark" aria-hidden="true"></span>
               <b>0</b>
             </Link>
           </div>
@@ -172,7 +172,7 @@ export default function Products() {
               <h2>Everything you need for beautiful mehendi.</h2>
               <p>Shop powders, oils, application tools and cone supplies — all from one place.</p>
             </div>
-            <div className="dashboard-welcome-art" aria-hidden="true">❧</div>
+            <div className="dashboard-welcome-art" aria-hidden="true"><span></span><i></i><b></b></div>
           </section>
 
           <section className="dashboard-category-section">
@@ -192,9 +192,9 @@ export default function Products() {
                   className={category === item.value ? 'dashboard-category active' : 'dashboard-category'}
                   onClick={() => chooseCategory(item.value)}
                 >
-                  <span className="dashboard-category-icon">{item.icon}</span>
+                  <span className="dashboard-category-rule" aria-hidden="true"></span>
                   <span>{item.label}</span>
-                  <small>Explore →</small>
+                  <small>{item.note}</small>
                 </button>
               ))}
             </div>
@@ -214,7 +214,7 @@ export default function Products() {
 
             {!loading && !error && products.length === 0 && (
               <div className="dashboard-empty">
-                <span>✦</span>
+                <span className="dashboard-empty-rule" aria-hidden="true"></span>
                 <h3>No products listed yet</h3>
                 <p>Your catalogue connection is working. Products will appear here when they are added.</p>
               </div>
