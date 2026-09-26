@@ -36,43 +36,9 @@ export default function Signup() {
 
   return (
     <main className="signup-page">
-      <header className="site-header">
-        <Link to="/" className="site-logo" aria-label="Alfiya Mehendi home">
-          <span className="logo-art">
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className="logo-copy">
-            <strong>Alfiya</strong>
-            <strong>Mehendi</strong>
-            <small>PURE · TRADITIONAL · BEAUTIFUL</small>
-          </span>
-        </Link>
-
-        <nav className="site-nav" aria-label="Main navigation">
-          <Link to="/">Home</Link>
-          <Link to="/products">Products <span className="nav-chevron">⌄</span></Link>
-          <Link to="/services">Mehendi Services</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
-
-        <div className="header-actions">
-          <button className="icon-action" type="button" aria-label="Search">
-            <span className="search-icon" />
-          </button>
-          <Link className="cart-action" to="/cart" aria-label="Cart">
-            <span className="cart-icon">♧</span>
-            <span className="cart-count">0</span>
-          </Link>
-          <Link className="header-login" to="/login">Login</Link>
-        </div>
-      </header>
-
       <section className="signup-shell">
         <div className="signup-story">
-          <div className="story-image" />
+          <div className="story-image" aria-hidden="true" />
           <div className="story-overlay" />
 
           <div className="story-content">
