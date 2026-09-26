@@ -70,10 +70,10 @@ export default function Login() {
 
             <form className="signup-form login-form">
               <label className="input-group">
-                <span>Email Address or Phone</span>
+                <span>Email Address</span>
                 <div className="input-shell">
                   <Icon type="mail" />
-                  <input type="text" placeholder="Enter your email or phone" autoComplete="username" />
+                  <input type="text" placeholder="Enter your email address" autoComplete="username" />
                 </div>
               </label>
 
@@ -110,10 +110,6 @@ export default function Login() {
 
             <div className="social-actions">
               <GoogleButton mode="signin" />
-              <button type="button" className="social-button">
-                <span>☎</span>
-                Continue with Phone
-              </button>
             </div>
 
             <p className="login-prompt">
