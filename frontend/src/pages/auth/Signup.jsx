@@ -81,7 +81,9 @@ export default function Signup() {
   };
 
   return (
-    <main className="signup-page">
+    <>
+      {showSuccess && <AuthSuccessOverlay mode="signup" onDone={() => navigate("/products")} />}
+      <main className="signup-page">
       <section className="signup-shell">
         <div className="signup-story">
           <div className="story-image" aria-hidden="true" />
@@ -213,6 +215,7 @@ export default function Signup() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
