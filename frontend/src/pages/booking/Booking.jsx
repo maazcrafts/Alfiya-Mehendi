@@ -27,7 +27,7 @@ export default function Booking(){
   const [service,setService]=useState(null),[bookings,setBookings]=useState([]),[booked,setBooked]=useState([])
   const [date,setDate]=useState(''),[time,setTime]=useState(''),[note,setNote]=useState('')
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
-  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(false)
+  const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false)
 
   async function loadBookings(){
     if(!logged)return
@@ -39,6 +39,22 @@ export default function Booking(){
   useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
   const canNext=step===1?Boolean(date):step===2?Boolean(time):true
+  const cancelBooking=async bookingId=>{
+    if(!window.confirm('Cancel this pending appointment request?')) return
+    setCancelling(bookingId)
+    setError('')
+    try{
+      const r=await fetch(apiBase+'/api/bookings/'+bookingId+'/cancel',{
+        method:'PATCH',
+        headers:{Authorization:'Bearer '+token()}
+      })
+      const d=await r.json()
+      if(!r.ok) throw Error(d.message)
+      await loadBookings()
+    }catch(e){setError(e.message||'Unable to cancel this booking.')}
+    finally{setCancelling('')}
+  }
+
   const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await r.json();if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
   return <main className="shop-dashboard booking-dashboard">
@@ -126,7 +142,7 @@ export default function Booking(){
         </section>
       </form>}
       {logged&&success&&<section className="booking-success-panel"><div className="booking-success-mark">✓</div><p className="dashboard-kicker">Request sent</p><h2>Your appointment is now pending.</h2><p>Alfiya Mehendi has received your request for <strong>{dateLabel(date)}</strong> at <strong>{timeLabel(time)}</strong>. You will see the final decision in your booking history.</p><div><Link to="/booking" className="service-book-button">View my bookings</Link><Link to="/services" className="services-shop-link">Browse other services</Link></div></section>}
-      {logged&&<section className="booking-history-section"><div className="booking-section-heading"><div><p className="dashboard-kicker">Your timeline</p><h2>Booking history</h2></div><span>{bookings.length} requests</span></div>{bookings.length===0?<div className="booking-empty-state compact"><h3>No requests yet.</h3><p>Your appointment timeline will appear here.</p></div>:<div className="booking-list">{bookings.map(b=>{const m=statusMeta[b.status]||statusMeta.requested;return <article className="booking-history-card" key={b.id}><div className="booking-history-main"><div><p className="dashboard-kicker">{b.level}</p><h3>{b.service_name}</h3></div><span className={'booking-status booking-status-'+m[1]}>{m[0]}</span></div><div className="booking-history-details"><span><b>Date</b>{dateLabel(String(b.booking_date).slice(0,10))}</span><span><b>Time</b>{timeLabel(b.booking_time)}</span><span><b>Price</b>{price(b.price_paise)}</span></div>{b.status==='requested'&&<p className="booking-status-note">Waiting for admin approval. Your slot is not confirmed yet.</p>}{b.status==='confirmed'&&<p className="booking-status-note success">Confirmed. Your appointment is booked.</p>}{b.status==='rejected'&&<p className="booking-status-note rejected">Rejected{b.admin_note?': '+b.admin_note:'.'} Choose another slot to try again.</p>}</article>})}</div>}</section>}
+      {logged&&<section className="booking-history-section"><div className="booking-section-heading"><div><p className="dashboard-kicker">Your timeline</p><h2>Booking history</h2></div><span>{bookings.length} requests</span></div>{bookings.length===0?<div className="booking-empty-state compact"><h3>No requests yet.</h3><p>Your appointment timeline will appear here.</p></div>:<div className="booking-list">{bookings.map(b=>{const m=statusMeta[b.status]||statusMeta.requested;return <article className="booking-history-card" key={b.id}><div className="booking-history-main"><div><p className="dashboard-kicker">{b.level}</p><h3>{b.service_name}</h3></div><span className={'booking-status booking-status-'+m[1]}>{m[0]}</span></div><div className="booking-history-details"><span><b>Date</b>{dateLabel(String(b.booking_date).slice(0,10))}</span><span><b>Time</b>{timeLabel(b.booking_time)}</span><span><b>Price</b>{price(b.price_paise)}</span></div>{b.status==='requested'&&<p className="booking-status-note">Waiting for admin approval. Your slot is not confirmed yet.</p>}{b.status==='confirmed'&&<p className="booking-status-note success">Confirmed. Your appointment is booked.</p>}{b.status==='rejected'&&<p className="booking-status-note rejected">Rejected{b.admin_note?': '+b.admin_note:'.'} Choose another slot to try again.</p>}{b.status==='cancelled'&&<p className="booking-status-note rejected">You cancelled this appointment request before it was approved.</p>}{b.status==='requested'&&<div className="booking-history-actions"><button type="button" className="booking-cancel-button" disabled={cancelling===b.id} onClick={()=>cancelBooking(b.id)}>{cancelling===b.id?'Cancelling…':'Cancel request'}</button><span>This only cancels a pending request.</span></div>}</article>})}</div>}</section>}
     </div></section>
   </main>
 }
