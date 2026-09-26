@@ -2502,3 +2502,8 @@ a { color: inherit; }
   .dashboard-sidebar .dashboard-user-mini strong{font-size:15px}
   .dashboard-sidebar .dashboard-user-mini small{font-size:11px}
 }
+
+/* Move the sidebar customer identity slightly downward */
+.dashboard-sidebar .dashboard-sidebar-bottom{
+  transform:translateY(12px);
+}
