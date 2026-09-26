@@ -8,6 +8,8 @@ import ResetPassword from './pages/auth/ResetPassword.jsx'
 import Products from './pages/products/Products.jsx'
 import ProductDetails from './pages/products/ProductDetails.jsx'
 import Services from './pages/services/Services.jsx'
+import Booking from './pages/booking/Booking.jsx'
+import AdminBookings from './pages/admin/AdminBookings.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -27,7 +29,8 @@ export default function App() {
         <Route path="/cart" element={<Placeholder title="Cart" />} />
         <Route path="/checkout" element={<Placeholder title="Checkout" />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/booking" element={<Placeholder title="Booking" />} />
+        <Route path="/booking" element={<Booking />} />
+        <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/account" element={<Placeholder title="My Account" />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
