@@ -7,7 +7,7 @@ const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const serviceImages = {
   // Basic — clean palm/application reference.
-  basic: 'https://images.pexels.com/photos/12584788/pexels-photo-12584788.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  basic: '/palm-mehendi.jpg',
 
   // Intermediate — both palms with clearly visible, detailed mehndi.
   intermediate: 'https://images.pexels.com/photos/11925938/pexels-photo-11925938.jpeg?auto=compress&cs=tinysrgb&w=1400',
