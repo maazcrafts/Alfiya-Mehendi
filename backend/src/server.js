@@ -8,6 +8,7 @@ import { initializeDatabase } from './config/database.js'
 import { upsertGoogleUser } from './models/userModel.js'
 import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.js'
 import { hashPassword, verifyPassword } from './services/passwordService.js'
+import { createPasswordResetToken, resetPasswordWithToken } from './services/passwordResetService.js'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -124,6 +125,57 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error)
     return res.status(500).json({ message: 'Unable to log in right now.' })
+  }
+})
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body
+    if (!email?.trim()) {
+      return res.status(400).json({ message: 'Email address is required.' })
+    }
+
+    const reset = await createPasswordResetToken(email.trim())
+    const genericMessage = 'If an account exists for that email, a password reset link has been generated.'
+
+    if (!reset) {
+      return res.json({ message: genericMessage })
+    }
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${reset.token}`
+    console.log('Password reset link generated:', resetUrl)
+
+    const response = { message: genericMessage }
+    if (process.env.NODE_ENV !== 'production') {
+      response.resetUrl = resetUrl
+    }
+    return res.json(response)
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    return res.status(500).json({ message: 'Unable to process the password reset request.' })
+  }
+})
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { token, password } = req.body
+    if (!token || !password) {
+      return res.status(400).json({ message: 'Reset token and new password are required.' })
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' })
+    }
+
+    const passwordHash = await hashPassword(password)
+    const updated = await resetPasswordWithToken(token, passwordHash)
+    if (!updated) {
+      return res.status(400).json({ message: 'This reset link is invalid or expired.' })
+    }
+
+    return res.json({ message: 'Password updated successfully. You can now log in.' })
+  } catch (error) {
+    console.error('Reset password error:', error)
+    return res.status(500).json({ message: 'Unable to reset the password right now.' })
   }
 })
 
