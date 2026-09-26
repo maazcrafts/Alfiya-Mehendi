@@ -37,6 +37,8 @@ export default function AdminBookings() {
   const [error, setError] = useState('')
   const [actionId, setActionId] = useState('')
   const [notes, setNotes] = useState({})
+  const [notice, setNotice] = useState('')
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     if (user?.role !== 'admin') {
@@ -49,6 +51,7 @@ export default function AdminBookings() {
   async function loadBookings() {
     setLoading(true)
     setError('')
+    setNotice('')
     try {
       const response = await fetch(`${apiBase}/api/bookings/admin?status=${filter}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
@@ -77,6 +80,7 @@ export default function AdminBookings() {
       })
       const data = await response.json()
       if (!response.ok) throw new Error(data.message || 'Unable to update this booking.')
+      setNotice(status === 'confirmed' ? 'Appointment confirmed and the time slot is now locked.' : 'Booking request rejected.')
       await loadBookings()
     } catch (err) {
       setError(err.message || 'Unable to update this booking.')
@@ -118,21 +122,21 @@ export default function AdminBookings() {
             <span>{bookings.filter((booking) => booking.status === 'requested').length} pending</span>
           </section>
 
-          <div className="admin-filter-row">
+          <div className="admin-control-row"><input className="admin-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search customer or service…" aria-label="Search bookings" /></div>\n          <div className="admin-filter-row">
             {filters.map(([value, label]) => (
               <button key={value} type="button" className={filter === value ? 'active' : ''} onClick={() => setFilter(value)}>{label}</button>
             ))}
             <button type="button" className="admin-refresh" onClick={loadBookings}>Refresh</button>
           </div>
 
-          {error && <div className="booking-alert booking-alert-error">{error}</div>}
+          {error && <div className="booking-alert booking-alert-error">{error}</div>}{notice && <div className="booking-alert booking-alert-success">{notice}</div>}
           {loading ? (
             <div className="services-state">Loading booking requests…</div>
           ) : bookings.length === 0 ? (
             <div className="booking-empty-state"><h2>No requests in this view.</h2><p>New customer booking requests will appear here.</p></div>
           ) : (
             <div className="admin-booking-list">
-              {bookings.map((booking) => (
+              {bookings.filter(b=>!query || `${b.customer_name} ${b.customer_email} ${b.service_name}`.toLowerCase().includes(query.toLowerCase())).map((booking) => (
                 <article className="admin-booking-card" key={booking.id}>
                   <div className="admin-booking-header">
                     <div>
