@@ -9,6 +9,7 @@ import { upsertGoogleUser } from './models/userModel.js'
 import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.js'
 import { hashPassword, verifyPassword } from './services/passwordService.js'
 import { createPasswordResetToken, resetPasswordWithToken } from './services/passwordResetService.js'
+import serviceRoutes from './routes/serviceRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 
 const app = express()
@@ -20,6 +21,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use('/api/products', productRoutes)
+app.use('/api/services', serviceRoutes)
 
 app.get('/api/health', async (_req, res) => {
   try {
