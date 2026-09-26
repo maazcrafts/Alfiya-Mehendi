@@ -2206,3 +2206,19 @@ a { color: inherit; }
 
 .direct-card{width:100%;font:inherit;text-align:left;cursor:pointer}.direct-card b{font:inherit}
 .support-login-note{margin-top:18px;padding:14px 16px;border:1px solid #d8c8b6;border-radius:10px;background:#f5ecdf;color:#756559;font-size:12px;line-height:1.5}
+
+/* Direct email support */
+.contact-email-section{margin-top:72px;display:grid;grid-template-columns:1.15fr .85fr;gap:32px;padding:52px;border:1px solid #d2bfaa;border-radius:24px;background:#fffaf3;box-shadow:0 16px 38px rgba(70,49,32,.05)}
+.contact-email-copy h2{margin:8px 0 15px;font:400 48px/1.05 Georgia,serif;color:#3c2920}
+.contact-email-copy>p:not(.dashboard-kicker){max-width:700px;color:#76675b;font-size:14px;line-height:1.75}
+.contact-email-address{margin-top:28px;padding:22px 24px;border:1px solid #d1bfac;border-radius:12px;background:#f4ecdf;color:#514239;font:500 22px Georgia,serif;word-break:break-word}
+.contact-email-action{min-height:340px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:34px;border-radius:20px;background:#e7e5d8;border:1px solid #d0cbb8}
+.email-symbol{width:84px;height:84px;display:grid;place-items:center;border-radius:50%;background:#dce5d4;color:#5f6e50;font:500 38px Georgia,serif}
+.contact-email-action>p{margin:18px 0 20px;color:#756559;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+.contact-email-action>a:not(.email-text-link){display:flex;align-items:center;justify-content:space-between;width:min(100%,330px);min-height:58px;padding:0 20px;border-radius:10px;background:#6e7b5d;color:#fff;text-decoration:none;font-size:12px;font-weight:800;transition:transform .18s,background .18s}
+.contact-email-action>a:not(.email-text-link):hover{transform:translateY(-2px);background:#5f6d50}
+.contact-email-action>a span{font-size:17px}
+.email-text-link{margin-top:16px;color:#6e7b5d;text-decoration:underline;text-underline-offset:4px;font-size:11px}
+
+@media(max-width:950px){.contact-email-section{grid-template-columns:1fr}}
+@media(max-width:700px){.contact-email-section{margin-top:52px;padding:28px 22px}.contact-email-copy h2{font-size:36px}.contact-email-address{font-size:17px}.contact-email-action{min-height:290px}}
