@@ -458,8 +458,13 @@ a { color: inherit; }
 
 .social-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+  justify-items: center;
   gap: 12px;
+}
+
+.social-actions .google-auth-wrap {
+  width: min(100%, 280px);
 }
 
 .social-button {
