@@ -196,14 +196,14 @@ a { color: inherit; }
 
 /* Signup split screen */
 .signup-shell {
-  min-height: calc(100vh - 90px);
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 56% 44%;
 }
 
 .signup-story {
   position: relative;
-  min-height: calc(100vh - 90px);
+  min-height: 100vh;
   overflow: hidden;
   color: #fff;
 }
@@ -211,9 +211,10 @@ a { color: inherit; }
 .story-image {
   position: absolute;
   inset: 0;
-  background-image: url("https://images.unsplash.com/photo-1771992232127-82002efcd233?auto=format&fit=crop&fm=jpg&q=85&w=1800");
+  background-image: url("https://images.pexels.com/photos/10290204/pexels-photo-10290204.jpeg?auto=compress&cs=tinysrgb&w=1800");
   background-size: cover;
   background-position: center;
+  filter: saturate(.88) contrast(1.08);
   transform: scale(1.01);
 }
 
@@ -599,4 +600,56 @@ a { color: inherit; }
   .signup-form-inner h2 { font-size: 43px; }
 
   .social-actions { grid-template-columns: 1fr; }
+}
+
+
+/* Login variant */
+.login-form-panel .login-form-inner {
+  max-width: 590px;
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -2px 0 2px;
+  color: #635a52;
+  font-size: 11px;
+}
+
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remember-row input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #3f4b38;
+}
+
+.login-options a {
+  color: #694832;
+  text-underline-offset: 3px;
+}
+
+.login-form-panel .social-button span:not(.google-mark) {
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (max-width: 980px) {
+  .signup-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .signup-story {
+    min-height: 480px;
+  }
+
+  .signup-form-panel {
+    min-height: 680px;
+  }
 }
