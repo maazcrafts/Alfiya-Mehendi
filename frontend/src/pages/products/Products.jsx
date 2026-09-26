@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const categories = [
-  { label: 'All Products', value: '' },
-  { label: 'Mehendi Powder', value: 'mehendi-powder' },
-  { label: 'Oils', value: 'oils' },
-  { label: 'Tools', value: 'tools' },
-  { label: 'Cone & Cellophane Supplies', value: 'cone-cellophane-supplies' },
+  { label: 'All Products', value: '', icon: '⌂' },
+  { label: 'Mehendi Powder', value: 'mehendi-powder', icon: '✦' },
+  { label: 'Oils', value: 'oils', icon: '◌' },
+  { label: 'Tools', value: 'tools', icon: '◇' },
+  { label: 'Cone & Cellophane', value: 'cone-cellophane-supplies', icon: '▱' },
 ]
 
 function formatPrice(paise) {
@@ -19,11 +19,20 @@ function formatPrice(paise) {
   }).format(paise / 100)
 }
 
+function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem('alfiya_user') || '{}')
+  } catch {
+    return {}
+  }
+}
+
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [user] = useState(getUser)
 
   const category = searchParams.get('category') || ''
   const search = searchParams.get('search') || ''
@@ -49,7 +58,9 @@ export default function Products() {
         if (!response.ok) throw new Error(data.message || 'Unable to load products.')
         setProducts(data.products || [])
       } catch (requestError) {
-        if (requestError.name !== 'AbortError') setError(requestError.message || 'Unable to load products.')
+        if (requestError.name !== 'AbortError') {
+          setError(requestError.message || 'Unable to load products.')
+        }
       } finally {
         if (!controller.signal.aborted) setLoading(false)
       }
@@ -71,63 +82,170 @@ export default function Products() {
     setSearchParams(next)
   }
 
-  return (
-    <main className="catalog-page">
-      <section className="catalog-hero">
-        <p className="catalog-eyebrow">Alfiya Mehendi Shop</p>
-        <h1>Mehendi, tools & essentials.</h1>
-        <p>Explore the products currently available from Alfiya Mehendi.</p>
-      </section>
+  const firstName = user?.name?.split(' ')?.[0] || 'there'
 
-      <section className="catalog-content">
-        <div className="catalog-toolbar">
-          <div className="category-tabs" aria-label="Product categories">
-            {categories.map((item) => (
-              <button
-                key={item.value || 'all'}
-                type="button"
-                className={category === item.value ? 'category-tab active' : 'category-tab'}
-                onClick={() => chooseCategory(item.value)}
-              >
-                {item.label}
-              </button>
-            ))}
+  return (
+    <main className="shop-dashboard">
+      <aside className="dashboard-sidebar">
+        <Link to="/" className="dashboard-brand">
+          <span className="dashboard-brand-mark">✦</span>
+          <span>
+            <strong>Alfiya</strong>
+            <small>MEHENDI</small>
+          </span>
+        </Link>
+
+        <div className="dashboard-section-label">Workspace</div>
+
+        <nav className="dashboard-nav" aria-label="Dashboard navigation">
+          <Link to="/products" className="dashboard-nav-item active">
+            <span>⌂</span> Shop
+          </Link>
+          <Link to="/services" className="dashboard-nav-item">
+            <span>✦</span> Mehendi Services
+          </Link>
+          <Link to="/orders" className="dashboard-nav-item">
+            <span>▤</span> My Orders
+          </Link>
+          <Link to="/booking" className="dashboard-nav-item">
+            <span>◷</span> My Bookings
+          </Link>
+        </nav>
+
+        <div className="dashboard-section-label">Account</div>
+
+        <nav className="dashboard-nav">
+          <Link to="/account" className="dashboard-nav-item">
+            <span>○</span> Profile
+          </Link>
+          <Link to="/contact" className="dashboard-nav-item">
+            <span>?</span> Help & Contact
+          </Link>
+        </nav>
+
+        <div className="dashboard-sidebar-bottom">
+          <div className="dashboard-user-mini">
+            <div className="dashboard-avatar">
+              {user?.picture ? <img src={user.picture} alt="" /> : firstName.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <strong>{user?.name || 'Guest'}</strong>
+              <small>{user?.email || 'Explore Alfiya Mehendi'}</small>
+            </div>
           </div>
         </div>
+      </aside>
 
-        {loading && <div className="catalog-state">Loading products…</div>}
-        {!loading && error && <div className="catalog-state catalog-error">{error}</div>}
-        {!loading && !error && products.length === 0 && (
-          <div className="catalog-empty">
-            <span className="catalog-empty-mark">❧</span>
-            <h2>No products listed yet</h2>
-            <p>The catalogue is connected. Products will appear here as soon as they are added.</p>
+      <section className="dashboard-main">
+        <header className="dashboard-topbar">
+          <div>
+            <p className="dashboard-kicker">Customer dashboard</p>
+            <h1>Good to see you, {firstName}.</h1>
           </div>
-        )}
 
-        {!loading && !error && products.length > 0 && (
-          <div className="product-grid">
-            {products.map((product) => {
-              const image = product.images?.[0]?.image_url
-              return (
-                <Link key={product.id} to={`/products/${product.slug}`} className="product-card">
-                  <div className="product-card-media">
-                    {image ? (
-                      <img src={image} alt={product.images?.[0]?.alt_text || product.name} />
-                    ) : (
-                      <div className="product-card-placeholder" aria-hidden="true">Alfiya</div>
-                    )}
-                  </div>
-                  <div className="product-card-body">
-                    <p>{product.categoryName}</p>
-                    <h2>{product.name}</h2>
-                    <strong>{formatPrice(product.pricePaise)}</strong>
-                  </div>
-                </Link>
-              )
-            })}
+          <div className="dashboard-top-actions">
+            <label className="dashboard-search">
+              <span>⌕</span>
+              <input
+                value={search}
+                onChange={(event) => {
+                  const next = new URLSearchParams(searchParams)
+                  if (event.target.value) next.set('search', event.target.value)
+                  else next.delete('search')
+                  setSearchParams(next)
+                }}
+                placeholder="Search products..."
+                aria-label="Search products"
+              />
+            </label>
+            <Link to="/cart" className="dashboard-cart">
+              <span>🛍</span>
+              <b>0</b>
+            </Link>
           </div>
-        )}
+        </header>
+
+        <div className="dashboard-content">
+          <section className="dashboard-welcome-card">
+            <div>
+              <p className="dashboard-kicker">Alfiya Mehendi Store</p>
+              <h2>Everything you need for beautiful mehendi.</h2>
+              <p>Shop powders, oils, application tools and cone supplies — all from one place.</p>
+            </div>
+            <div className="dashboard-welcome-art" aria-hidden="true">❧</div>
+          </section>
+
+          <section className="dashboard-category-section">
+            <div className="dashboard-heading-row">
+              <div>
+                <p className="dashboard-kicker">Browse</p>
+                <h2>Shop by category</h2>
+              </div>
+              <span>{products.length} products available</span>
+            </div>
+
+            <div className="dashboard-category-grid">
+              {categories.map((item) => (
+                <button
+                  key={item.value || 'all'}
+                  type="button"
+                  className={category === item.value ? 'dashboard-category active' : 'dashboard-category'}
+                  onClick={() => chooseCategory(item.value)}
+                >
+                  <span className="dashboard-category-icon">{item.icon}</span>
+                  <span>{item.label}</span>
+                  <small>Explore →</small>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="dashboard-products-section">
+            <div className="dashboard-heading-row">
+              <div>
+                <p className="dashboard-kicker">Catalogue</p>
+                <h2>{heading}</h2>
+              </div>
+              {category && <button type="button" className="dashboard-clear" onClick={() => chooseCategory('')}>View all</button>}
+            </div>
+
+            {loading && <div className="catalog-state">Loading products…</div>}
+            {!loading && error && <div className="catalog-state catalog-error">{error}</div>}
+
+            {!loading && !error && products.length === 0 && (
+              <div className="dashboard-empty">
+                <span>✦</span>
+                <h3>No products listed yet</h3>
+                <p>Your catalogue connection is working. Products will appear here when they are added.</p>
+              </div>
+            )}
+
+            {!loading && !error && products.length > 0 && (
+              <div className="dashboard-product-grid">
+                {products.map((product) => {
+                  const image = product.images?.[0]?.image_url
+                  return (
+                    <Link key={product.id} to={`/products/${product.slug}`} className="dashboard-product-card">
+                      <div className="dashboard-product-media">
+                        {image ? (
+                          <img src={image} alt={product.images?.[0]?.alt_text || product.name} />
+                        ) : (
+                          <div>Alfiya</div>
+                        )}
+                        {product.stockQuantity === 0 && <span className="dashboard-sold-out">Out of stock</span>}
+                      </div>
+                      <div className="dashboard-product-body">
+                        <small>{product.categoryName}</small>
+                        <h3>{product.name}</h3>
+                        <strong>{formatPrice(product.pricePaise)}</strong>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+        </div>
       </section>
     </main>
   )
