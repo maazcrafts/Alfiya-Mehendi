@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import GoogleButton from "./GoogleButton.jsx";
 import AuthSuccessOverlay from "./AuthSuccessOverlay.jsx";
+import PasswordStrength from "./PasswordStrength.jsx";
 
 const Icon = ({ type }) => {
   const common = {
@@ -161,6 +162,7 @@ export default function Signup() {
                     <Icon type="eye" />
                   </button>
                 </div>
+                <PasswordStrength password={form.password} />
               </label>
 
               <label className="input-group">
