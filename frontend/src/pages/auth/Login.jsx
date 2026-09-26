@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import GoogleButton from "./GoogleButton.jsx";
 
 const Icon = ({ type }) => {
   const common = {
@@ -108,10 +109,7 @@ export default function Login() {
             <div className="auth-divider"><span>OR</span></div>
 
             <div className="social-actions">
-              <button type="button" className="social-button">
-                <span className="google-mark">G</span>
-                Continue with Google
-              </button>
+              <GoogleButton mode="signin" />
               <button type="button" className="social-button">
                 <span>☎</span>
                 Continue with Phone
