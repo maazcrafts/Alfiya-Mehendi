@@ -50,7 +50,23 @@ export default function Booking(){
       {!loading&&logged&&!service&&serviceSlug&&<div className="booking-empty-state"><h2>We couldn't load that service.</h2><Link to="/services" className="service-book-button">Choose another service</Link></div>}
       {logged&&service&&serviceSlug&&!success&&<form onSubmit={submit}>
         <div className="booking-wizard-head"><div><p className="dashboard-kicker">Step {step} of 3</p><h2>{service.name}</h2><p>{service.description}</p></div><strong>{price(service.price_paise)}</strong></div>
-        <div className="booking-progress">{[1,2,3].map(n=><button type="button" key={n} className={step>=n?'active':''} onClick={()=>n<step&&setStep(n)}><b>0{n}</b><span>{n===1?'Date':n===2?'Time':'Review'}</span></button>)}</div>
+        <div className="booking-progress" aria-label="Appointment steps">
+          {[1,2,3].map(n=>{
+            const done=step>n, current=step===n, locked=n>step;
+            const label=n===1?'Date':n===2?'Time':'Review';
+            const hint=n===1?'Choose your day':n===2?'Pick a slot':'Check details';
+            return <button type="button" key={n} className={current?'current':done?'done':'upcoming'} disabled={locked} onClick={()=>done&&setStep(n)} aria-current={current?'step':undefined}>
+              <b>{done?'✓':('0'+n)}</b>
+              <span><strong>{label}</strong><small>{current?'You are here':done?'Completed':hint}</small></span>
+            </button>
+          })}
+        </div>
+        <div className="booking-step-status" aria-live="polite">
+          <span className="booking-step-dot"></span>
+          <strong>{step===1?'Choose your appointment date':step===2?'Choose an available time':'Review before sending'}</strong>
+          <span className="booking-step-arrow">→</span>
+          <span>{step===1?'Next: Time':step===2?'Next: Review':'Next: Request appointment'}</span>
+        </div>
         <section className="booking-wizard-card">
           {step===1&&<div><p className="dashboard-kicker">01 · Pick your day</p><h2>When would you like us?</h2><label className="booking-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{setDate(e.target.value);setTime('')}} required/></label>{date&&<div className="booking-selected-banner"><strong>{dateLabel(date)}</strong><span>Next, choose a time that works for you.</span></div>}</div>}
           {step===2&&<div><p className="dashboard-kicker">02 · Pick your time</p><h2>Choose an available slot.</h2>{loadingSlots?<div className="services-state">Checking availability…</div>:<div className="booking-time-grid upgraded">{slots.map(s=><button type="button" key={s.value} disabled={booked.includes(s.value)} className={time===s.value?'selected':''} onClick={()=>setTime(s.value)}>{s.label}<small>{booked.includes(s.value)?'Booked':time===s.value?'Selected':'Available'}</small></button>)}</div>}</div>}
