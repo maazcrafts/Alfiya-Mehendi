@@ -31,12 +31,12 @@ export default function Booking(){
 
   async function loadBookings(){
     if(!logged)return
-    try{const r=await fetch(apiBase+'/api/bookings/mine',{headers:{Authorization:'Bearer '+token()}});const d=await r.json();if(!r.ok)throw Error(d.message);setBookings(d.bookings||[])}
+    try{const r=await fetch(apiBase+'/api/bookings/mine',{headers:{Authorization:'Bearer '+token()}});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBookings(d.bookings||[])}
     catch(e){setError(e.message||'Unable to load bookings.')}
   }
   useEffect(()=>{if(!serviceSlug){setLoading(false);return} fetch(apiBase+'/api/services/'+encodeURIComponent(serviceSlug)).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setService(d.service)}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[serviceSlug])
   useEffect(()=>{loadBookings()},[])
-  useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
+  useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
   const canNext=step===1?Boolean(date):step===2?Boolean(time):true
   const cancelBooking=async bookingId=>{
@@ -48,14 +48,14 @@ export default function Booking(){
         method:'PATCH',
         headers:{Authorization:'Bearer '+token()}
       })
-      const d=await r.json()
+      const d=await readApiResponse(r)
       if(!r.ok) throw Error(d.message)
       await loadBookings()
     }catch(e){setError(e.message||'Unable to cancel this booking.')}
     finally{setCancelling('')}
   }
 
-  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await r.json();if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
+  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
   return <main className="shop-dashboard booking-dashboard">
     <DashboardSidebar active="bookings" />
