@@ -1759,3 +1759,79 @@ a { color: inherit; }
  .booking-review{grid-template-columns:1fr 1fr!important}
  .booking-submit{min-width:0!important}
 }
+
+/* Appointment scale pass — desktop content should use the available workspace */
+.booking-shell{width:100%!important;max-width:none!important;margin:0!important}
+.booking-service-strip{min-height:132px!important;padding:30px 34px!important;border-radius:18px!important}
+.booking-breadcrumb{font-size:10px!important;margin-bottom:10px!important}
+.booking-service-strip h2{font-size:38px!important}
+.booking-service-strip p{font-size:14px!important;margin-top:9px!important}
+.booking-price{min-width:165px!important}
+.booking-price small{font-size:10px!important}
+.booking-price strong{font-size:31px!important}
+
+.booking-journey{padding:26px 28px 15px!important;border-radius:18px 18px 0 0!important}
+.booking-journey-heading{margin-bottom:20px!important}
+.booking-journey-heading h3{font-size:29px!important}
+.booking-count{font-size:10px!important;padding:7px 11px!important}
+.booking-progress{gap:10px!important}
+.booking-progress button{min-height:82px!important;padding:14px 18px!important;border-radius:12px!important}
+.booking-progress::before{left:13%;right:13%;top:40px!important}
+.booking-progress b{width:38px!important;height:38px!important;flex-basis:38px!important;font-size:11px!important}
+.booking-progress strong{font-size:14px!important}
+.booking-progress small{font-size:10px!important}
+.booking-next-hint{min-height:42px!important;padding-top:10px!important;font-size:11px!important}
+.booking-next-hint strong{font-size:12px!important}
+.booking-step-dot{width:8px!important;height:8px!important;flex-basis:8px!important}
+
+.booking-wizard-card{padding:42px 44px 32px!important;min-height:300px!important}
+.booking-section-number{width:34px!important;height:34px!important;font-size:10px!important}
+.booking-wizard-card h2{font-size:38px!important;margin:16px 0 9px!important}
+.booking-help{max-width:760px!important;font-size:13px!important}
+.booking-field{margin-top:31px!important}
+.booking-field>span{font-size:11px!important;margin-bottom:10px!important}
+.booking-date-field input{height:62px!important;padding:0 18px!important;font-size:15px!important}
+.booking-selected-banner{padding:16px 18px!important;margin-top:15px!important}
+.booking-selected-banner small{font-size:9px!important}
+.booking-selected-banner strong{font-size:13px!important}
+.booking-selected-banner>span{font-size:11px!important}
+
+.booking-time-grid.upgraded{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;margin-top:28px!important}
+.booking-time-grid.upgraded button{min-height:82px!important;padding:13px 8px!important}
+.booking-time-grid.upgraded button strong{font-size:13px!important}
+.booking-time-grid.upgraded button small{font-size:10px!important;margin-top:7px!important}
+
+.booking-review{gap:12px!important;margin:28px 0!important}
+.booking-review div{padding:19px!important}
+.booking-review small{font-size:9px!important;margin-bottom:8px!important}
+.booking-review strong{font-size:13px!important}
+.booking-confirm-note{padding:16px 18px!important;font-size:11px!important}
+.booking-confirm-note strong{font-size:11px!important}
+
+.booking-wizard-actions{margin-top:32px!important;padding-top:22px!important}
+.booking-back{height:52px!important;padding:0 24px!important;font-size:12px!important}
+.booking-submit{min-width:235px!important;height:54px!important;font-size:12px!important}
+.booking-disclaimer{font-size:10px!important}
+
+@media(max-width:1200px){
+ .booking-time-grid.upgraded{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:800px){
+ .booking-service-strip{padding:24px!important}
+ .booking-service-strip h2{font-size:32px!important}
+ .booking-journey{padding:20px 18px 12px!important}
+ .booking-progress button{min-height:74px!important}
+ .booking-progress strong{font-size:12px!important}
+ .booking-wizard-card{padding:32px 26px 26px!important}
+ .booking-wizard-card h2{font-size:32px!important}
+ .booking-time-grid.upgraded{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:650px){
+ .booking-service-strip{padding:20px!important}
+ .booking-service-strip h2{font-size:28px!important}
+ .booking-journey{padding:16px 12px 8px!important}
+ .booking-wizard-card{padding:28px 18px 22px!important}
+ .booking-wizard-card h2{font-size:27px!important}
+ .booking-time-grid.upgraded{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .booking-submit{width:100%!important;min-width:0!important}
+}
