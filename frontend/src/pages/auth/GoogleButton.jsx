@@ -32,7 +32,7 @@ export default function GoogleButton({ mode = "signin" }) {
         await loadGoogle();
         if (cancelled || !containerRef.current) return;
 
-        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "37574893420-so4mu6u3uuunkil58nek24nardjm46q4.apps.googleusercontent.com";
         if (!clientId) {
           setError("Google sign-in is not configured yet.");
           return;
