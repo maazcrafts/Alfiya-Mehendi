@@ -1442,3 +1442,7 @@ a { color: inherit; }
  .dashboard-welcome-card{padding:30px;min-height:230px}.dashboard-category-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:500px){.dashboard-category-grid,.dashboard-product-grid{grid-template-columns:1fr}}
+
+.dashboard-brand-logo{width:62px;height:62px;display:block;flex:0 0 62px;object-fit:cover;border-radius:14px;background:#f8f0e2;box-shadow:0 4px 12px rgba(76,48,30,.08)}
+.dashboard-brand{align-items:center}
+@media(max-width:760px){.dashboard-brand-logo{width:54px;height:54px;flex-basis:54px}}
