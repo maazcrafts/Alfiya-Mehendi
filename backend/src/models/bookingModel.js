@@ -84,7 +84,8 @@ export async function listAdminBookings(status = 'all') {
     `
       SELECT
         b.id, b.booking_date, b.booking_time, b.status,
-        b.customer_name, b.customer_phone, b.customer_location,
+        COALESCE(b.customer_name, u.name) AS customer_name,
+        b.customer_phone, b.customer_location,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
         u.id AS user_id, u.email AS customer_email,
         s.name AS service_name, s.slug AS service_slug,
