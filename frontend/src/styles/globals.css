@@ -5416,3 +5416,7 @@ a { color: inherit; }
 @media(max-width:1100px){.admin-stat-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.admin-stat-grid,.admin-quick-grid,.admin-form-grid{grid-template-columns:1fr 1fr}.admin-management-list article{grid-template-columns:1fr auto}.admin-management-list article button{grid-row:2}.admin-panel,.admin-management{padding:15px}}
 @media(max-width:520px){.admin-stat-grid,.admin-quick-grid,.admin-form-grid{grid-template-columns:1fr}.admin-form-grid .wide{grid-column:auto}.admin-panel-head{align-items:flex-start;flex-direction:column}.admin-list-head .admin-search{max-width:none;width:100%}}
+
+.admin-order-status-control{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:13px;border-top:1px solid #eee7df}
+.admin-order-status-control label{font-size:11px;color:#756a61}
+.admin-order-status-control select{border:1px solid #d4c8bc;border-radius:7px;background:#fffdfa;padding:8px 10px;font-size:12px;color:#43382f}
