@@ -3996,3 +3996,137 @@ a { color: inherit; }
 @media(prefers-reduced-motion:reduce){
   .new-tour-character,.tour-character-shadow,.tour-character-spark,.new-tour-cue-dot{animation:none!important}
 }
+
+/* Tour character flight system — the guide moves around the viewport between chapters */
+.new-tour-stage{
+  display:block!important;
+  padding:0!important;
+}
+.new-tour-character-flight{
+  position:absolute!important;
+  z-index:4!important;
+  width:360px!important;
+  height:560px!important;
+  pointer-events:none!important;
+  transition:
+    left 1.35s cubic-bezier(.18,.8,.18,1),
+    top 1.35s cubic-bezier(.18,.8,.18,1),
+    right 1.35s cubic-bezier(.18,.8,.18,1),
+    bottom 1.35s cubic-bezier(.18,.8,.18,1)!important;
+}
+.new-tour-character-flight.left-low{left:5vw;bottom:3vh}
+.new-tour-character-flight.right-low{right:5vw;bottom:4vh}
+.new-tour-character-flight.left-high{left:7vw;top:12vh}
+.new-tour-character-flight.right-high{right:7vw;top:11vh}
+.new-tour-character-flight.left-center{left:14vw;top:28vh}
+.new-tour-character-flight.right-center{right:14vw;top:27vh}
+
+.new-tour-character-flight .new-tour-character{
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  filter:drop-shadow(0 28px 30px rgba(48,31,23,.16))!important;
+  animation:none!important;
+}
+.new-tour-character-flight .tour-character-body{
+  animation:tourGuideAirFloat 3.2s ease-in-out infinite!important;
+}
+.new-tour-character-flight .tour-character-shadow{
+  animation:tourGuideAirShadow 3.2s ease-in-out infinite!important;
+}
+.new-tour-character-flight .tour-character-spark{
+  animation:tourGuideAirSpark 2.1s ease-in-out infinite!important;
+}
+
+/* The speech panel is independent, so the guide can fly anywhere without moving the explanation. */
+.new-tour-bubble{
+  position:absolute!important;
+  z-index:8!important;
+  left:50%!important;
+  bottom:7vh!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+}
+.new-tour-bubble:hover{transform:translateX(-50%) translateY(-2px)!important}
+
+/* A short "flight" flourish whenever the character arrives at a new chapter. */
+.new-tour-character-flight:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:26px;
+  width:120px;
+  height:18px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  border:1px solid rgba(160,94,62,.18);
+  opacity:0;
+}
+.new-tour-character-flight.left-high:after,
+.new-tour-character-flight.right-high:after,
+.new-tour-character-flight.left-center:after,
+.new-tour-character-flight.right-center:after{
+  animation:tourArrivalRing 1.25s ease-out .15s;
+}
+@keyframes tourGuideAirFloat{
+  0%,100%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}
+  50%{transform:translateX(-50%) translateY(-20px) rotate(1.5deg)}
+}
+@keyframes tourGuideAirShadow{
+  0%,100%{transform:translateX(-50%) scaleX(1);opacity:.2}
+  50%{transform:translateX(-50%) scaleX(.72);opacity:.1}
+}
+@keyframes tourGuideAirSpark{
+  0%,100%{opacity:.3;transform:translateY(0) scale(.88)}
+  50%{opacity:1;transform:translateY(-10px) scale(1.12)}
+}
+@keyframes tourArrivalRing{
+  0%{opacity:0;transform:translateX(-50%) scale(.55)}
+  30%{opacity:.8}
+  100%{opacity:0;transform:translateX(-50%) scale(1.7)}
+}
+
+/* Keep the mobile guide close to the panel, but still move it between sides. */
+@media(max-width:780px){
+  .new-tour-character-flight{
+    width:220px!important;
+    height:300px!important;
+    transition:left 1s cubic-bezier(.18,.8,.18,1),right 1s cubic-bezier(.18,.8,.18,1),top 1s cubic-bezier(.18,.8,.18,1),bottom 1s cubic-bezier(.18,.8,.18,1)!important;
+  }
+  .new-tour-character-flight.left-low{left:2px;bottom:4px}
+  .new-tour-character-flight.right-low{right:2px;bottom:4px}
+  .new-tour-character-flight.left-high{left:2px;top:18vh}
+  .new-tour-character-flight.right-high{right:2px;top:18vh}
+  .new-tour-character-flight.left-center{left:4px;top:31vh}
+  .new-tour-character-flight.right-center{right:4px;top:31vh}
+  .new-tour-character-flight .new-tour-character{
+    width:220px!important;
+    height:300px!important;
+    transform:scale(.72)!important;
+    transform-origin:bottom center!important;
+  }
+  .new-tour-bubble{
+    left:18px!important;
+    right:18px!important;
+    bottom:18px!important;
+    width:calc(100vw - 36px)!important;
+    transform:none!important;
+  }
+  .new-tour-bubble:hover{transform:none!important}
+}
+@media(max-width:480px){
+  .new-tour-character-flight{width:180px!important;height:250px!important}
+  .new-tour-character-flight .new-tour-character{
+    width:180px!important;height:250px!important;transform:scale(.7)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .new-tour-character-flight{
+    transition:none!important;
+  }
+  .new-tour-character-flight .tour-character-body,
+  .new-tour-character-flight .tour-character-shadow,
+  .new-tour-character-flight .tour-character-spark{
+    animation:none!important;
+  }
+}
