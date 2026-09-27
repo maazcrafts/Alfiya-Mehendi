@@ -66,6 +66,16 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/admin/all', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const products = await listProducts({ includeInactive: true })
+    return res.json({ products })
+  } catch (error) {
+    console.error('List all products error:', error)
+    return res.status(500).json({ message: 'Unable to load products.' })
+  }
+})
+
 router.get('/:slug', async (req, res) => {
   try {
     const product = await findProductBySlug(req.params.slug)
