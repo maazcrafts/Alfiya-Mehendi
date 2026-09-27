@@ -22,7 +22,7 @@ function formatPrice(paise) {
 
 function getUser() {
   try {
-    return JSON.parse(localStorage.getItem('alfiya_user') || '{}')
+    return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}')
   } catch {
     return {}
   }
@@ -41,7 +41,7 @@ export default function Products() {
 
   useEffect(() => {
     async function loadCartCount() {
-      const authToken = localStorage.getItem('alfiya_auth_token') || ''
+      const authToken = sessionStorage.getItem('alfiya_auth_token') || ''
       if (!authToken) { setCartCount(0); return }
       try {
         const response = await fetch(`${apiBase}/api/cart`, { headers: { Authorization: `Bearer ${authToken}` } })
