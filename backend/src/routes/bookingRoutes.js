@@ -97,6 +97,22 @@ router.get('/mine', requireAuth, async (req, res) => {
   }
 })
 
+router.get('/availability', requireAuth, async (req, res) => {
+  try {
+    const { date } = req.query
+
+    if (!DATE_PATTERN.test(date || '') || !isValidDate(date)) {
+      return res.status(400).json({ message: 'Please choose a valid appointment date.' })
+    }
+
+    const bookedSlots = await listBookedTimes(date)
+    return res.json({ bookedSlots })
+  } catch (error) {
+    console.error('Load booking availability error:', error)
+    return res.status(500).json({ message: 'Unable to load appointment availability.' })
+  }
+})
+
 router.patch('/:id/cancel', requireAuth, async (req, res) => {
   try {
     const result = await cancelUserBooking({
