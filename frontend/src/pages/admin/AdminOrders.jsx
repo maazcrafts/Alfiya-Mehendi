@@ -1,6 +1,6 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
@@ -26,7 +26,6 @@ const filters = [
 ]
 
 function token() { return localStorage.getItem('alfiya_auth_token') || '' }
-function user() { try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} } }
 function money(paise) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format((paise || 0) / 100)
 }
@@ -36,7 +35,6 @@ function dateLabel(value) {
 
 export default function AdminOrders() {
   const navigate = useNavigate()
-  const admin = useMemo(user, [])
   const [filter, setFilter] = useState('all')
   const [orders, setOrders] = useState([])
   const [query, setQuery] = useState('')
@@ -46,10 +44,6 @@ export default function AdminOrders() {
   const [saving, setSaving] = useState('')
 
   useEffect(() => {
-    if (admin?.role !== 'admin') {
-      navigate('/services', { replace: true })
-      return
-    }
     loadOrders()
   }, [filter])
 
@@ -62,7 +56,11 @@ export default function AdminOrders() {
       })
       const type = response.headers.get('content-type') || ''
       if (!type.includes('application/json')) throw new Error('The orders service returned an unexpected response.')
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
+      if (response.status === 401 || response.status === 403) {
+        navigate('/services', { replace: true })
+        throw new Error(data.message || 'Administrator access required.')
+      }
       if (!response.ok) throw new Error(data.message || 'Unable to load customer orders.')
       setOrders(data.orders || [])
     } catch (err) {
