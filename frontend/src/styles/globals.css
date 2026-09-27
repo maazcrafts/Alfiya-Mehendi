@@ -4176,3 +4176,145 @@ a { color: inherit; }
 .new-tour-character-flight .new-tour-character{
   overflow:visible!important;
 }
+
+/* New-user tour — scale up the presentation and correct guide hands */
+.new-tour-character-flight{
+  width:440px!important;
+  height:670px!important;
+}
+.new-tour-character-flight.left-low{left:4vw;bottom:1vh}
+.new-tour-character-flight.right-low{right:4vw;bottom:2vh}
+.new-tour-character-flight.left-high{left:5vw;top:8vh}
+.new-tour-character-flight.right-high{right:5vw;top:7vh}
+.new-tour-character-flight.left-center{left:10vw;top:22vh}
+.new-tour-character-flight.right-center{right:10vw;top:21vh}
+
+.new-tour-character-flight .new-tour-character{
+  width:440px!important;
+  height:670px!important;
+}
+.new-tour-character-flight .tour-character-body{
+  width:245px!important;
+  height:525px!important;
+  bottom:36px!important;
+  transform:translateX(-50%) scale(1.08)!important;
+  transform-origin:bottom center!important;
+}
+
+/* Put the hands at the actual ends of the arms instead of beside the waist. */
+.new-tour-character-flight .tour-hand{
+  width:37px!important;
+  height:48px!important;
+  top:292px!important;
+  z-index:6!important;
+}
+.new-tour-character-flight .tour-hand-left{
+  left:-1px!important;
+  transform:rotate(18deg)!important;
+}
+.new-tour-character-flight .tour-hand-right{
+  right:-6px!important;
+  transform:rotate(-28deg)!important;
+}
+
+/* Larger cinematic explanation card */
+.new-tour-bubble{
+  width:min(880px,62vw)!important;
+  min-height:500px!important;
+  padding:56px 62px 38px!important;
+  border-radius:34px!important;
+  box-shadow:0 42px 120px rgba(42,28,20,.31),0 10px 34px rgba(60,41,32,.12)!important;
+}
+.new-tour-bubble-tail{
+  left:-19px!important;
+  bottom:125px!important;
+  width:37px!important;
+  height:37px!important;
+}
+.new-tour-kicker{
+  margin-bottom:16px!important;
+  font-size:12px!important;
+  letter-spacing:.22em!important;
+}
+.new-tour-bubble h2{
+  max-width:760px!important;
+  font-size:62px!important;
+  line-height:1.02!important;
+}
+.new-tour-text{
+  max-width:750px!important;
+  margin-top:24px!important;
+  font-size:18px!important;
+  line-height:1.7!important;
+}
+.new-tour-cue{
+  max-width:750px!important;
+  min-height:61px!important;
+  margin-top:27px!important;
+  padding:0 19px!important;
+  border-radius:14px!important;
+}
+.new-tour-cue span{font-size:20px!important}
+.new-tour-cue strong{font-size:13px!important}
+.new-tour-footer{
+  margin-top:29px!important;
+  padding-top:24px!important;
+}
+.new-tour-footer>span{font-size:11px!important}
+.new-tour-footer>div{gap:15px!important}
+.new-tour-skip{
+  min-height:55px!important;
+  padding:0 17px!important;
+  font-size:12px!important;
+}
+.new-tour-next{
+  min-height:58px!important;
+  min-width:175px!important;
+  padding:0 24px!important;
+  border-radius:11px!important;
+  font-size:13px!important;
+}
+.new-tour-next b{font-size:20px!important}
+
+@media(max-width:1200px){
+  .new-tour-character-flight{
+    width:370px!important;
+    height:590px!important;
+  }
+  .new-tour-character-flight .new-tour-character{
+    width:370px!important;height:590px!important;
+  }
+  .new-tour-character-flight .tour-character-body{
+    transform:translateX(-50%) scale(.94)!important;
+  }
+  .new-tour-bubble{
+    width:min(780px,64vw)!important;
+    padding:48px 52px 34px!important;
+  }
+  .new-tour-bubble h2{font-size:52px!important}
+  .new-tour-text{font-size:16px!important}
+}
+@media(max-width:780px){
+  .new-tour-character-flight{
+    width:220px!important;height:300px!important;
+  }
+  .new-tour-character-flight .new-tour-character{
+    width:220px!important;height:300px!important;
+  }
+  .new-tour-character-flight .tour-character-body{
+    transform:translateX(-50%) scale(.72)!important;
+  }
+  .new-tour-bubble{
+    width:calc(100vw - 36px)!important;
+    min-height:0!important;
+    padding:34px 28px 24px!important;
+  }
+  .new-tour-bubble h2{font-size:39px!important}
+  .new-tour-text{font-size:14px!important}
+  .new-tour-cue{min-height:53px!important}
+}
+@media(max-width:480px){
+  .new-tour-bubble{padding:28px 22px 19px!important}
+  .new-tour-bubble h2{font-size:33px!important}
+  .new-tour-text{font-size:13px!important}
+}
