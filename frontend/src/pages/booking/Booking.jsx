@@ -2,6 +2,23 @@ import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
+
+function BookingErrorModal({ message, onClose }) {
+  if (!message) return null
+  return (
+    <div className="booking-error-modal-backdrop" role="presentation" onClick={onClose}>
+      <div className="booking-error-modal" role="alertdialog" aria-modal="true" aria-labelledby="booking-error-title" onClick={event => event.stopPropagation()}>
+        <button type="button" className="booking-error-modal-close" aria-label="Close" onClick={onClose}>×</button>
+        <div className="booking-error-modal-icon">!</div>
+        <p className="dashboard-kicker">Appointment date</p>
+        <h2 id="booking-error-title">That date has already passed.</h2>
+        <p>{message}</p>
+        <button type="button" className="booking-error-modal-action" onClick={onClose}>Choose another date</button>
+      </div>
+    </div>
+  )
+}
+
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 const slots = Array.from({ length: 21 }, (_, i) => {
   const minutes = 600 + i * 30, h = Math.floor(minutes / 60), m = minutes % 60
