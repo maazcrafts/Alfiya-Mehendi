@@ -142,8 +142,8 @@ router.patch('/:id/status', requireAuth, requireAdmin, async (req, res) => {
   try {
     const { status, adminNote } = req.body
 
-    if (!['confirmed', 'rejected'].includes(status)) {
-      return res.status(400).json({ message: 'Admin status must be confirmed or rejected.' })
+    if (!['confirmed', 'rejected', 'completed', 'cancelled'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid admin booking status.' })
     }
 
     const result = await updateBookingStatus({
