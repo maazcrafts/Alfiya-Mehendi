@@ -55,10 +55,10 @@ export default function Login() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Unable to log in.");
 
-      localStorage.setItem("alfiya_auth_token", data.token);
-      localStorage.setItem("alfiya_user", JSON.stringify(data.user));
-      if (rememberMe) localStorage.setItem("alfiya_remember_me", "true");
-      else localStorage.removeItem("alfiya_remember_me");
+      sessionStorage.setItem("alfiya_auth_token", data.token);
+      sessionStorage.setItem("alfiya_user", JSON.stringify(data.user));
+      if (rememberMe) sessionStorage.setItem("alfiya_remember_me", "true");
+      else sessionStorage.removeItem("alfiya_remember_me");
       setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to log in.");
