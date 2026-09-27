@@ -205,3 +205,4 @@ export default function Booking(){
     </div></section>
   </main>
   </>
+}
