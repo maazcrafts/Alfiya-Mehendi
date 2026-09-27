@@ -49,12 +49,18 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+    const normalizedOrigin = origin?.replace(/\/$/, '')
+    const isVercelOrigin = normalizedOrigin && /^https:\/\/([a-z0-9-]+\.)?vercel\.app$/i.test(normalizedOrigin)
+    const isAllowed = !normalizedOrigin || allowedOrigins.includes(normalizedOrigin) || isVercelOrigin
+
+    if (isAllowed) {
       return callback(null, true)
     }
+
+    console.warn('Blocked CORS origin:', normalizedOrigin)
     return callback(new Error('CORS origin not allowed'))
   },
-  credentials: true,
+  credentials: false,
 }))
 app.use(express.json())
 app.use('/api/products', productRoutes)
