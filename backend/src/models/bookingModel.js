@@ -1,15 +1,18 @@
 import { query, getClient } from '../config/pool.js'
 
-export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerNote }) {
+export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerNote }) {
   const result = await query(
     `
       INSERT INTO bookings (
-        user_id, service_id, booking_date, booking_time, status, customer_note
+        user_id, service_id, booking_date, booking_time, status,
+        customer_name, customer_phone, customer_location, customer_note
       )
-      VALUES ($1, $2, $3, $4, 'requested', $5)
-      RETURNING id, user_id, service_id, booking_date, booking_time, status, customer_note, admin_note, created_at, updated_at
+      VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8)
+      RETURNING id, user_id, service_id, booking_date, booking_time, status,
+        customer_name, customer_phone, customer_location, customer_note, admin_note,
+        created_at, updated_at
     `,
-    [userId, serviceId, bookingDate, bookingTime, customerNote || null],
+    [userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerNote || null],
   )
   return result.rows[0]
 }
@@ -81,8 +84,9 @@ export async function listAdminBookings(status = 'all') {
     `
       SELECT
         b.id, b.booking_date, b.booking_time, b.status,
+        b.customer_name, b.customer_phone, b.customer_location,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
-        u.id AS user_id, u.name AS customer_name, u.email AS customer_email,
+        u.id AS user_id, u.email AS customer_email,
         s.name AS service_name, s.slug AS service_slug,
         s.price_paise, s.level
       FROM bookings b
