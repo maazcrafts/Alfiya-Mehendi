@@ -55,3 +55,5 @@ router.get('/admin', requireAuth, requireAdmin, async (req, res) => {
     return res.status(500).json({ message: 'Unable to load customer orders.' })
   }
 })
+
+export default router
