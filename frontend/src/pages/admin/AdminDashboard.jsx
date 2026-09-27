@@ -117,9 +117,9 @@ export default function AdminDashboard() {
     finally { setSaving(false) }
   }
 
-  async function deactivateProduct(id) {
-    if (!window.confirm('Deactivate this product?')) return
-    try { await request(`/api/products/${id}`, { method: 'DELETE' }); await loadProducts(); flash('Product deactivated.') }
+  async function toggleProduct(product) {
+    if (product.isActive && !window.confirm('Hide this product from the shop?')) return
+    try { await request(`/api/products/${product.id}`, { method: 'PATCH', body: JSON.stringify({ isActive: !product.isActive }) }); await loadProducts(); flash(product.isActive ? 'Product hidden.' : 'Product restored.') }
     catch (e) { setError(e.message) }
   }
 
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
               </form>
 
               <div className="admin-panel-head admin-list-head"><div><p className="dashboard-kicker">Inventory</p><h2>Products</h2></div><input className="admin-search" placeholder="Search products…" value={productSearch} onChange={e=>setProductSearch(e.target.value)}/></div>
-              <div className="admin-management-list">{filteredProducts.map(p=><article key={p.id}><div><strong>{p.name}</strong><span>{p.categoryName||'Uncategorised'} · {money(p.pricePaise)} · {p.stockQuantity} in stock</span></div><span className={p.isActive?'admin-pill':'admin-pill muted'}>{p.isActive?'Active':'Hidden'}</span><button onClick={()=>editProduct(p)}>Edit</button><button onClick={()=>deactivateProduct(p.id)} disabled={!p.isActive}>Hide</button></article>)}</div>
+              <div className="admin-management-list">{filteredProducts.map(p=><article key={p.id}><div><strong>{p.name}</strong><span>{p.categoryName||'Uncategorised'} · {money(p.pricePaise)} · {p.stockQuantity} in stock</span></div><span className={p.isActive?'admin-pill':'admin-pill muted'}>{p.isActive?'Active':'Hidden'}</span><button onClick={()=>editProduct(p)}>Edit</button><button onClick={()=>toggleProduct(p)}>{p.isActive ? 'Hide' : 'Restore'}</button></article>)}</div>
             </section>
           )}
 
