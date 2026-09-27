@@ -20,18 +20,17 @@ export function requireAuth(req, res, next) {
 export async function requireAdmin(req, res, next) {
   const configuredEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase()
   const authenticatedEmail = req.auth?.email?.trim().toLowerCase()
-  const userId = req.auth?.userId || req.auth?.sub
 
-  if (!configuredEmail || !authenticatedEmail || authenticatedEmail !== configuredEmail || !userId) {
+  if (!configuredEmail || !authenticatedEmail || authenticatedEmail !== configuredEmail) {
     return res.status(403).json({ message: 'Administrator access required.' })
   }
 
   try {
-    // Do not trust the role embedded in an old JWT. The database is authoritative.
-    // This also lets an already-issued token work after ADMIN_EMAIL/role changes.
+    // The configured admin email is the source of truth. Look the account up
+    // by email instead of depending on an older JWT's user-id/role claims.
     const result = await query(
-      'SELECT id, email, role FROM users WHERE id = $1 LIMIT 1',
-      [userId],
+      'SELECT id, email, role FROM users WHERE LOWER(email) = $1 LIMIT 1',
+      [configuredEmail],
     )
     const user = result.rows[0]
 
@@ -39,20 +38,23 @@ export async function requireAdmin(req, res, next) {
       return res.status(403).json({ message: 'Administrator access required.' })
     }
 
-    // Keep the single configured admin account in sync with ADMIN_EMAIL.
     if (user.role !== 'admin') {
       const promoted = await query(
         `UPDATE users
          SET role = 'admin', updated_at = NOW()
          WHERE id = $1
          RETURNING id, email, role`,
-        [userId],
+        [user.id],
       )
       if (!promoted.rows[0]) {
         return res.status(403).json({ message: 'Administrator access required.' })
       }
     }
 
+    // Normalize the auth context for downstream admin routes.
+    req.auth.userId = user.id
+    req.auth.sub = user.id
+    req.auth.email = user.email
     req.auth.role = 'admin'
     return next()
   } catch (error) {
