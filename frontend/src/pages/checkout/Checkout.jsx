@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-const getToken = () => localStorage.getItem('alfiya_auth_token') || ''
+const getToken = () => sessionStorage.getItem('alfiya_auth_token') || ''
 
 function money(paise) {
   return new Intl.NumberFormat('en-IN', {
