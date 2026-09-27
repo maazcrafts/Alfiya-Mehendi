@@ -17,6 +17,8 @@ import Cart from './pages/cart/Cart.jsx'
 import Contact from './pages/contact/Contact.jsx'
 import Account from './pages/account/Account.jsx'
 import Checkout from './pages/checkout/Checkout.jsx'
+import GettingThere from './pages/booking/GettingThere.jsx'
+import './styles/getting-there.css'
 import NetworkStatus from './components/NetworkStatus.jsx'
 
 function Placeholder({ title }) {
@@ -39,6 +41,7 @@ export default function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/services" element={<Services />} />
         <Route path="/booking" element={<Booking />} />
+          <Route path="/booking/getting-there" element={<GettingThere />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/support" element={<AdminSupport />} />
