@@ -80,7 +80,7 @@ export default function AdminDashboard() {
 
   async function loadProducts() {
     try {
-      const data = await request('/api/products?includeInactive=true')
+      const data = await request('/api/products/admin/all')
       setProducts(data.products || [])
     } catch (e) { setError(e.message) }
   }
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
   async function saveProduct(event) {
     event.preventDefault(); setSaving(true); setError('')
     try {
-      const payload = { ...productForm, pricePaise: Number(productForm.pricePaise), stockQuantity: Number(productForm.stockQuantity) }
+      const payload = { ...productForm, pricePaise: Math.round(Number(productForm.pricePaise) * 100), stockQuantity: Number(productForm.stockQuantity) }
       const data = await request(editingProduct ? `/api/products/${editingProduct}` : '/api/products', {
         method: editingProduct ? 'PATCH' : 'POST', body: JSON.stringify(payload),
       })
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
     setEditingProduct(product.id)
     setProductForm({
       name: product.name, slug: product.slug, description: product.description || '',
-      pricePaise: Math.round(product.pricePaise), stockQuantity: product.stockQuantity,
+      pricePaise: (Number(product.pricePaise) / 100).toFixed(2), stockQuantity: product.stockQuantity,
       categoryId: product.categoryId || '', isActive: product.isActive,
       images: (product.images || []).map(i => ({ imageUrl: i.image_url, altText: i.alt_text || '' })),
     })
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
   async function saveService(event) {
     event.preventDefault(); setSaving(true); setError('')
     try {
-      const payload = { ...serviceForm, pricePaise: Number(serviceForm.pricePaise), durationMinutes: serviceForm.durationMinutes === '' ? null : Number(serviceForm.durationMinutes) }
+      const payload = { ...serviceForm, pricePaise: Math.round(Number(serviceForm.pricePaise) * 100), durationMinutes: serviceForm.durationMinutes === '' ? null : Number(serviceForm.durationMinutes) }
       await request(editingService ? `/api/services/${editingService}` : '/api/services', {
         method: editingService ? 'PATCH' : 'POST', body: JSON.stringify(payload),
       })
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
               <form className="admin-form-grid" onSubmit={saveProduct}>
                 <input required placeholder="Product name" value={productForm.name} onChange={e=>setProductForm({...productForm,name:e.target.value})}/>
                 <input required placeholder="slug e.g. red-mehendi-oil" value={productForm.slug} onChange={e=>setProductForm({...productForm,slug:e.target.value})}/>
-                <input required type="number" min="0" placeholder="Price in paise" value={productForm.pricePaise} onChange={e=>setProductForm({...productForm,pricePaise:e.target.value})}/>
+                <input required type="number" min="0" placeholder="Price in INR" value={productForm.pricePaise} onChange={e=>setProductForm({...productForm,pricePaise:e.target.value})}/>
                 <input type="number" min="0" placeholder="Stock quantity" value={productForm.stockQuantity} onChange={e=>setProductForm({...productForm,stockQuantity:e.target.value})}/>
                 <select value={productForm.categoryId} onChange={e=>setProductForm({...productForm,categoryId:e.target.value})}><option value="">No category</option>{(overview?.categories||[]).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select>
                 <label className="admin-check"><input type="checkbox" checked={productForm.isActive} onChange={e=>setProductForm({...productForm,isActive:e.target.checked})}/> Visible in shop</label>
@@ -254,14 +254,14 @@ export default function AdminDashboard() {
                 <input required placeholder="Service name" value={serviceForm.name} onChange={e=>setServiceForm({...serviceForm,name:e.target.value})}/>
                 <input required placeholder="slug" value={serviceForm.slug} onChange={e=>setServiceForm({...serviceForm,slug:e.target.value})}/>
                 <select value={serviceForm.level} onChange={e=>setServiceForm({...serviceForm,level:e.target.value})}><option value="basic">Basic</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option><option value="bridal">Bridal</option></select>
-                <input required type="number" min="0" placeholder="Price in paise" value={serviceForm.pricePaise} onChange={e=>setServiceForm({...serviceForm,pricePaise:e.target.value})}/>
+                <input required type="number" min="0" placeholder="Price in INR" value={serviceForm.pricePaise} onChange={e=>setServiceForm({...serviceForm,pricePaise:e.target.value})}/>
                 <input type="number" min="0" placeholder="Duration in minutes" value={serviceForm.durationMinutes} onChange={e=>setServiceForm({...serviceForm,durationMinutes:e.target.value})}/>
                 <label className="admin-check"><input type="checkbox" checked={serviceForm.isActive} onChange={e=>setServiceForm({...serviceForm,isActive:e.target.checked})}/> Available for booking</label>
                 <textarea className="wide" placeholder="Description" value={serviceForm.description} onChange={e=>setServiceForm({...serviceForm,description:e.target.value})}/>
                 <div className="wide admin-form-actions"><button className="admin-primary" disabled={saving}>{saving?'Saving…':editingService?'Save changes':'Create service'}</button>{editingService&&<button type="button" onClick={()=>{setEditingService(null);setServiceForm(emptyService)}}>Cancel</button>}</div>
               </form>
               <div className="admin-panel-head admin-list-head"><div><p className="dashboard-kicker">Service catalogue</p><h2>Services</h2></div><input className="admin-search" placeholder="Search services…" value={serviceSearch} onChange={e=>setServiceSearch(e.target.value)}/></div>
-              <div className="admin-management-list">{filteredServices.map(s=><article key={s.id}><div><strong>{s.name}</strong><span>{s.level} · {money(s.price_paise)} · {s.duration_minutes || '—'} min</span></div><span className={s.is_active?'admin-pill':'admin-pill muted'}>{s.is_active?'Active':'Hidden'}</span><button onClick={()=>{setEditingService(s.id);setServiceForm({name:s.name,slug:s.slug,level:s.level,description:s.description||'',pricePaise:Number(s.price_paise),durationMinutes:s.duration_minutes||'',isActive:s.is_active})}}>Edit</button><button onClick={()=>toggleService(s)}>{s.is_active?'Hide':'Restore'}</button></article>)}</div>
+              <div className="admin-management-list">{filteredServices.map(s=><article key={s.id}><div><strong>{s.name}</strong><span>{s.level} · {money(s.price_paise)} · {s.duration_minutes || '—'} min</span></div><span className={s.is_active?'admin-pill':'admin-pill muted'}>{s.is_active?'Active':'Hidden'}</span><button onClick={()=>{setEditingService(s.id);setServiceForm({name:s.name,slug:s.slug,level:s.level,description:s.description||'',pricePaise:(Number(s.price_paise)/100).toFixed(2),durationMinutes:s.duration_minutes||'',isActive:s.is_active})}}>Edit</button><button onClick={()=>toggleService(s)}>{s.is_active?'Hide':'Restore'}</button></article>)}</div>
             </section>
           )}
 
