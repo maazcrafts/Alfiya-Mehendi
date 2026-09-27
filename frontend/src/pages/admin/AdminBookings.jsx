@@ -1,6 +1,6 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
@@ -32,7 +32,6 @@ const filters = [
 ]
 
 export default function AdminBookings() {
-  const user = useMemo(getUser, [])
   const navigate = useNavigate()
   const [filter, setFilter] = useState('requested')
   const [bookings, setBookings] = useState([])
@@ -44,10 +43,6 @@ export default function AdminBookings() {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    if (user?.role !== 'admin') {
-      navigate('/services', { replace: true })
-      return
-    }
     loadBookings()
   }, [filter])
 
@@ -59,6 +54,10 @@ export default function AdminBookings() {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
       const data = await response.json()
+      if (response.status === 401 || response.status === 403) {
+        navigate('/services', { replace: true })
+        throw new Error('Administrator access required.')
+      }
       if (!response.ok) throw new Error(data.message || 'Unable to load booking requests.')
       setBookings(data.bookings || [])
     } catch (err) {
