@@ -66,19 +66,38 @@ export default function Checkout() {
   async function loadCheckout() {
     setLoading(true)
     setError('')
+
+    // Load the cart independently from address data. A missing/failed address
+    // request must never make an existing cart appear empty.
     try {
-      const [cartData, addressData] = await Promise.all([
-        request('/api/cart'),
-        request('/api/addresses'),
-      ])
-      setItems(cartData.items || [])
-      const saved = addressData.addresses || []
+      const cartData = await request('/api/cart')
+      setItems(Array.isArray(cartData.items) ? cartData.items : [])
+    } catch (err) {
+      setError(err.message || 'Unable to load your cart for checkout.')
+      setItems([])
+      setLoading(false)
+      return
+    }
+
+    try {
+      const addressData = await request('/api/addresses')
+      const saved = Array.isArray(addressData.addresses) ? addressData.addresses : []
       setAddresses(saved)
       const preferred = saved.find(address => address.isDefault) || saved[0]
-      if (preferred) setSelectedAddressId(preferred.id)
-      else setShowAddressForm(true)
+      if (preferred) {
+        setSelectedAddressId(preferred.id)
+        setShowAddressForm(false)
+      } else {
+        setSelectedAddressId('')
+        setShowAddressForm(true)
+      }
     } catch (err) {
-      setError(err.message || 'Unable to load checkout.')
+      // The cart is still valid. Let the user add/select an address instead
+      // of replacing the checkout with an empty-cart state.
+      setAddresses([])
+      setSelectedAddressId('')
+      setShowAddressForm(true)
+      setError(err.message || 'Unable to load saved addresses. Please add a delivery address.')
     } finally {
       setLoading(false)
     }
