@@ -21,6 +21,7 @@ export default function Account() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [feedback, setFeedback] = useState({ type: '', message: '' })
+  const [activity, setActivity] = useState({ orders: 0, bookings: 0, cart: 0 })
 
   const token = localStorage.getItem('alfiya_auth_token') || ''
   const localUser = useMemo(() => {
@@ -59,6 +60,31 @@ export default function Account() {
     }
 
     loadProfile()
+
+    async function loadActivity() {
+      const headers = { Authorization: 'Bearer ' + token }
+      const results = await Promise.allSettled([
+        fetch(apiBase + '/api/orders/mine', { headers }),
+        fetch(apiBase + '/api/bookings/mine', { headers }),
+        fetch(apiBase + '/api/cart', { headers }),
+      ])
+      const read = async (result, key) => {
+        if (result.status !== 'fulfilled' || !result.value.ok) return 0
+        try {
+          const data = await result.value.json()
+          if (key === 'cart') return Array.isArray(data.items) ? data.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0) : 0
+          if (key === 'orders') return Array.isArray(data.orders) ? data.orders.length : 0
+          return Array.isArray(data.bookings) ? data.bookings.length : 0
+        } catch { return 0 }
+      }
+      const [orders, bookings, cart] = await Promise.all([
+        read(results[0], 'orders'),
+        read(results[1], 'bookings'),
+        read(results[2], 'cart'),
+      ])
+      setActivity({ orders, bookings, cart })
+    }
+    loadActivity()
   }, [navigate, token])
 
   async function saveProfile(event) {
@@ -161,6 +187,24 @@ export default function Account() {
           </section>
 
           {feedback.message && <div className={`profile-feedback ${feedback.type}`}>{feedback.message}</div>}
+
+          <section className="profile-stats-strip" aria-label="Account activity">
+            <div className="profile-stat-card">
+              <span className="profile-stat-index">01</span>
+              <div><strong>{activity.orders}</strong><small>Orders placed</small></div>
+              <Link to="/orders">View orders →</Link>
+            </div>
+            <div className="profile-stat-card profile-stat-accent">
+              <span className="profile-stat-index">02</span>
+              <div><strong>{activity.bookings}</strong><small>Appointments</small></div>
+              <Link to="/booking">View bookings →</Link>
+            </div>
+            <div className="profile-stat-card">
+              <span className="profile-stat-index">03</span>
+              <div><strong>{activity.cart}</strong><small>Items in cart</small></div>
+              <Link to="/cart">Open cart →</Link>
+            </div>
+          </section>
 
           <section className="profile-grid">
             <article className="profile-card profile-personal-card">
