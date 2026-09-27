@@ -115,21 +115,7 @@ export default function Products() {
           </div>
 
           <div className="dashboard-top-actions">
-            <label className="dashboard-search">
-              <span className="dashboard-search-mark" aria-hidden="true"></span>
-              <input
-                value={search}
-                onChange={(event) => {
-                  const next = new URLSearchParams(searchParams)
-                  if (event.target.value) next.set('search', event.target.value)
-                  else next.delete('search')
-                  setSearchParams(next)
-                }}
-                placeholder="Search products..."
-                aria-label="Search products"
-              />
-            </label>
-            <Link to="/cart" className="dashboard-cart">
+            <Link to="/cart" className="dashboard-cart" aria-label="Open cart">
               <span className="dashboard-bag-mark" aria-hidden="true"></span>
               <b>{cartCount}</b>
             </Link>
