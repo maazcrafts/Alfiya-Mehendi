@@ -145,7 +145,7 @@ export default function NewUserTour() {
       </div>
 
       <div className="new-tour-stage">
-        <div className={"new-tour-character-flight " + characterPosition} key={characterPosition}>
+        <div className={"new-tour-character-flight " + characterPosition}>
           <TourCharacter />
         </div>
 
