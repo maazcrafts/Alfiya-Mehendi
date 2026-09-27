@@ -1584,7 +1584,7 @@ a { color: inherit; }
 .admin-booking-card{padding:26px;border:1px solid #d4c1ab;border-radius:13px;background:#fffaf2;box-shadow:0 7px 20px rgba(89,66,46,.05)}
 .admin-booking-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
 .admin-booking-header h3{margin:5px 0 0;color:#3d2b23;font-family:Georgia,serif;font-size:25px;font-weight:400}
-.admin-booking-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:15px;margin-top:22px;padding:17px 0;border-top:1px solid #eadfd2;border-bottom:1px solid #eadfd2}
+.admin-booking-grid{display:grid;grid-template-columns:1.35fr 1fr 1.2fr 1fr;gap:15px;margin-top:22px;padding:17px 0;border-top:1px solid #eadfd2;border-bottom:1px solid #eadfd2}
 .admin-booking-grid div{display:grid;gap:4px}
 .admin-booking-grid small,.admin-message small,.admin-decision label>span{color:#9a8878;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .admin-booking-grid strong{color:#49392f;font-size:13px;font-weight:600}
