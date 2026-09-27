@@ -20,6 +20,7 @@ import Checkout from './pages/checkout/Checkout.jsx'
 import GettingThere from './pages/booking/GettingThere.jsx'
 import './styles/getting-there.css'
 import NetworkStatus from './components/NetworkStatus.jsx'
+import NewUserTour from './components/NewUserTour.jsx'
 
 function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/about" element={<Placeholder title="About" />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <NewUserTour />
     </BrowserRouter>
   )
 }
