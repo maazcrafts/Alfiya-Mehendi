@@ -4,7 +4,7 @@ import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-function token() { return localStorage.getItem('alfiya_auth_token') || '' }
+function token() { return sessionStorage.getItem('alfiya_auth_token') || '' }
 function money(paise) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format((Number(paise) || 0) / 100)
 }
@@ -18,7 +18,7 @@ const emptyService = { name: '', slug: '', level: 'basic', description: '', pric
 export default function AdminDashboard() {
   const navigate = useNavigate()
   const [admin, setAdmin] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
+    try { return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}') } catch { return {} }
   })
   const [tab, setTab] = useState('overview')
   const [overview, setOverview] = useState(null)
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
       const profileData = await profile.json().catch(() => ({}))
       if (profile.ok && profileData.user) {
         setAdmin(profileData.user)
-        localStorage.setItem('alfiya_user', JSON.stringify(profileData.user))
+        sessionStorage.setItem('alfiya_user', JSON.stringify(profileData.user))
       }
     } catch (e) {
       if (/administrator access required|authentication required|invalid or expired/i.test(e.message || '')) {
