@@ -196,7 +196,7 @@ VALUES
   ('Oils', 'oils', 'Mehendi oils and aftercare oils'),
   ('Tools', 'tools', 'Mehendi application tools'),
   ('Cone & Cellophane Supplies', 'cone-cellophane-supplies', 'Cone paper, cellophane and related supplies')
-ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
+ON CONFLICT (slug) DO NOTHING;
 
 -- Initial service catalogue.
 INSERT INTO services (name, slug, level, description, price_paise)
