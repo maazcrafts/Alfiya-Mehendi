@@ -4130,3 +4130,49 @@ a { color: inherit; }
     animation:none!important;
   }
 }
+
+/* Guide character — complete lower body / no clipped legs */
+.tour-dress{
+  height:235px!important;
+  border-radius:60px 60px 35px 35px!important;
+}
+.tour-skirt{
+  position:absolute;
+  z-index:2;
+  left:20px;
+  top:320px;
+  width:170px;
+  height:92px;
+  border-radius:25px 25px 48% 48%;
+  background:linear-gradient(160deg,#788564 0%,#657353 100%);
+  clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);
+}
+.tour-leg{
+  position:absolute;
+  z-index:1;
+  top:395px;
+  width:37px;
+  height:67px;
+  border-radius:20px 20px 12px 12px;
+  background:#c98564;
+}
+.tour-leg-left{left:58px;transform:rotate(2deg)}
+.tour-leg-right{right:58px;transform:rotate(-2deg)}
+.tour-leg span{
+  position:absolute;
+  left:-7px;
+  bottom:-10px;
+  width:51px;
+  height:19px;
+  border-radius:55% 45% 40% 40%;
+  background:#4a342b;
+}
+.tour-leg-left span{transform:rotate(-4deg)}
+.tour-leg-right span{transform:rotate(4deg)}
+.new-tour-character-flight .tour-character-body{
+  height:465px!important;
+  bottom:30px!important;
+}
+.new-tour-character-flight .new-tour-character{
+  overflow:visible!important;
+}
