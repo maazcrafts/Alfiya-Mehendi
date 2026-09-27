@@ -16,7 +16,14 @@ const statusMeta = {
 }
 function user(){try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
 function token(){return localStorage.getItem('alfiya_auth_token')||''}
-function today(){return new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function today(){
+  return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())
+}
+function isFutureAppointment(dateValue,timeValue){
+  if(!dateValue||!timeValue)return false
+  const requested=new Date(dateValue+'T'+timeValue+':00+05:30')
+  return Number.isFinite(requested.getTime()) && requested.getTime()>Date.now()
+}
 function price(p){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((p||0)/100)}
 function dateLabel(v){return v?new Intl.DateTimeFormat('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00')):''}
 function timeLabel(v){if(!v)return '';const [h,m]=v.slice(0,5).split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
@@ -41,7 +48,18 @@ export default function Booking(){
   useEffect(()=>{loadBookings()},[])
   useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
-  const canNext=step===1?Boolean(date):step===2?Boolean(time):true
+  const canNext=step===1?Boolean(date)&&date>=today():step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
+  const continueStep=()=>{
+    setError('')
+    if(step===1){
+      if(!date||date<today()){setError('Please choose a future appointment date.');return}
+      setStep(2);return
+    }
+    if(step===2){
+      if(!time||!slots.some(s=>s.value===time)||booked.includes(time)){setError('Please choose an available time slot.');return}
+      setStep(3)
+    }
+  }
   const cancelBooking=async bookingId=>{
     if(!window.confirm('Cancel this pending appointment request?')) return
     setCancelling(bookingId)
@@ -58,7 +76,7 @@ export default function Booking(){
     finally{setCancelling('')}
   }
 
-  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
+  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose a future date and an available time slot.');setStep(date>=today()?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
   return <main className="shop-dashboard booking-dashboard">
     <DashboardSidebar active="bookings" />
@@ -138,7 +156,7 @@ export default function Booking(){
 
             <div className="booking-wizard-actions">
               {step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>← Back</button>:<span/>}
-              {step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={()=>setStep(step+1)}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
+              {step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={continueStep}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
             </div>
             {step===3&&<p className="booking-disclaimer">Your appointment is not confirmed until Alfiya approves the request.</p>}
           </section>
