@@ -5161,3 +5161,69 @@ a { color: inherit; }
 .logout-girl .logout-tear-left{
   opacity:.35;
 }
+
+/* Final logout pose: one relaxed arm + one raised goodbye wave */
+.logout-girl .logout-girl-arm-left{
+  display:block!important;
+  left:35px!important;
+  top:169px!important;
+  width:34px!important;
+  height:138px!important;
+  border-radius:22px!important;
+  transform:rotate(17deg)!important;
+  transform-origin:top center!important;
+}
+.logout-girl .logout-girl-arm-right{
+  display:block!important;
+  right:15px!important;
+  top:156px!important;
+  width:32px!important;
+  height:86px!important;
+  border-radius:20px!important;
+  transform:rotate(-42deg)!important;
+  transform-origin:top center!important;
+}
+.logout-girl .logout-girl-hand-left{
+  display:block!important;
+  left:20px!important;
+  top:299px!important;
+  width:32px!important;
+  height:38px!important;
+  border-radius:50%!important;
+  transform:none!important;
+}
+.logout-girl .logout-girl-hand-right{
+  display:none!important;
+}
+.logout-goodbye-hand{
+  display:block!important;
+  right:-7px!important;
+  top:176px!important;
+  width:61px!important;
+  height:100px!important;
+  z-index:12!important;
+  transform-origin:bottom center!important;
+  animation:goodbyeWaveClean 1.05s ease-in-out infinite!important;
+}
+.logout-goodbye-hand:before{
+  left:20px!important;
+  bottom:0!important;
+  width:31px!important;
+  height:43px!important;
+}
+.logout-goodbye-hand span{
+  bottom:31px!important;
+  width:10px!important;
+  height:48px!important;
+}
+@keyframes goodbyeWaveClean{
+  0%,100%{transform:rotate(-6deg) translateY(0)}
+  50%{transform:rotate(10deg) translateY(-3px)}
+}
+/* Remove every tear-wiping/handkerchief visual from this pose. */
+.logout-wipe-upper-arm,
+.logout-wipe-forearm,
+.logout-wipe-hand,
+.logout-handkerchief{
+  display:none!important;
+}
