@@ -153,7 +153,8 @@ export async function updateBookingStatus({ bookingId, status, adminNote }) {
       return { kind: 'not_found' }
     }
 
-    if (!['requested', 'confirmed'].includes(booking.status) || (booking.status === 'confirmed' && !['completed', 'cancelled'].includes(status) && status !== 'confirmed')) {
+    const validTransition = booking.status === 'requested' ? ['confirmed', 'rejected'].includes(status) : booking.status === 'confirmed' ? ['confirmed', 'completed', 'cancelled'].includes(status) : false
+    if (!validTransition) {
       await client.query('ROLLBACK')
       return { kind: 'invalid_status', currentStatus: booking.status }
     }
