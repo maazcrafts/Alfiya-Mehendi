@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js'
-import { createOrderFromCart, listAdminOrders, listUserOrders } from '../models/orderModel.js'
+import { createOrderFromCart, listAdminOrders, listUserOrders, updateOrderStatus } from '../models/orderModel.js'
 
 const router = Router()
 
@@ -54,4 +54,19 @@ router.get('/admin', requireAuth, requireAdmin, async (req, res) => {
 })
 
 // Keep a single default export for the router.
+router.patch('/admin/:id/status', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const allowed = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded']
+    if (!allowed.includes(req.body.status)) {
+      return res.status(400).json({ message: 'Invalid order status.' })
+    }
+    const order = await updateOrderStatus(req.params.id, req.body.status)
+    if (!order) return res.status(404).json({ message: 'Order not found.' })
+    return res.json({ message: 'Order status updated.', order })
+  } catch (error) {
+    console.error('Update order status error:', error)
+    return res.status(500).json({ message: 'Unable to update the order.' })
+  }
+})
+
 export default router
