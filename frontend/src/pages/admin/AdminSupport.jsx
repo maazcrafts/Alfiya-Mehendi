@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 const filters = [['all','All'],['new','New'],['in_progress','In progress'],['resolved','Resolved']]
 
-function getUser(){ try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}} }
 function token(){return localStorage.getItem('alfiya_auth_token')||''}
 function dateLabel(v){return new Intl.DateTimeFormat('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}
 
 export default function AdminSupport(){
   const navigate=useNavigate()
-  const admin=useMemo(getUser,[])
   const [filter,setFilter]=useState('all')
   const [query,setQuery]=useState('')
   const [requests,setRequests]=useState([])
@@ -20,13 +18,14 @@ export default function AdminSupport(){
   const [error,setError]=useState('')
   const [saving,setSaving]=useState(null)
 
-  useEffect(()=>{if(admin?.role!=='admin'){navigate('/services',{replace:true});return}load()},[filter])
+  useEffect(()=>{load()},[filter])
 
   async function load(){
     setLoading(true);setError('')
     try{
       const r=await fetch(apiBase+'/api/support/admin?status='+filter,{headers:{Authorization:'Bearer '+token()}})
-      const d=await r.json()
+      const d=await r.json().catch(()=>({}))
+      if(r.status===401||r.status===403){navigate('/services',{replace:true});throw new Error(d.message||'Administrator access required.')}
       if(!r.ok)throw new Error(d.message||'Unable to load support requests.')
       setRequests(d.requests||[])
     }catch(e){setError(e.message||'Unable to load support requests.')}
