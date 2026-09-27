@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import Login from './pages/auth/Login.jsx'
 import Signup from './pages/auth/Signup.jsx'
 import Terms from './pages/legal/Terms.jsx'
@@ -27,6 +27,11 @@ function Placeholder({ title }) {
   return <main style={{ padding: '3rem' }}><h1>{title}</h1><p>Page scaffold ready for implementation.</p></main>
 }
 
+function RootRedirect() {
+  const token = sessionStorage.getItem('alfiya_auth_token')
+  return <Navigate to={token ? '/products' : '/signup'} replace />
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -36,7 +41,7 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Placeholder title="Alfiya Mehendi" />} />
+        <Route path="/" element={<RootRedirect />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:slug" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
