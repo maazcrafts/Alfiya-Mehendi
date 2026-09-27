@@ -4376,3 +4376,130 @@ a { color: inherit; }
 .new-tour-character-flight .tour-dress{
   overflow:hidden!important;
 }
+
+/* Tour guide expression system — each chapter gets a distinct, animated face */
+.new-tour-character-flight .tour-face{
+  transition:transform .45s ease, height .3s ease!important;
+}
+.new-tour-character-flight .tour-face:before,
+.new-tour-character-flight .tour-face:after{
+  transition:top .35s ease,left .35s ease,right .35s ease,width .35s ease,height .35s ease,transform .35s ease,border-radius .35s ease!important;
+}
+.new-tour-character-flight .tour-face i{
+  transition:all .35s ease!important;
+}
+.new-tour-character-flight .tour-face .tour-mouth{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:66px;
+  width:15px;
+  height:6px;
+  transform:translateX(-50%);
+  border-bottom:2px solid #754633;
+  border-radius:50%;
+  transition:all .35s ease!important;
+}
+.new-tour-character-flight .tour-face b{
+  transition:opacity .35s ease,transform .35s ease!important;
+}
+
+/* HOME — happy / welcoming */
+.new-tour-character-flight .expression-happy:before,
+.new-tour-character-flight .expression-happy:after{
+  top:47px;
+}
+.new-tour-character-flight .expression-happy .tour-mouth{
+  width:17px;height:8px;top:64px;
+}
+
+/* SERVICES — bright smile */
+.new-tour-character-flight .expression-smile:before,
+.new-tour-character-flight .expression-smile:after{
+  top:49px;
+  height:5px;
+  border-radius:50%;
+}
+.new-tour-character-flight .expression-smile .tour-mouth{
+  width:20px;height:10px;top:63px;
+  border-bottom-width:3px;
+}
+
+/* BOOKING — shocked / surprised */
+.new-tour-character-flight .expression-shocked:before{
+  left:21px;top:45px;width:10px;height:10px;
+}
+.new-tour-character-flight .expression-shocked:after{
+  right:21px;top:45px;width:10px;height:10px;
+}
+.new-tour-character-flight .expression-shocked .tour-mouth{
+  top:68px;width:14px;height:18px;
+  border:2px solid #754633;
+  border-radius:50%;
+}
+
+/* ORDERS — focused / attentive */
+.new-tour-character-flight .expression-focused:before{
+  left:22px;top:51px;width:10px;height:3px;
+  border-radius:4px;
+  transform:rotate(8deg);
+}
+.new-tour-character-flight .expression-focused:after{
+  right:22px;top:51px;width:10px;height:3px;
+  border-radius:4px;
+  transform:rotate(-8deg);
+}
+.new-tour-character-flight .expression-focused .tour-mouth{
+  top:68px;width:12px;height:2px;
+  border-radius:0;
+}
+
+/* CART — excited */
+.new-tour-character-flight .expression-excited:before,
+.new-tour-character-flight .expression-excited:after{
+  top:44px;width:9px;height:9px;
+  box-shadow:none;
+}
+.new-tour-character-flight .expression-excited .tour-mouth{
+  top:63px;width:18px;height:13px;
+  border-bottom:3px solid #754633;
+}
+
+/* PROFILE — sideways glance */
+.new-tour-character-flight .expression-glance:before{
+  left:29px;top:47px;width:6px;height:7px;
+}
+.new-tour-character-flight .expression-glance:after{
+  right:14px;top:47px;width:6px;height:7px;
+}
+.new-tour-character-flight .expression-glance .tour-mouth{
+  left:52%;top:66px;width:14px;height:5px;
+}
+
+/* HELP — warm smile */
+.new-tour-character-flight .expression-warm:before,
+.new-tour-character-flight .expression-warm:after{
+  top:48px;width:7px;height:5px;
+  border-radius:0 0 8px 8px;
+}
+.new-tour-character-flight .expression-warm .tour-mouth{
+  top:64px;width:18px;height:9px;
+}
+
+/* Make the expressions feel alive rather than static */
+.new-tour-character-flight .tour-face{
+  animation:guideFaceBreathe 4.8s ease-in-out infinite;
+}
+@keyframes guideFaceBreathe{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1px)}
+}
+
+/* Tiny eye reaction on the shocked chapter */
+.new-tour-character-flight .expression-shocked{
+  animation:guideSurprise 1.8s ease-in-out infinite!important;
+}
+@keyframes guideSurprise{
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(1.025)}
+}
