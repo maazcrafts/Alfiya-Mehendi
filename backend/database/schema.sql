@@ -196,7 +196,7 @@ VALUES
   ('Oils', 'oils', 'Mehendi oils and aftercare oils'),
   ('Tools', 'tools', 'Mehendi application tools'),
   ('Cone & Cellophane Supplies', 'cone-cellophane-supplies', 'Cone paper, cellophane and related supplies')
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 -- Initial service catalogue.
 INSERT INTO services (name, slug, level, description, price_paise)
@@ -206,37 +206,37 @@ VALUES
   ('Intermediate — Five Finger Hand', 'intermediate-five-finger-hand', 'intermediate', 'One hand, five-finger design.', 35000),
   ('Advanced — Full Length', 'advanced-full-length', 'advanced', 'One hand, full-length design.', 80000),
   ('Bridal Mehendi', 'bridal-mehendi', 'bridal', 'One hand, bridal mehendi design.', 175000)
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 
 -- Demo catalogue items for local development/testing.
 -- Replace these with the real Alfiya Mehendi catalogue before production.
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Double Filter Mehendi Powder', 'double-filter-mehendi-powder', 'Fine double-filter mehendi powder for cone preparation and home application.', 18000, 25, TRUE
+SELECT id, 'Double Filter Mehendi Powder', 'double-filter-mehendi-powder', 'Fine double-filter mehendi powder for cone preparation and home application.', 17900, 25, TRUE
 FROM categories WHERE slug = 'mehendi-powder'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Triple Filter Mehendi Powder', 'triple-filter-mehendi-powder', 'Extra-fine triple-filter mehendi powder for smoother cone filling.', 24000, 20, TRUE
+SELECT id, 'Triple Filter Mehendi Powder', 'triple-filter-mehendi-powder', 'Extra-fine triple-filter mehendi powder for smoother cone filling.', 22900, 20, TRUE
 FROM categories WHERE slug = 'mehendi-powder'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Red Mehendi Oil', 'red-mehendi-oil', 'Mehendi aftercare oil for helping deepen and maintain stain.', 12000, 30, TRUE
+SELECT id, 'Red Mehendi Oil', 'red-mehendi-oil', 'Mehendi aftercare oil for helping deepen and maintain stain.', 11900, 30, TRUE
 FROM categories WHERE slug = 'oils'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Golden Mehendi Oil', 'golden-mehendi-oil', 'Golden oil blend for post-application mehendi care.', 15000, 24, TRUE
+SELECT id, 'Golden Mehendi Oil', 'golden-mehendi-oil', 'Golden oil blend for post-application mehendi care.', 14900, 24, TRUE
 FROM categories WHERE slug = 'oils'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Mehendi Bowl & Spatula Set', 'mehendi-bowl-spatula-set', 'Simple reusable bowl and spatula set for mixing and application.', 16000, 18, TRUE
+SELECT id, 'Mehendi Bowl & Spatula Set', 'mehendi-bowl-spatula-set', 'Simple reusable bowl and spatula set for mixing and application.', 15900, 18, TRUE
 FROM categories WHERE slug = 'tools'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 INSERT INTO products (category_id, name, slug, description, price_paise, stock_quantity, is_active)
-SELECT id, 'Cellophane Cone Sheets', 'cellophane-cone-sheets', 'Clear cellophane sheets for rolling clean mehendi cones.', 9000, 40, TRUE
+SELECT id, 'Cellophane Cone Sheets', 'cellophane-cone-sheets', 'Clear cellophane sheets for rolling clean mehendi cones.', 8900, 40, TRUE
 FROM categories WHERE slug = 'cone-cellophane-supplies'
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
