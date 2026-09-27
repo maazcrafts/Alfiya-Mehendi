@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 function getToken() {
-  return localStorage.getItem('alfiya_auth_token') || ''
+  return sessionStorage.getItem('alfiya_auth_token') || ''
 }
 
 function formatDate(value) {
@@ -120,6 +120,8 @@ export default function AdminBookings() {
     const text = [
       booking.customer_name,
       booking.customer_email,
+      booking.customer_phone,
+      booking.customer_location,
       booking.service_name,
       booking.level,
       booking.booking_date,
