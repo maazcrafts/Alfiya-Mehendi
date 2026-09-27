@@ -50,7 +50,7 @@ export default function ProductDetails() {
   if (!product) return null
 
   async function addToCart() {
-    const authToken = localStorage.getItem('alfiya_auth_token') || ''
+    const authToken = sessionStorage.getItem('alfiya_auth_token') || ''
     if (!authToken) {
       navigate('/login', { state: { from: `/products/${slug}` } })
       return
