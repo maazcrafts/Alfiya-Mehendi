@@ -53,4 +53,5 @@ router.get('/admin', requireAuth, requireAdmin, async (req, res) => {
   }
 })
 
+// Keep a single default export for the router.
 export default router
