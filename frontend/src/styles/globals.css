@@ -2917,3 +2917,356 @@ a { color: inherit; }
   .booking-error-modal h2{font-size:30px}
   .booking-error-modal p:not(.dashboard-kicker){font-size:13px}
 }
+
+
+/* Booking success celebration — large 2D character modal */
+.booking-celebration-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+  display:grid;
+  place-items:center;
+  padding:34px;
+  background:rgba(39,28,22,.66);
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+  animation:bookingCelebrationFade .2s ease-out;
+}
+.booking-celebration-modal{
+  position:relative;
+  width:min(920px,calc(100vw - 68px));
+  min-height:510px;
+  display:grid;
+  grid-template-columns:43% 57%;
+  overflow:hidden;
+  border:1px solid rgba(186,157,126,.65);
+  border-radius:30px;
+  background:#fffaf3;
+  box-shadow:0 35px 110px rgba(28,19,14,.38);
+  animation:bookingCelebrationPop .24s cubic-bezier(.2,.8,.2,1);
+}
+.booking-celebration-close{
+  position:absolute;
+  z-index:8;
+  top:18px;
+  right:19px;
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border:1px solid #d7c5b2;
+  border-radius:50%;
+  background:rgba(255,250,243,.92);
+  color:#4b3b31;
+  font-size:26px;
+  line-height:1;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.booking-celebration-close:hover{
+  background:#3c2920;
+  border-color:#3c2920;
+  color:#fffaf3;
+  transform:rotate(90deg);
+}
+.booking-celebration-character{
+  position:relative;
+  min-height:510px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#edf1e5 0%,#e2e8d9 58%,#d7e0cb 100%);
+  border-right:1px solid #d5c8b8;
+}
+.celebration-ground{
+  position:absolute;
+  width:280px;
+  height:28px;
+  left:50%;
+  bottom:31px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(92,104,74,.18);
+  filter:blur(2px);
+}
+.celebration-character-body{
+  position:absolute;
+  left:50%;
+  bottom:48px;
+  width:190px;
+  height:355px;
+  transform:translateX(-50%);
+  animation:celebrationCharacterBounce 2.2s ease-in-out infinite;
+}
+.celebration-hair{
+  position:absolute;
+  z-index:2;
+  left:35px;
+  top:6px;
+  width:120px;
+  height:136px;
+  border-radius:55% 55% 45% 45%;
+  background:#3b2921;
+  box-shadow:inset 16px 2px 0 rgba(255,255,255,.06);
+}
+.celebration-face{
+  position:absolute;
+  z-index:3;
+  left:55px;
+  top:22px;
+  width:80px;
+  height:93px;
+  border-radius:47% 47% 45% 45%;
+  background:#c98462;
+  border:2px solid rgba(91,55,39,.12);
+}
+.celebration-face:before{
+  content:"";
+  position:absolute;
+  left:17px;
+  top:43px;
+  width:9px;
+  height:5px;
+  border-radius:50%;
+  border-top:2px solid #3b2921;
+}
+.celebration-face:after{
+  content:"";
+  position:absolute;
+  right:17px;
+  top:43px;
+  width:9px;
+  height:5px;
+  border-radius:50%;
+  border-top:2px solid #3b2921;
+}
+.celebration-face span,
+.celebration-face i{
+  position:absolute;
+  display:block;
+  top:42px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#3b2921;
+}
+.celebration-face span{left:25px}
+.celebration-face i{right:25px}
+.celebration-neck{
+  position:absolute;
+  z-index:1;
+  left:80px;
+  top:105px;
+  width:30px;
+  height:30px;
+  background:#b87558;
+}
+.celebration-torso{
+  position:absolute;
+  z-index:2;
+  left:30px;
+  top:123px;
+  width:130px;
+  height:205px;
+  border-radius:55px 55px 25px 25px;
+  background:#6e7b5d;
+  box-shadow:inset 0 18px 0 rgba(255,255,255,.08);
+}
+.celebration-torso:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:25px;
+  width:46px;
+  height:70px;
+  transform:translateX(-50%);
+  border:2px solid rgba(255,250,243,.5);
+  border-radius:50%;
+}
+.celebration-arm{
+  position:absolute;
+  z-index:1;
+  top:137px;
+  width:35px;
+  height:145px;
+  border-radius:25px;
+  background:#c98462;
+}
+.celebration-arm-left{
+  left:15px;
+  transform:rotate(23deg);
+  transform-origin:top center;
+}
+.celebration-arm-right{
+  right:9px;
+  height:154px;
+  transform:rotate(-51deg);
+  transform-origin:top center;
+}
+.celebration-hand{
+  position:absolute;
+  z-index:4;
+  right:-8px;
+  top:245px;
+  width:31px;
+  height:39px;
+  border-radius:55% 45% 50% 50%;
+  background:#c98462;
+  transform:rotate(-23deg);
+}
+.celebration-spark{
+  position:absolute;
+  z-index:5;
+  color:#a05e3e;
+  font-weight:900;
+  animation:celebrationSpark 1.7s ease-in-out infinite;
+}
+.spark-one{top:91px;left:46px;font-size:27px}
+.spark-two{top:150px;right:48px;font-size:20px;animation-delay:.35s}
+.spark-three{top:220px;left:35px;font-size:38px;animation-delay:.7s}
+.celebration-bubble{
+  position:absolute;
+  z-index:6;
+  top:39px;
+  right:24px;
+  width:175px;
+  padding:15px 17px;
+  border-radius:18px 18px 5px 18px;
+  background:#fffaf3;
+  border:1px solid #d7c6b4;
+  box-shadow:0 10px 24px rgba(60,41,32,.1);
+  transform:rotate(2deg);
+}
+.celebration-bubble:after{
+  content:"";
+  position:absolute;
+  right:19px;
+  bottom:-11px;
+  width:19px;
+  height:19px;
+  background:#fffaf3;
+  border-right:1px solid #d7c6b4;
+  border-bottom:1px solid #d7c6b4;
+  transform:rotate(45deg);
+}
+.celebration-bubble span{
+  display:block;
+  margin-bottom:5px;
+  color:#a05e3e;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.14em;
+}
+.celebration-bubble strong{
+  color:#47382f;
+  font:400 18px/1.2 Georgia,serif;
+}
+.booking-celebration-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:66px 68px 62px;
+  background:#fffaf3;
+}
+.booking-celebration-copy .dashboard-kicker{
+  margin:0 0 13px;
+  color:#a05e3e;
+  font-size:11px;
+  letter-spacing:.18em;
+}
+.booking-celebration-copy h2{
+  margin:0;
+  max-width:480px;
+  color:#3c2920;
+  font:400 45px/1.08 Georgia,serif;
+}
+.booking-celebration-message{
+  max-width:490px;
+  margin:22px 0 0;
+  color:#75655a;
+  font-size:15px;
+  line-height:1.8;
+}
+.booking-celebration-message strong{
+  color:#4d3d32;
+  font-weight:800;
+}
+.booking-celebration-note{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  max-width:490px;
+  margin-top:25px;
+  padding:16px 18px;
+  border:1px solid #dce3d3;
+  border-radius:13px;
+  background:#eef2e9;
+  color:#647057;
+  font-size:12px;
+  line-height:1.55;
+}
+.booking-celebration-check{
+  width:31px;
+  height:31px;
+  flex:0 0 31px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#6e7b5d;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+}
+.booking-celebration-action{
+  align-self:flex-start;
+  min-width:190px;
+  min-height:55px;
+  margin-top:28px;
+  padding:0 24px;
+  border:0;
+  border-radius:10px;
+  background:#6e7b5d;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.booking-celebration-action:hover{
+  background:#3c2920;
+  transform:translateY(-2px);
+  box-shadow:0 12px 25px rgba(60,41,32,.2);
+}
+@keyframes bookingCelebrationFade{from{opacity:0}to{opacity:1}}
+@keyframes bookingCelebrationPop{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes celebrationCharacterBounce{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-8px)}
+}
+@keyframes celebrationSpark{
+  0%,100%{opacity:.4;transform:translateY(0) scale(.9)}
+  50%{opacity:1;transform:translateY(-8px) scale(1.08)}
+}
+@media(max-width:800px){
+  .booking-celebration-modal{
+    width:min(560px,calc(100vw - 34px));
+    min-height:0;
+    grid-template-columns:1fr;
+  }
+  .booking-celebration-character{
+    min-height:330px;
+    border-right:0;
+    border-bottom:1px solid #d5c8b8;
+  }
+  .celebration-character-body{transform:translateX(-50%) scale(.76);transform-origin:bottom center}
+  .celebration-bubble{top:22px;right:18px}
+  .booking-celebration-copy{padding:38px 30px 34px}
+  .booking-celebration-copy h2{font-size:36px}
+  .booking-celebration-action{width:100%}
+}
+@media(max-width:480px){
+  .booking-celebration-backdrop{padding:15px}
+  .booking-celebration-character{min-height:290px}
+  .booking-celebration-copy{padding:31px 23px 27px}
+  .booking-celebration-copy h2{font-size:31px}
+  .booking-celebration-message{font-size:13px}
+  .celebration-character-body{transform:translateX(-50%) scale(.64);transform-origin:bottom center}
+}
