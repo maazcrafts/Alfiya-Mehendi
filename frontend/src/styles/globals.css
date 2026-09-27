@@ -2815,3 +2815,105 @@ a { color: inherit; }
   .booking-dashboard .booking-wizard-actions{flex-direction:column-reverse!important;gap:12px!important}
   .booking-dashboard .booking-back,.booking-dashboard .booking-submit{width:100%!important;min-width:0!important}
 }
+
+/* Booking validation — full-screen error modal */
+.booking-error-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-items:center;
+  padding:30px;
+  background:rgba(38,27,21,.58);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+  animation:bookingModalFadeIn .18s ease-out;
+}
+.booking-error-modal{
+  position:relative;
+  width:min(620px,calc(100vw - 40px));
+  padding:54px 54px 48px;
+  border:1px solid rgba(176,148,119,.55);
+  border-radius:26px;
+  background:#fffaf3;
+  box-shadow:0 30px 90px rgba(35,24,18,.3);
+  text-align:center;
+  animation:bookingModalPop .2s ease-out;
+}
+.booking-error-modal-close{
+  position:absolute;
+  top:17px;
+  right:19px;
+  width:42px;
+  height:42px;
+  border:1px solid #dccdbd;
+  border-radius:50%;
+  background:#f5ecdf;
+  color:#5b493d;
+  font-size:25px;
+  line-height:1;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.booking-error-modal-close:hover{
+  background:#3c2920;
+  color:#fffaf3;
+  transform:rotate(90deg);
+}
+.booking-error-modal-icon{
+  width:70px;
+  height:70px;
+  margin:0 auto 24px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#f3ddd6;
+  color:#a05e3e;
+  font-size:30px;
+  font-weight:900;
+  box-shadow:0 0 0 9px #f9eee8;
+}
+.booking-error-modal .dashboard-kicker{
+  margin-bottom:10px;
+  color:#a05e3e;
+  font-size:11px;
+  letter-spacing:.18em;
+}
+.booking-error-modal h2{
+  margin:0 auto 14px;
+  max-width:500px;
+  color:#3c2920;
+  font:400 38px/1.12 Georgia,serif;
+}
+.booking-error-modal p:not(.dashboard-kicker){
+  max-width:490px;
+  margin:0 auto;
+  color:#75655a;
+  font-size:14px;
+  line-height:1.75;
+}
+.booking-error-modal-action{
+  min-height:54px;
+  margin-top:30px;
+  padding:0 27px;
+  border:0;
+  border-radius:10px;
+  background:#6e7b5d;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.booking-error-modal-action:hover{
+  background:#3c2920;
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(60,41,32,.18);
+}
+@keyframes bookingModalFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes bookingModalPop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:600px){
+  .booking-error-modal{padding:46px 25px 32px}
+  .booking-error-modal h2{font-size:30px}
+  .booking-error-modal p:not(.dashboard-kicker){font-size:13px}
+}
