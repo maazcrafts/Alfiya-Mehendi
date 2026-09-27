@@ -201,11 +201,11 @@ ON CONFLICT (slug) DO NOTHING;
 -- Initial service catalogue.
 INSERT INTO services (name, slug, level, description, price_paise)
 VALUES
-  ('Basic — Palm Arabic Style', 'basic-palm-arabic-style', 'basic', 'Both hands, palm Arabic style.', 25000),
-  ('Intermediate — Arm Length', 'intermediate-arm-length', 'intermediate', 'One hand, arm length design.', 50000),
-  ('Intermediate — Five Finger Hand', 'intermediate-five-finger-hand', 'intermediate', 'One hand, five-finger design.', 35000),
-  ('Advanced — Full Length', 'advanced-full-length', 'advanced', 'One hand, full-length design.', 80000),
-  ('Bridal Mehendi', 'bridal-mehendi', 'bridal', 'One hand, bridal mehendi design.', 175000)
+  ('Basic — Palm Arabic Style', 'basic-palm-arabic-style', 'basic', 'Both hands, palm Arabic style.', 24900),
+  ('Intermediate — Arm Length', 'intermediate-arm-length', 'intermediate', 'One hand, arm length design.', 49900),
+  ('Intermediate — Five Finger Hand', 'intermediate-five-finger-hand', 'intermediate', 'One hand, five-finger design.', 34900),
+  ('Advanced — Full Length', 'advanced-full-length', 'advanced', 'One hand, full-length design.', 79900),
+  ('Bridal Mehendi', 'bridal-mehendi', 'bridal', 'One hand, bridal mehendi design.', 164900)
 ON CONFLICT (slug) DO UPDATE SET price_paise = EXCLUDED.price_paise, updated_at = NOW();
 
 
