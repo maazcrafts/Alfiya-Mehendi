@@ -14,8 +14,8 @@ const statusMeta = {
   refunded: ['Refunded', 'cancelled', 0],
 }
 
-function token(){return localStorage.getItem('alfiya_auth_token')||''}
-function getUser(){try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
+function token(){return sessionStorage.getItem('alfiya_auth_token')||''}
+function getUser(){try{return JSON.parse(sessionStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
 function money(paise){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((paise||0)/100)}
 function dateLabel(v){return new Intl.DateTimeFormat('en-IN',{day:'numeric',month:'long',year:'numeric'}).format(new Date(v))}
 
