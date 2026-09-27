@@ -72,6 +72,8 @@ export default function Signup() {
 
       localStorage.setItem("alfiya_auth_token", data.token);
       localStorage.setItem("alfiya_user", JSON.stringify(data.user));
+      localStorage.setItem("alfiya_new_user_tour", "pending");
+      localStorage.removeItem("alfiya_new_user_tour_step");
       setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to create your account.");
