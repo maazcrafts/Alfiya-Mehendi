@@ -34,8 +34,26 @@ async function applyConfiguredAdminRole(user) {
   return result.rows[0] || user
 }
 
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\\/$/, ''))
+  .filter(Boolean)
+
+if (!allowedOrigins.length && process.env.NODE_ENV === 'production') {
+  allowedOrigins.push('https://frontend-pi-one-14.vercel.app')
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins.push('http://localhost:5173')
+}
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || true,
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin.replace(/\\/$/, ''))) {
+      return callback(null, true)
+    }
+    return callback(new Error('CORS origin not allowed'))
+  },
   credentials: true,
 }))
 app.use(express.json())
