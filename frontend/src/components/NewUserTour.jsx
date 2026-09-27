@@ -83,6 +83,7 @@ export default function NewUserTour() {
   const [index, setIndex] = useState(0)
 
   const current = steps[index]
+  const characterPosition = ['left-low', 'right-low', 'left-high', 'right-high', 'left-center', 'right-center', 'left-high'][index] || 'left-low'
   const isCorrectPage = location.pathname === current.path
 
   useEffect(() => {
@@ -144,7 +145,9 @@ export default function NewUserTour() {
       </div>
 
       <div className="new-tour-stage">
-        <TourCharacter />
+        <div className={"new-tour-character-flight " + characterPosition} key={characterPosition}>
+          <TourCharacter />
+        </div>
 
         <div className="new-tour-bubble">
           <div className="new-tour-bubble-tail" />
