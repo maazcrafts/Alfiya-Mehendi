@@ -50,10 +50,10 @@ export default function AdminBookings() {
       const response = await fetch(`${apiBase}/api/bookings/admin?status=${filter}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
       if (response.status === 401 || response.status === 403) {
         navigate('/services', { replace: true })
-        throw new Error('Administrator access required.')
+        throw new Error(data.message || 'Administrator access required.')
       }
       if (!response.ok) throw new Error(data.message || 'Unable to load booking requests.')
       setBookings(data.bookings || [])
@@ -76,7 +76,7 @@ export default function AdminBookings() {
         },
         body: JSON.stringify({ status, adminNote: notes[id] || '' }),
       })
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(data.message || 'Unable to update this booking.')
       setNotice(status === 'confirmed' ? 'Appointment confirmed and the time slot is now locked.' : status === 'completed' ? 'Appointment marked completed.' : status === 'cancelled' ? 'Appointment cancelled.' : 'Booking request rejected.')
       await loadBookings()
