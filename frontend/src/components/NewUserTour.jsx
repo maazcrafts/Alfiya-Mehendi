@@ -90,7 +90,7 @@ export default function NewUserTour() {
     const saved = Number(localStorage.getItem('alfiya_new_user_tour_step') || '0')
     setIndex(Number.isFinite(saved) && saved >= 0 && saved < steps.length ? saved : 0)
     setActive(true)
-  }, [])
+  }, [location.pathname])
 
   useEffect(() => {
     if (!active || !current) return
