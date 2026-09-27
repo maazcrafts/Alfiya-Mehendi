@@ -12,7 +12,7 @@ const icons = {
 }
 
 function getUser() {
-  try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
+  try { return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}') } catch { return {} }
 }
 
 export default function DashboardSidebar({ active = 'shop', adminOnly = false }) {
