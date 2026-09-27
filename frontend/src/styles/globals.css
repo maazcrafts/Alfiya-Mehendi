@@ -5227,3 +5227,136 @@ a { color: inherit; }
 .logout-handkerchief{
   display:none!important;
 }
+
+/* Final logout character: calm human-like standing pose, crying, no wave */
+.logout-girl{
+  width:270px!important;
+  height:410px!important;
+  animation:none!important;
+  filter:drop-shadow(0 18px 18px rgba(55,38,29,.10));
+}
+.logout-girl-hair{
+  left:54px!important;
+  top:4px!important;
+  width:162px!important;
+  height:180px!important;
+  border-radius:52% 52% 45% 46%!important;
+}
+.logout-girl-face{
+  left:83px!important;
+  top:28px!important;
+  width:103px!important;
+  height:123px!important;
+  border-radius:48% 48% 45% 45%!important;
+}
+.logout-girl-neck{
+  left:119px!important;
+  top:143px!important;
+  width:35px!important;
+  height:31px!important;
+}
+.logout-girl-dress{
+  left:54px!important;
+  top:163px!important;
+  width:164px!important;
+  height:190px!important;
+  border-radius:52px 52px 38px 38px!important;
+}
+/* Remove the oval/loop drawn on her chest. */
+.logout-girl-dress:before{
+  display:none!important;
+}
+/* Restore natural arms hanging beside the body. */
+.logout-girl .logout-girl-arm-left,
+.logout-girl .logout-girl-arm-right{
+  display:block!important;
+  top:172px!important;
+  width:31px!important;
+  height:137px!important;
+  border-radius:19px!important;
+  transform:none!important;
+  transform-origin:top center!important;
+}
+.logout-girl .logout-girl-arm-left{
+  left:37px!important;
+  transform:rotate(13deg)!important;
+}
+.logout-girl .logout-girl-arm-right{
+  right:29px!important;
+  transform:rotate(-13deg)!important;
+}
+.logout-girl .logout-girl-hand-left,
+.logout-girl .logout-girl-hand-right{
+  display:block!important;
+  width:30px!important;
+  height:37px!important;
+  border-radius:50%!important;
+  top:292px!important;
+}
+.logout-girl .logout-girl-hand-left{
+  left:28px!important;
+  transform:none!important;
+}
+.logout-girl .logout-girl-hand-right{
+  right:20px!important;
+  transform:none!important;
+}
+/* Remove every special-action element from the pose. */
+.logout-goodbye-hand,
+.logout-wipe-upper-arm,
+.logout-wipe-forearm,
+.logout-wipe-hand,
+.logout-handkerchief{
+  display:none!important;
+}
+/* More natural face: worried brows and a small downturned mouth. */
+.logout-girl .logout-eye{
+  top:53px!important;
+  width:7px!important;
+  height:5px!important;
+  border-bottom:2px solid #38271f!important;
+}
+.logout-girl .logout-eye-left{
+  left:25px!important;
+  transform:rotate(-10deg)!important;
+}
+.logout-girl .logout-eye-right{
+  right:25px!important;
+  transform:rotate(10deg)!important;
+}
+.logout-girl .logout-mouth{
+  top:78px!important;
+  width:18px!important;
+  height:9px!important;
+  border-top:2px solid #754633!important;
+  border-bottom:0!important;
+  border-radius:50%!important;
+}
+/* Keep tears on the cheeks, with a slight downward trail. */
+.logout-girl .logout-tear{
+  top:58px!important;
+  width:7px!important;
+  height:20px!important;
+  opacity:.9!important;
+  animation:staticTears 2.2s ease-in-out infinite!important;
+}
+.logout-girl .logout-tear-left{left:25px!important}
+.logout-girl .logout-tear-right{right:25px!important;animation-delay:.3s!important}
+@keyframes staticTears{
+  0%,100%{transform:translateY(0);opacity:.78}
+  50%{transform:translateY(3px);opacity:1}
+}
+/* Slightly more natural lower-body proportions. */
+.logout-girl-leg{
+  top:344px!important;
+  width:31px!important;
+  height:48px!important;
+}
+.logout-girl-leg-left{left:78px!important}
+.logout-girl-leg-right{right:78px!important}
+.logout-girl-leg span{
+  width:45px!important;
+  height:16px!important;
+  left:-7px!important;
+  bottom:-8px!important;
+}
