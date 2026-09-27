@@ -17,7 +17,10 @@ export function requireAuth(req, res, next) {
 }
 
 export function requireAdmin(req, res, next) {
-  if (req.auth?.role !== 'admin') {
+  const configuredEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase()
+  const authenticatedEmail = req.auth?.email?.trim().toLowerCase()
+
+  if (!configuredEmail || req.auth?.role !== 'admin' || authenticatedEmail !== configuredEmail) {
     return res.status(403).json({ message: 'Administrator access required.' })
   }
 
