@@ -4911,3 +4911,22 @@ a { color: inherit; }
   .logout-confirm-copy>p:not(.dashboard-kicker){font-size:14px}
   .logout-confirm-actions{justify-content:center}
 }
+
+/* Logout girl cleanup — remove the detached circular hand shapes beside her waist */
+.logout-girl .logout-girl-hand{
+  display:none!important;
+}
+/* Extend the arms naturally so they finish without separate floating circles. */
+.logout-girl .logout-girl-arm{
+  height:154px!important;
+  width:34px!important;
+  border-radius:22px!important;
+}
+.logout-girl .logout-girl-arm-left{
+  left:35px!important;
+  transform:rotate(17deg)!important;
+}
+.logout-girl .logout-girl-arm-right{
+  right:22px!important;
+  transform:rotate(-20deg)!important;
+}
