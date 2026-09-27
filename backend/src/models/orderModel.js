@@ -1,4 +1,97 @@
-import { query } from '../config/pool.js'
+import { getClient, query } from '../config/pool.js'
+import { findUserAddress } from './addressModel.js'
+
+export async function createOrderFromCart({ userId, addressId }) {
+  const client = await getClient()
+  try {
+    await client.query('BEGIN')
+
+    const address = await client.query(
+      'SELECT id FROM addresses WHERE id = $1 AND user_id = $2 LIMIT 1',
+      [addressId, userId],
+    )
+    if (!address.rows[0]) {
+      await client.query('ROLLBACK')
+      return { kind: 'address' }
+    }
+
+    const cart = await client.query('SELECT id FROM carts WHERE user_id = $1 LIMIT 1 FOR UPDATE', [userId])
+    if (!cart.rows[0]) {
+      await client.query('ROLLBACK')
+      return { kind: 'empty' }
+    }
+
+    const cartItems = await client.query(
+      `SELECT ci.product_id, ci.quantity, p.name, p.price_paise, p.stock_quantity, p.is_active
+       FROM cart_items ci JOIN products p ON p.id = ci.product_id
+       WHERE ci.cart_id = $1 ORDER BY ci.id FOR UPDATE OF p`,
+      [cart.rows[0].id],
+    )
+    if (!cartItems.rows.length) {
+      await client.query('ROLLBACK')
+      return { kind: 'empty' }
+    }
+
+    const unavailable = cartItems.rows.find(item => !item.is_active || item.stock_quantity < item.quantity)
+    if (unavailable) {
+      await client.query('ROLLBACK')
+      return {
+        kind: 'stock',
+        productName: unavailable.name,
+        available: unavailable.stock_quantity,
+        requested: unavailable.quantity,
+      }
+    }
+
+    const subtotal = cartItems.rows.reduce((sum, item) => sum + Number(item.price_paise) * item.quantity, 0)
+    const shipping = 0
+    const total = subtotal + shipping
+
+    const order = await client.query(
+      `INSERT INTO orders (user_id, shipping_address_id, status, subtotal_paise, shipping_paise, total_paise)
+       VALUES ($1, $2, 'pending', $3, $4, $5) RETURNING id, status, subtotal_paise, shipping_paise, total_paise, created_at`,
+      [userId, addressId, subtotal, shipping, total],
+    )
+
+    for (const item of cartItems.rows) {
+      const lineTotal = Number(item.price_paise) * item.quantity
+      await client.query(
+        `INSERT INTO order_items (order_id, product_id, product_name, unit_price_paise, quantity, line_total_paise)
+         VALUES ($1,$2,$3,$4,$5,$6)`,
+        [order.rows[0].id, item.product_id, item.name, item.price_paise, item.quantity, lineTotal],
+      )
+      await client.query(
+        'UPDATE products SET stock_quantity = stock_quantity - $1, updated_at = NOW() WHERE id = $2',
+        [item.quantity, item.product_id],
+      )
+    }
+
+    await client.query('DELETE FROM cart_items WHERE cart_id = $1', [cart.rows[0].id])
+    await client.query('UPDATE carts SET updated_at = NOW() WHERE id = $1', [cart.rows[0].id])
+    await client.query('COMMIT')
+
+    const created = order.rows[0]
+    return {
+      kind: 'created',
+      order: {
+        id: created.id,
+        status: created.status,
+        subtotalPaise: Number(created.subtotal_paise),
+        shippingPaise: Number(created.shipping_paise),
+        totalPaise: Number(created.total_paise),
+        createdAt: created.created_at,
+        address: await findUserAddress(userId, addressId),
+      },
+    }
+  } catch (error) {
+    await client.query('ROLLBACK')
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
+
 
 export async function listUserOrders(userId) {
   const result = await query(
