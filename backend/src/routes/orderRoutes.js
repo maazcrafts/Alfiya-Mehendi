@@ -14,9 +14,6 @@ router.get('/mine', requireAuth, async (req, res) => {
   }
 })
 
-export default router
-
-
 router.post('/', requireAuth, async (req, res) => {
   try {
     const addressId = String(req.body?.addressId || '').trim()
