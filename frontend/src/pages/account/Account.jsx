@@ -24,9 +24,9 @@ export default function Account() {
   const [activity, setActivity] = useState({ orders: 0, bookings: 0, cart: 0 })
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
-  const token = localStorage.getItem('alfiya_auth_token') || ''
+  const token = sessionStorage.getItem('alfiya_auth_token') || ''
   const localUser = useMemo(() => {
-    try { return JSON.parse(localStorage.getItem('alfiya_user') || 'null') } catch { return null }
+    try { return JSON.parse(sessionStorage.getItem('alfiya_user') || 'null') } catch { return null }
   }, [])
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function Account() {
         if (!response.ok) throw new Error(data.message || 'Unable to load your profile.')
         setUser(data.user)
         setFormName(data.user.name || '')
-        localStorage.setItem('alfiya_user', JSON.stringify({
+        sessionStorage.setItem('alfiya_user', JSON.stringify({
           ...localUser,
           id: data.user.id,
           name: data.user.name,
@@ -114,7 +114,7 @@ export default function Account() {
 
       setUser(data.user)
       setFormName(data.user.name)
-      localStorage.setItem('alfiya_user', JSON.stringify({
+      sessionStorage.setItem('alfiya_user', JSON.stringify({
         ...localUser,
         id: data.user.id,
         name: data.user.name,
@@ -134,9 +134,9 @@ export default function Account() {
 
   function confirmLogout() {
     setShowLogoutConfirm(false)
-    localStorage.removeItem('alfiya_auth_token')
-    localStorage.removeItem('alfiya_user')
-    localStorage.removeItem('alfiya_remember_me')
+    sessionStorage.removeItem('alfiya_auth_token')
+    sessionStorage.removeItem('alfiya_user')
+    sessionStorage.removeItem('alfiya_remember_me')
     window.dispatchEvent(new Event('alfiya-auth-changed'))
     navigate('/login', { replace: true })
   }
