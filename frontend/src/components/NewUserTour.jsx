@@ -53,7 +53,7 @@ const steps = [
   },
 ]
 
-function TourCharacter() {
+function TourCharacter({ expression = 'happy' }) {
   return (
     <div className="new-tour-character" aria-hidden="true">
       <div className="tour-character-spark spark-a">✦</div>
@@ -61,7 +61,7 @@ function TourCharacter() {
       <div className="tour-character-shadow" />
       <div className="tour-character-body">
         <div className="tour-hair" />
-        <div className="tour-face"><i /><b /></div>
+        <div className={`tour-face expression-${expression}`}><i /><b /><em className="tour-mouth" /></div>
         <div className="tour-neck" />
         <div className="tour-dress">
           <span />
@@ -149,7 +149,7 @@ export default function NewUserTour() {
 
       <div className="new-tour-stage">
         <div className={"new-tour-character-flight " + characterPosition}>
-          <TourCharacter />
+          <TourCharacter expression={["happy", "smile", "shocked", "focused", "excited", "glance", "warm"][index] || "happy"} />
         </div>
 
         <div className="new-tour-bubble">
