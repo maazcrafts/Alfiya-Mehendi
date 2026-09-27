@@ -54,8 +54,8 @@ export default function GoogleButton({ mode = "signin" }) {
               const data = await result.json();
               if (!result.ok) throw new Error(data.message || "Google sign-in failed.");
 
-              localStorage.setItem("alfiya_auth_token", data.token);
-              localStorage.setItem("alfiya_user", JSON.stringify(data.user));
+              sessionStorage.setItem("alfiya_auth_token", data.token);
+              sessionStorage.setItem("alfiya_user", JSON.stringify(data.user));
               if (mode === "signup") {
                 localStorage.setItem("alfiya_new_user_tour", "pending");
                 localStorage.removeItem("alfiya_new_user_tour_step");
