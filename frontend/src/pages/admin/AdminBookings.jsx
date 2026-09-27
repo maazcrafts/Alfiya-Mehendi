@@ -206,12 +206,42 @@ export default function AdminBookings() {
                       <span>{booking.customer_email || '—'}</span>
                     </div>
                     <div>
-                      <small>Date</small>
-                      <strong>{formatDate(booking.booking_date)}</strong>
+                      <small>Phone</small>
+                      <strong>{booking.customer_phone || 'Not provided'}</strong>
+                      {booking.customer_phone && <a href={`tel:${booking.customer_phone}`}>Call customer</a>}
                     </div>
                     <div>
-                      <small>Time</small>
-                      <strong>{formatTime(booking.booking_time)}</strong>
+                      <small>Location</small>
+                      <strong>{booking.customer_location || 'Not provided'}</strong>
+                    </div>
+                    <div>
+                      <small>Appointment</small>
+                      <strong>{formatDate(booking.booking_date)}</strong>
+                      <span>{formatTime(booking.booking_time)}</span>
+                    </div>
+                  </div>
+
+                  <div className="admin-contact-card">
+                    <div className="admin-contact-card-heading">
+                      <div>
+                        <span>Customer contact</span>
+                        <strong>Stay in touch with {booking.customer_name || 'this customer'}</strong>
+                      </div>
+                      <span className="admin-contact-badge">Account verified</span>
+                    </div>
+                    <div className="admin-contact-actions">
+                      <a href={booking.customer_email ? `mailto:${booking.customer_email}` : '#'} aria-disabled={!booking.customer_email}>
+                        <small>Email</small>
+                        <strong>{booking.customer_email || 'No email'}</strong>
+                      </a>
+                      <a href={booking.customer_phone ? `tel:${booking.customer_phone}` : '#'} aria-disabled={!booking.customer_phone}>
+                        <small>Phone</small>
+                        <strong>{booking.customer_phone || 'No phone'}</strong>
+                      </a>
+                      <div>
+                        <small>Area / locality</small>
+                        <strong>{booking.customer_location || 'Not provided'}</strong>
+                      </div>
                     </div>
                   </div>
 
