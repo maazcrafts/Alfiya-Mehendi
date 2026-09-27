@@ -128,6 +128,12 @@ CREATE TABLE IF NOT EXISTS bookings (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Booking contact snapshot. These details are captured when the appointment is requested
+-- so the admin has a clear, reliable contact record for the appointment.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_name VARCHAR(120);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_phone VARCHAR(30);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_location TEXT;
+
 CREATE TABLE IF NOT EXISTS payments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
