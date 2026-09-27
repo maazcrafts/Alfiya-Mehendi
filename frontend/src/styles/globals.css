@@ -5033,3 +5033,131 @@ a { color: inherit; }
   0%,100%{transform:rotate(-16deg)}
   50%{transform:rotate(9deg) translateY(-3px)}
 }
+
+/* FINAL LOGOUT POSE — clearly wipe the tear at the eye with one hand, wave goodbye with the other */
+.logout-girl .logout-girl-arm-left,
+.logout-girl .logout-girl-arm-right,
+.logout-girl .logout-girl-hand-left,
+.logout-girl .logout-girl-hand-right{
+  display:none!important;
+}
+
+/* Tear-wiping arm: upper arm drops from shoulder, forearm bends upward to her face. */
+.logout-wipe-upper-arm{
+  position:absolute;
+  z-index:5;
+  left:35px;
+  top:165px;
+  width:32px;
+  height:93px;
+  border-radius:20px;
+  background:#c98564;
+  transform:rotate(27deg);
+  transform-origin:top center;
+}
+.logout-wipe-forearm{
+  position:absolute;
+  z-index:6;
+  left:66px;
+  top:207px;
+  width:31px;
+  height:91px;
+  border-radius:19px;
+  background:#c98564;
+  transform:rotate(-55deg);
+  transform-origin:top center;
+}
+.logout-wipe-hand{
+  position:absolute;
+  z-index:10;
+  left:73px;
+  top:179px;
+  width:34px;
+  height:42px;
+  border-radius:50%;
+  background:#c98564;
+  transform:rotate(-15deg);
+}
+
+/* White handkerchief sits directly against the crying eye — not down by the waist. */
+.logout-handkerchief{
+  position:absolute;
+  z-index:11;
+  left:72px;
+  top:168px;
+  width:42px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:2px solid #d8c9ba;
+  border-radius:7px 4px 9px 5px;
+  background:#fffdf8;
+  color:#a05e3e;
+  font-size:13px;
+  line-height:1;
+  transform:rotate(-18deg);
+  box-shadow:0 4px 9px rgba(60,41,32,.12);
+  animation:handkerchiefWipe 1.5s ease-in-out infinite;
+}
+.logout-handkerchief:before{
+  content:"";
+  position:absolute;
+  left:7px;
+  top:7px;
+  width:9px;
+  height:9px;
+  border-top:1px solid #d8c9ba;
+  border-left:1px solid #d8c9ba;
+}
+.logout-handkerchief span{
+  display:block;
+  transform:rotate(18deg);
+}
+@keyframes handkerchiefWipe{
+  0%,100%{transform:rotate(-18deg) translate(0,0)}
+  50%{transform:rotate(-10deg) translate(4px,1px)}
+}
+
+/* Goodbye hand: raised beside her face with distinct fingers, visibly waving. */
+.logout-goodbye-hand{
+  position:absolute;
+  z-index:11;
+  right:0;
+  top:160px;
+  width:61px;
+  height:103px;
+  transform-origin:bottom center;
+  animation:goodbyeWave 1.1s ease-in-out infinite;
+}
+.logout-goodbye-hand:before{
+  content:"";
+  position:absolute;
+  left:20px;
+  bottom:0;
+  width:31px;
+  height:43px;
+  border-radius:52% 48% 45% 45%;
+  background:#c98564;
+}
+.logout-goodbye-hand span{
+  position:absolute;
+  bottom:31px;
+  width:10px;
+  height:48px;
+  border-radius:9px;
+  background:#c98564;
+  transform-origin:bottom center;
+}
+.logout-goodbye-hand span:nth-child(1){left:14px;transform:rotate(-24deg)}
+.logout-goodbye-hand span:nth-child(2){left:23px;transform:rotate(-9deg)}
+.logout-goodbye-hand span:nth-child(3){left:32px;transform:rotate(7deg)}
+.logout-goodbye-hand span:nth-child(4){left:41px;transform:rotate(22deg)}
+@keyframes goodbyeWave{
+  0%,100%{transform:rotate(-7deg) translateY(0)}
+  50%{transform:rotate(12deg) translateY(-3px)}
+}
+
+/* The tear-wiping hand reaches the eye, so the tear is partly hidden as she dabs it. */
+.logout-girl .logout-tear-left{
+  opacity:.35;
+}
