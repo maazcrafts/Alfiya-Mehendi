@@ -36,7 +36,7 @@ async function applyConfiguredAdminRole(user) {
 
 const allowedOrigins = (process.env.FRONTEND_URL || '')
   .split(',')
-  .map((origin) => origin.trim().replace(/\\/$/, ''))
+  .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean)
 
 if (!allowedOrigins.length && process.env.NODE_ENV === 'production') {
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.replace(/\\/$/, ''))) {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
       return callback(null, true)
     }
     return callback(new Error('CORS origin not allowed'))
