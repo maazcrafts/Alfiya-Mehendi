@@ -5,7 +5,7 @@ const steps = [
   {
     path: '/products',
     kicker: '01 · HOME',
-    title: 'Welcome to Alfiya.',
+    title: 'Welcome to Alfiya Henna.',
     text: 'This is your main space. Shop mehendi supplies, search the catalogue, open your cart, and jump anywhere from the sidebar.',
     cue: 'Your whole Alfiya workspace starts here.',
   },
