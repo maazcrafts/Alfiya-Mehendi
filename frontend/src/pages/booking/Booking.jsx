@@ -3,6 +3,49 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
 
+function BookingCelebrationModal({ onClose, serviceName }) {
+  return (
+    <div className="booking-celebration-backdrop" role="presentation" onClick={onClose}>
+      <div className="booking-celebration-modal" role="dialog" aria-modal="true" aria-labelledby="booking-celebration-title" onClick={event => event.stopPropagation()}>
+        <button type="button" className="booking-celebration-close" aria-label="Close" onClick={onClose}>×</button>
+
+        <div className="booking-celebration-character" aria-hidden="true">
+          <div className="celebration-spark spark-one">✦</div>
+          <div className="celebration-spark spark-two">✦</div>
+          <div className="celebration-spark spark-three">·</div>
+          <div className="celebration-bubble">
+            <span>YOU DID IT!</span>
+            <strong>Your request is in.</strong>
+          </div>
+          <div className="celebration-character-body">
+            <div className="celebration-hair"></div>
+            <div className="celebration-face"><span></span><i></i></div>
+            <div className="celebration-neck"></div>
+            <div className="celebration-torso"></div>
+            <div className="celebration-arm celebration-arm-left"></div>
+            <div className="celebration-arm celebration-arm-right"></div>
+            <div className="celebration-hand"></div>
+          </div>
+          <div className="celebration-ground"></div>
+        </div>
+
+        <div className="booking-celebration-copy">
+          <p className="dashboard-kicker">Alfiya appointment studio</p>
+          <h2 id="booking-celebration-title">You’re officially on the list.</h2>
+          <p className="booking-celebration-message">
+            Your <strong>{serviceName}</strong> request has been sent successfully. You picked your slot — now sit back, relax, and let Alfiya work her mehendi magic. ✨
+          </p>
+          <div className="booking-celebration-note">
+            <span className="booking-celebration-check">✓</span>
+            <span>Alfiya will review your request and your booking history will show the final decision.</span>
+          </div>
+          <button type="button" className="booking-celebration-action" onClick={onClose}>Okay, got it!</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function BookingErrorModal({ message, onClose }) {
   if (!message) return null
   return (
@@ -61,7 +104,7 @@ export default function Booking(){
   const [service,setService]=useState(null),[bookings,setBookings]=useState([]),[booked,setBooked]=useState([])
   const [date,setDate]=useState(''),[time,setTime]=useState(''),[note,setNote]=useState('')
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
-  const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false)
+  const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false),[showCelebration,setShowCelebration]=useState(false)
 
   async function loadBookings(){
     if(!logged)return
@@ -112,10 +155,11 @@ export default function Booking(){
     finally{setCancelling('')}
   }
 
-  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
+  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);setShowCelebration(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
   return <>
     <BookingErrorModal message={error} onClose={() => setError('')} />
+    {success&&showCelebration&&<BookingCelebrationModal serviceName={service?.name||'mehendi service'} onClose={()=>setShowCelebration(false)} />}
     <main className="shop-dashboard booking-dashboard">
     <DashboardSidebar active="bookings" />
     <section className="dashboard-main"><header className="dashboard-topbar"><div><p className="dashboard-kicker">Alfiya appointment studio</p><h1>{success?'Request received.':serviceSlug?'Build your appointment.':'My bookings.'}</h1></div><Link to="/services" className="services-shop-link">{serviceSlug?'Back to services':'Book an appointment'}</Link></header>
