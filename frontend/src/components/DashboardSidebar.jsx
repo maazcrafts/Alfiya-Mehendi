@@ -37,6 +37,9 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
       <nav className="dashboard-nav" aria-label="Dashboard navigation">
         {adminOnly ? (
           <>
+            <Link to="/admin" className={`dashboard-nav-item ${active === 'admin-dashboard' ? 'active' : ''}`}>
+              <span className="dashboard-nav-icon">{icons.admin}</span>Dashboard
+            </Link>
             <Link to="/services" className="dashboard-nav-item">
               <span className="dashboard-nav-icon">{icons.services}</span>Customer view
             </Link>
