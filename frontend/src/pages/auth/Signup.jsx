@@ -32,6 +32,17 @@ const Icon = ({ type }) => {
   return <svg {...common}>{paths[type]}</svg>;
 };
 
+const getApiBase = () => {
+  const configured = import.meta.env.VITE_API_URL?.trim().replace(/\\/$/, "");
+  if (configured) return configured;
+
+  if (typeof window !== "undefined" && /^(localhost|127\\.0\\.0\\.1)$/.test(window.location.hostname)) {
+    return "http://localhost:5000";
+  }
+
+  return "https://alfiya-mehendi-api.onrender.com";
+};
+
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -61,7 +72,7 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const apiBase = getApiBase();
       const response = await fetch(apiBase + "/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
