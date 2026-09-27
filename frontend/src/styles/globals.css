@@ -1255,7 +1255,7 @@ a { color: inherit; }
 .dashboard-topbar{min-height:92px;display:flex;align-items:center;justify-content:space-between;padding:22px 42px;background:#fbf8f1;border-bottom:1px solid #e3dbcf}
 .dashboard-kicker{margin:0 0 7px;color:#8a715d;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
 .dashboard-topbar h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:26px;font-weight:400;color:#2a241f}
-.dashboard-top-actions{display:flex;align-items:center;gap:13px}
+.dashboard-top-actions{display:flex;align-items:center;justify-content:flex-end;gap:13px}
 .dashboard-search{width:260px;height:40px;display:flex;align-items:center;gap:9px;padding:0 12px;border:1px solid #d8cec0;border-radius:7px;background:#fffdf9}
 .dashboard-search span{color:#85776a;font-size:18px}
 .dashboard-search input{width:100%;border:0;outline:0;background:transparent;color:#302a25;font-size:11px}
@@ -1317,8 +1317,8 @@ a { color: inherit; }
 .dashboard-search{width:310px;height:46px;padding:0 14px}
 .dashboard-search span{font-size:20px}
 .dashboard-search input{font-size:13px}
-.dashboard-cart{width:46px;height:46px;font-size:18px}
-.dashboard-cart b{min-width:18px;height:18px;font-size:9px}
+.dashboard-cart{width:58px;height:58px;font-size:20px}
+.dashboard-cart b{min-width:20px;height:20px;font-size:10px}
 .dashboard-content{padding:38px 48px 85px}
 .dashboard-welcome-card{min-height:225px;padding:40px 46px;border-radius:15px}
 .dashboard-kicker{font-size:10px}
