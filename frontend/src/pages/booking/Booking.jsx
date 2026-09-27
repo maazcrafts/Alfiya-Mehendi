@@ -70,7 +70,18 @@ export default function Booking(){
   }
   useEffect(()=>{if(!serviceSlug){setLoading(false);return} fetch(apiBase+'/api/services/'+encodeURIComponent(serviceSlug)).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setService(d.service)}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[serviceSlug])
   useEffect(()=>{loadBookings()},[])
-  useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
+  useEffect(()=>{
+    if(!logged || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+      setBooked([])
+      setLoadingSlots(false)
+      return
+    }
+    setLoadingSlots(true)
+    fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}})
+      .then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])})
+      .catch(e=>setError(e.message))
+      .finally(()=>setLoadingSlots(false))
+  },[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
   const todayKey=dateKey(today())
   const canNext=step===1?dateKey(date)>=todayKey:step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
@@ -156,7 +167,12 @@ export default function Booking(){
               <span className="booking-section-number">01</span>
               <h2>When should we see you?</h2>
               <p className="booking-help">Choose the day that works for you. You can change it later before sending the request.</p>
-              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{setDate(e.target.value);setTime('')}} required/></label>
+              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{
+  const value=e.target.value
+  setError('')
+  setDate(value)
+  setTime('')
+}} required/></label>
               {date&&<div className="booking-selected-banner"><div><small>Selected date</small><strong>{dateLabel(date)}</strong></div><span>✓ Date selected</span></div>}
             </div>}
 
