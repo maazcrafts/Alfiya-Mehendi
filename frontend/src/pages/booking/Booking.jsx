@@ -33,11 +33,11 @@ function BookingCelebrationModal({ onClose, serviceName }) {
           <p className="dashboard-kicker">Alfiya appointment studio</p>
           <h2 id="booking-celebration-title">You’re officially on the list.</h2>
           <p className="booking-celebration-message">
-            Your <strong>{serviceName}</strong> request has been sent successfully. You picked your slot — now sit back, relax, and let Alfiya work her mehendi magic. ✨
+            Your <strong>{serviceName}</strong> request is sent. ✨
           </p>
           <div className="booking-celebration-note">
             <span className="booking-celebration-check">✓</span>
-            <span>Alfiya will review your request and your booking history will show the final decision.</span>
+            <span>We’ll let you know when Alfiya approves it.</span>
           </div>
           <button type="button" className="booking-celebration-action" onClick={onClose}>Okay, got it!</button>
         </div>
