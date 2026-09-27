@@ -164,7 +164,7 @@ export default function Booking(){
 
             <div className="booking-wizard-actions">
               {step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>← Back</button>:<span/>}
-              {step<3?<button type="button" className="booking-submit" disabled={!canNext||loadingSlots} onClick={continueStep}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
+              {step<3?<button type="button" className="booking-submit" disabled={step===2?( !canNext || loadingSlots ):false} onClick={continueStep}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
             </div>
             {step===3&&<p className="booking-disclaimer">Your appointment is not confirmed until Alfiya approves the request.</p>}
           </section>
