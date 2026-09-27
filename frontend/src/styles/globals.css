@@ -4624,3 +4624,27 @@ a { color: inherit; }
 .new-tour-character-flight{
   height:610px!important;
 }
+
+/* Contact page guide only — restore the larger, older character scale.
+   These selectors intentionally do not touch the onboarding tour character. */
+.contact-guide-scene{
+  min-height:470px!important;
+}
+.contact-guide{
+  width:285px!important;
+  height:430px!important;
+  transform:scale(1.08)!important;
+  transform-origin:center bottom!important;
+}
+.contact-guide-speech{
+  right:1%!important;
+  top:4px!important;
+}
+@media(max-width:950px){
+  .contact-guide-scene{min-height:390px!important}
+  .contact-guide{transform:scale(.94)!important}
+}
+@media(max-width:700px){
+  .contact-guide-scene{min-height:380px!important}
+  .contact-guide{transform:scale(.88)!important}
+}
