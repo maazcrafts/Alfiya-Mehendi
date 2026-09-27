@@ -31,10 +31,26 @@ function isPastDateTime(date, time) {
 
 router.post('/', requireAuth, async (req, res) => {
   try {
-    const { serviceSlug, bookingDate, bookingTime, customerNote } = req.body
+    const { serviceSlug, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerNote } = req.body
 
-    if (!serviceSlug || !bookingDate || !bookingTime) {
-      return res.status(400).json({ message: 'Service, date and time are required.' })
+    const cleanName = String(customerName || '').trim()
+    const cleanPhone = String(customerPhone || '').trim()
+    const cleanLocation = String(customerLocation || '').trim()
+
+    if (!serviceSlug || !bookingDate || !bookingTime || !cleanName || !cleanPhone || !cleanLocation) {
+      return res.status(400).json({ message: 'Name, phone number, area/location, service, date and time are required.' })
+    }
+
+    if (cleanName.length < 2 || cleanName.length > 120) {
+      return res.status(400).json({ message: 'Please enter a valid name.' })
+    }
+
+    if (!/^(?:\+91[-\s]?)?[6-9]\d{9}$/.test(cleanPhone.replace(/[()]/g, ''))) {
+      return res.status(400).json({ message: 'Please enter a valid Indian mobile number.' })
+    }
+
+    if (cleanLocation.length < 2 || cleanLocation.length > 300) {
+      return res.status(400).json({ message: 'Please enter a valid area or location.' })
     }
 
     if (!isValidDate(bookingDate)) {
@@ -74,6 +90,9 @@ router.post('/', requireAuth, async (req, res) => {
       serviceId: service.id,
       bookingDate,
       bookingTime,
+      customerName: cleanName,
+      customerPhone: cleanPhone,
+      customerLocation: cleanLocation,
       customerNote: customerNote?.trim(),
     })
 
