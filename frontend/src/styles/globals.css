@@ -3270,3 +3270,86 @@ a { color: inherit; }
   .booking-celebration-message{font-size:13px}
   .celebration-character-body{transform:translateX(-50%) scale(.64);transform-origin:bottom center}
 }
+
+/* Booking request-received page alignment */
+.booking-dashboard .booking-success-panel{
+  width:100%!important;
+  min-height:430px!important;
+  margin:0 0 48px!important;
+  padding:58px 70px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  border-radius:24px!important;
+  border:1px solid #d2dfc9!important;
+  background:linear-gradient(135deg,#f4f5ec 0%,#e7eedf 100%)!important;
+}
+.booking-dashboard .booking-success-panel .booking-success-mark{
+  width:78px!important;
+  height:78px!important;
+  margin:0 0 20px!important;
+  flex:0 0 78px!important;
+}
+.booking-dashboard .booking-success-panel .dashboard-kicker{
+  margin:0 0 11px!important;
+  font-size:11px!important;
+  letter-spacing:.18em!important;
+}
+.booking-dashboard .booking-success-panel h2{
+  max-width:760px!important;
+  margin:0 auto 17px!important;
+  font:400 42px/1.12 Georgia,serif!important;
+  color:#3c4a32!important;
+}
+.booking-dashboard .booking-success-panel>p:not(.dashboard-kicker){
+  max-width:720px!important;
+  margin:0 auto 27px!important;
+  color:#66715d!important;
+  font-size:15px!important;
+  line-height:1.75!important;
+}
+.booking-dashboard .booking-success-panel>div:last-child{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:14px!important;
+  flex-wrap:wrap!important;
+}
+.booking-dashboard .booking-success-panel .service-book-button{
+  min-height:52px!important;
+  min-width:155px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 21px!important;
+  border-radius:10px!important;
+  text-decoration:none!important;
+  font-size:12px!important;
+}
+.booking-dashboard .booking-success-panel .services-shop-link{
+  min-height:52px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 21px!important;
+  border:1px solid #cbbba8!important;
+  border-radius:10px!important;
+  background:#fffaf3!important;
+  color:#5b4a3f!important;
+  text-decoration:none!important;
+  font-size:12px!important;
+  font-weight:800!important;
+}
+@media(max-width:700px){
+  .booking-dashboard .booking-success-panel{
+    min-height:400px!important;
+    padding:45px 24px!important;
+  }
+  .booking-dashboard .booking-success-panel h2{font-size:34px!important}
+  .booking-dashboard .booking-success-panel>p:not(.dashboard-kicker){font-size:13px!important}
+  .booking-dashboard .booking-success-panel>div:last-child{width:100%;flex-direction:column!important}
+  .booking-dashboard .booking-success-panel .service-book-button,
+  .booking-dashboard .booking-success-panel .services-shop-link{width:100%!important}
+}
