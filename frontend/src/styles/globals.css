@@ -4547,3 +4547,80 @@ a { color: inherit; }
 .new-tour-character-flight .tour-skirt{
   z-index:6!important;
 }
+
+/* Refine guide proportions: softer/feminine silhouette, shorter height, clean shoulders */
+.new-tour-character-flight .tour-character-body{
+  width:225px!important;
+  height:485px!important;
+  bottom:42px!important;
+  transform:translateX(-50%) scale(.96)!important;
+  transform-origin:bottom center!important;
+}
+.new-tour-character-flight .tour-dress{
+  left:34px!important;
+  width:143px!important;
+  height:224px!important;
+  border-radius:58px 58px 34px 34px!important;
+}
+/* Slim the arms so the guide no longer reads as broad/muscular. */
+.new-tour-character-flight .tour-arm{
+  width:32px!important;
+  height:174px!important;
+  top:151px!important;
+  border-radius:20px!important;
+}
+.new-tour-character-flight .tour-arm:before{
+  display:none!important;
+}
+.new-tour-character-flight .tour-arm-left{
+  left:17px!important;
+  transform:rotate(17deg)!important;
+}
+.new-tour-character-flight .tour-arm-right{
+  right:15px!important;
+  transform:rotate(-22deg)!important;
+}
+/* Softer hands at the ends of the slim arms. */
+.new-tour-character-flight .tour-arm-left:after,
+.new-tour-character-flight .tour-arm-right:after{
+  content:"";
+  position:absolute;
+  bottom:-8px;
+  width:32px;
+  height:39px;
+  border-radius:50%;
+  background:#c98564;
+}
+.new-tour-character-flight .tour-arm-left:after{left:-2px}
+.new-tour-character-flight .tour-arm-right:after{right:-2px}
+
+/* Remove the round shoulder blobs introduced by the previous shoulder connector fix. */
+.new-tour-character-flight .tour-arm:before{
+  content:none!important;
+  display:none!important;
+}
+
+/* Shorter lower body proportions. */
+.new-tour-character-flight .tour-skirt{
+  left:25px!important;
+  top:309px!important;
+  width:166px!important;
+  height:84px!important;
+}
+.new-tour-character-flight .tour-leg{
+  top:380px!important;
+  width:34px!important;
+  height:70px!important;
+}
+.new-tour-character-flight .tour-leg-left{left:59px!important}
+.new-tour-character-flight .tour-leg-right{right:59px!important}
+.new-tour-character-flight .tour-leg span{
+  width:47px!important;
+  height:17px!important;
+  bottom:-9px!important;
+}
+
+/* Keep the overall flight container compact instead of making her tower upward. */
+.new-tour-character-flight{
+  height:610px!important;
+}
