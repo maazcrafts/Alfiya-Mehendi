@@ -6,23 +6,22 @@ import { useEffect, useMemo, useState } from 'react'
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const serviceImages = {
-  // Basic — clean palm/application reference.
-  basic: '/palm-mehendi.jpg',
+  // Basic — clean palm-focused mehndi reference.
+  basic: 'https://images.pexels.com/photos/12872542/pexels-photo-12872542.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
-  // Intermediate — both palms with clearly visible, detailed mehndi.
+  // Intermediate — detailed hand/palm work suitable for the more developed designs.
   intermediate: 'https://images.pexels.com/photos/11925938/pexels-photo-11925938.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
-  // Five Finger Hand — dedicated finger-focused reference.
-  fiveFinger: 'https://i.pinimg.com/736x/7b/74/90/7b7490e13b18da7287b0a9c28dda612e.jpg',
+  // Five Finger Hand — close framing where the finger/hand detailing is clearly visible.
+  fiveFinger: 'https://images.pexels.com/photos/5598594/pexels-photo-5598594.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
-  // Arm Length — full forearm-to-hand reference matching the service coverage.
-  armLength: 'https://www.theconsumersfeedback.com/uploads/recent/1775915925-69da5395ec6b8.jpg',
+  // Arm Length — henna extending visibly across the arms.
+  armLength: 'https://images.pexels.com/photos/20043117/pexels-photo-20043117.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
-  // Advanced — full hands and arms, matching the full-length service.
+  // Advanced — fuller hand-and-arm coverage with dense bridal-level detail.
   advanced: 'https://images.pexels.com/photos/4711086/pexels-photo-4711086.jpeg?auto=compress&cs=tinysrgb&w=1400',
 
-  // Bridal — Pakistani/South Asian bridal portrait with red traditional attire,
-  // jewelry and visible henna rather than another generic hand close-up.
+  // Bridal — dedicated South Asian bridal portrait, not another generic hand close-up.
   bridal: 'https://images.pexels.com/photos/13779728/pexels-photo-13779728.jpeg?auto=compress&cs=tinysrgb&w=1600',
 }
 
