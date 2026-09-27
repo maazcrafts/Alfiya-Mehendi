@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const getApiBase = () => {
+  const configured = import.meta.env.VITE_API_URL?.trim().replace(/\\/$/, "");
+  if (configured) return configured;
+
+  if (typeof window !== "undefined" && /^(localhost|127\\.0\\.0\\.1)$/.test(window.location.hostname)) {
+    return "http://localhost:5000";
+  }
+
+  return "https://alfiya-mehendi-api.onrender.com";
+};
+
 export default function GoogleButton({ mode = "signin" }) {
   const containerRef = useRef(null);
   const navigate = useNavigate();
@@ -44,7 +55,7 @@ export default function GoogleButton({ mode = "signin" }) {
           callback: async (response) => {
             try {
               setError("");
-              const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+              const apiBase = getApiBase();
               const result = await fetch(apiBase + "/api/auth/google", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
