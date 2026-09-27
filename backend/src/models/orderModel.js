@@ -221,3 +221,14 @@ export async function finalizePaidOrder({ userId, orderId }) {
     return {kind:'finalized',order:{id:created.id,status:created.status,subtotalPaise:Number(created.subtotal_paise),shippingPaise:Number(created.shipping_paise),totalPaise:Number(created.total_paise),createdAt:created.created_at,address:await findUserAddress(userId,order.shipping_address_id)}}
   } catch(error){await client.query('ROLLBACK');throw error} finally{client.release()}
 }
+
+
+export async function updateOrderStatus(orderId, status) {
+  const result = await query(
+    `UPDATE orders SET status = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING id, status, subtotal_paise, shipping_paise, total_paise, created_at, updated_at`,
+    [status, orderId],
+  )
+  return result.rows[0] || null
+}
