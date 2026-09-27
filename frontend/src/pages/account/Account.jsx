@@ -293,7 +293,10 @@ export default function Account() {
                 <div className="logout-girl-arm logout-girl-arm-right" />
                 <div className="logout-girl-hand logout-girl-hand-left" />
                 <div className="logout-girl-hand logout-girl-hand-right" />
-                <div className="logout-handkerchief">✦</div>
+                <div className="logout-wipe-upper-arm" />
+                <div className="logout-wipe-forearm" />
+                <div className="logout-wipe-hand" />
+                <div className="logout-handkerchief"><span>✦</span></div>
                 <div className="logout-goodbye-hand"><span /><span /><span /><span /></div>
                 <div className="logout-girl-leg logout-girl-leg-left"><span /></div>
                 <div className="logout-girl-leg logout-girl-leg-right"><span /></div>
