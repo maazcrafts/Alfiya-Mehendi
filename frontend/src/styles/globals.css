@@ -3353,3 +3353,80 @@ a { color: inherit; }
   .booking-dashboard .booking-success-panel .service-book-button,
   .booking-dashboard .booking-success-panel .services-shop-link{width:100%!important}
 }
+
+/* Celebration modal — larger, calmer, less text */
+.booking-celebration-modal{
+  width:min(1080px,calc(100vw - 80px))!important;
+  min-height:610px!important;
+  grid-template-columns:50% 50%!important;
+  border-radius:34px!important;
+}
+.booking-celebration-character{
+  min-height:610px!important;
+}
+.booking-celebration-copy{
+  padding:76px 78px 70px!important;
+  justify-content:center!important;
+}
+.booking-celebration-copy h2{
+  max-width:520px!important;
+  font-size:54px!important;
+  line-height:1.04!important;
+}
+.booking-celebration-message{
+  max-width:500px!important;
+  margin:25px 0 0!important;
+  font-size:17px!important;
+  line-height:1.65!important;
+}
+.booking-celebration-note{
+  max-width:500px!important;
+  margin-top:22px!important;
+  padding:17px 19px!important;
+  font-size:13px!important;
+}
+.booking-celebration-action{
+  min-width:205px!important;
+  min-height:58px!important;
+  margin-top:30px!important;
+  font-size:13px!important;
+}
+.booking-celebration-close{
+  width:48px!important;
+  height:48px!important;
+  top:20px!important;
+  right:20px!important;
+  font-size:28px!important;
+}
+.booking-celebration-character-body{
+  transform:translateX(-50%) scale(1.12)!important;
+  transform-origin:bottom center!important;
+}
+.celebration-bubble{
+  width:205px!important;
+  padding:17px 19px!important;
+  top:48px!important;
+  right:34px!important;
+}
+.celebration-bubble strong{font-size:20px!important}
+.celebration-spark{font-size:30px!important}
+.spark-two{font-size:23px!important}
+
+@media(max-width:800px){
+  .booking-celebration-modal{
+    width:min(620px,calc(100vw - 34px))!important;
+    grid-template-columns:1fr!important;
+  }
+  .booking-celebration-character{min-height:360px!important}
+  .booking-celebration-copy{padding:40px 32px 35px!important}
+  .booking-celebration-copy h2{font-size:40px!important}
+  .booking-celebration-message{font-size:15px!important}
+  .booking-celebration-character-body{
+    transform:translateX(-50%) scale(.82)!important;
+  }
+}
+@media(max-width:480px){
+  .booking-celebration-character{min-height:310px!important}
+  .booking-celebration-copy{padding:34px 24px 28px!important}
+  .booking-celebration-copy h2{font-size:34px!important}
+}
