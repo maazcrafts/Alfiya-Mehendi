@@ -103,7 +103,9 @@ export default function Booking(){
 
   const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
-  return <main className="shop-dashboard booking-dashboard">
+  return <>
+    <BookingErrorModal message={error} onClose={() => setError('')} />
+    <main className="shop-dashboard booking-dashboard">
     <DashboardSidebar active="bookings" />
     <section className="dashboard-main"><header className="dashboard-topbar"><div><p className="dashboard-kicker">Alfiya appointment studio</p><h1>{success?'Request received.':serviceSlug?'Build your appointment.':'My bookings.'}</h1></div><Link to="/services" className="services-shop-link">{serviceSlug?'Back to services':'Book an appointment'}</Link></header>
     <div className="dashboard-content booking-content">
@@ -202,4 +204,4 @@ export default function Booking(){
       </section>}
     </div></section>
   </main>
-}
+  </>
