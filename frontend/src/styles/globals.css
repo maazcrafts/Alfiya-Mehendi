@@ -4930,3 +4930,106 @@ a { color: inherit; }
   right:22px!important;
   transform:rotate(-20deg)!important;
 }
+
+/* Logout pose: one hand wipes a tear with a handkerchief, the other waves goodbye */
+.logout-girl .logout-girl-arm-left{
+  height:112px!important;
+  top:165px!important;
+  left:38px!important;
+  transform:rotate(48deg)!important;
+  transform-origin:top center!important;
+}
+.logout-girl .logout-girl-arm-right{
+  height:92px!important;
+  top:158px!important;
+  right:17px!important;
+  transform:rotate(-43deg)!important;
+  transform-origin:top center!important;
+}
+.logout-girl .logout-girl-hand-left,
+.logout-girl .logout-girl-hand-right{
+  display:block!important;
+  width:31px!important;
+  height:36px!important;
+  border-radius:50%!important;
+}
+.logout-girl .logout-girl-hand-left{
+  left:8px!important;
+  top:245px!important;
+  transform:rotate(35deg)!important;
+}
+.logout-girl .logout-girl-hand-right{
+  right:-1px!important;
+  top:225px!important;
+}
+.logout-handkerchief{
+  position:absolute;
+  z-index:9;
+  left:16px;
+  top:225px;
+  width:40px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:2px solid #d9cbbd;
+  border-radius:7px 4px 8px 4px;
+  background:#fffdf8;
+  color:#a05e3e;
+  font-size:14px;
+  transform:rotate(-18deg);
+  box-shadow:0 5px 10px rgba(60,41,32,.08);
+  animation:handkerchiefDab 1.8s ease-in-out infinite;
+}
+.logout-handkerchief:after{
+  content:"";
+  position:absolute;
+  right:-5px;
+  bottom:-5px;
+  width:9px;
+  height:9px;
+  border-right:2px solid #d9cbbd;
+  border-bottom:2px solid #d9cbbd;
+  background:#fffdf8;
+  transform:rotate(18deg);
+}
+.logout-goodbye-hand{
+  position:absolute;
+  z-index:9;
+  right:-8px;
+  top:196px;
+  width:45px;
+  height:72px;
+  transform:rotate(-16deg);
+  animation:goodbyeWave 1.15s ease-in-out infinite;
+}
+.logout-goodbye-hand:before{
+  content:"";
+  position:absolute;
+  left:9px;
+  bottom:0;
+  width:28px;
+  height:39px;
+  border-radius:50%;
+  background:#c98564;
+}
+.logout-goodbye-hand span{
+  position:absolute;
+  bottom:28px;
+  width:9px;
+  height:34px;
+  border-radius:8px;
+  background:#c98564;
+  transform-origin:bottom center;
+}
+.logout-goodbye-hand span:nth-child(1){left:7px;transform:rotate(-20deg)}
+.logout-goodbye-hand span:nth-child(2){left:15px;transform:rotate(-7deg)}
+.logout-goodbye-hand span:nth-child(3){left:23px;transform:rotate(8deg)}
+.logout-goodbye-hand span:nth-child(4){left:31px;transform:rotate(21deg)}
+@keyframes handkerchiefDab{
+  0%,100%{transform:rotate(-18deg) translate(0,0)}
+  50%{transform:rotate(-13deg) translate(2px,-4px)}
+}
+@keyframes goodbyeWave{
+  0%,100%{transform:rotate(-16deg)}
+  50%{transform:rotate(9deg) translateY(-3px)}
+}
