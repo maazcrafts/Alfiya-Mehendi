@@ -4503,3 +4503,47 @@ a { color: inherit; }
   0%,100%{transform:scale(1)}
   45%{transform:scale(1.025)}
 }
+
+/* Final shoulder connection fix — arms must visibly grow out of the torso */
+.new-tour-character-flight .tour-arm{
+  z-index:5!important;
+  top:148px!important;
+  width:42px!important;
+  height:192px!important;
+  border-radius:25px!important;
+  background:#c98564!important;
+}
+.new-tour-character-flight .tour-arm:before{
+  content:"";
+  position:absolute;
+  top:-5px;
+  width:52px;
+  height:54px;
+  border-radius:50%;
+  background:#c98564;
+  z-index:-1;
+}
+.new-tour-character-flight .tour-arm-left{
+  left:12px!important;
+  transform:rotate(16deg)!important;
+  transform-origin:top center!important;
+}
+.new-tour-character-flight .tour-arm-left:before{
+  left:-5px;
+}
+.new-tour-character-flight .tour-arm-right{
+  right:25px!important;
+  transform:rotate(-21deg)!important;
+  transform-origin:top center!important;
+}
+.new-tour-character-flight .tour-arm-right:before{
+  right:-5px;
+}
+
+/* Keep the shoulder joins tucked visually under the dress edge. */
+.new-tour-character-flight .tour-dress{
+  z-index:6!important;
+}
+.new-tour-character-flight .tour-skirt{
+  z-index:6!important;
+}
