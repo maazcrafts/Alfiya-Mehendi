@@ -4648,3 +4648,266 @@ a { color: inherit; }
   .contact-guide-scene{min-height:380px!important}
   .contact-guide{transform:scale(.88)!important}
 }
+
+/* Logout confirmation — emotional Alfiya 2D character */
+.logout-confirm-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:grid;
+  place-items:center;
+  padding:32px;
+  background:rgba(47,34,27,.58);
+  backdrop-filter:blur(13px);
+  animation:logoutOverlayIn .25s ease both;
+}
+.logout-confirm-card{
+  position:relative;
+  width:min(920px,92vw);
+  min-height:510px;
+  display:grid;
+  grid-template-columns:360px 1fr;
+  align-items:center;
+  gap:30px;
+  overflow:hidden;
+  padding:48px 54px 48px 40px;
+  border:1px solid rgba(196,174,151,.7);
+  border-radius:34px;
+  background:#fffaf3;
+  box-shadow:0 40px 110px rgba(35,24,18,.3);
+  animation:logoutCardIn .42s cubic-bezier(.2,.8,.2,1) both;
+}
+.logout-confirm-close{
+  position:absolute;
+  top:18px;
+  right:20px;
+  z-index:5;
+  width:42px;
+  height:42px;
+  border:1px solid #dccdbd;
+  border-radius:50%;
+  background:#fffdf9;
+  color:#6e5b4e;
+  font-size:25px;
+  line-height:1;
+  cursor:pointer;
+}
+.logout-confirm-close:hover{background:#f1e9de;color:#3c2920}
+.logout-girl-scene{
+  position:relative;
+  height:420px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.logout-girl{
+  position:relative;
+  width:270px;
+  height:400px;
+  animation:logoutGirlFloat 3.4s ease-in-out infinite;
+  filter:drop-shadow(0 20px 20px rgba(55,38,29,.12));
+}
+.logout-girl-hair{
+  position:absolute;
+  left:58px;
+  top:7px;
+  width:154px;
+  height:172px;
+  border-radius:55% 55% 46% 48%;
+  background:#38271f;
+}
+.logout-girl-face{
+  position:absolute;
+  z-index:4;
+  left:86px;
+  top:29px;
+  width:98px;
+  height:119px;
+  border-radius:48% 48% 45% 45%;
+  background:#c98564;
+  border:2px solid rgba(82,50,37,.1);
+}
+.logout-eye{
+  position:absolute;
+  top:52px;
+  width:8px;
+  height:5px;
+  border-bottom:3px solid #38271f;
+  border-radius:50%;
+}
+.logout-eye-left{left:25px;transform:rotate(-10deg)}
+.logout-eye-right{right:25px;transform:rotate(10deg)}
+.logout-mouth{
+  position:absolute;
+  left:39px;
+  top:77px;
+  width:20px;
+  height:11px;
+  border-top:2px solid #754633;
+  border-radius:50%;
+}
+.logout-tear{
+  position:absolute;
+  z-index:6;
+  top:57px;
+  width:8px;
+  height:18px;
+  border-radius:60% 40% 60% 60%;
+  background:#8bb7c9;
+  box-shadow:0 2px 5px rgba(80,130,150,.18);
+  animation:logoutTear 1.8s ease-in-out infinite;
+}
+.logout-tear-left{left:25px}
+.logout-tear-right{right:25px;animation-delay:.45s}
+.logout-girl-neck{
+  position:absolute;
+  z-index:2;
+  left:120px;
+  top:140px;
+  width:34px;
+  height:34px;
+  background:#b97657;
+}
+.logout-girl-dress{
+  position:absolute;
+  z-index:3;
+  left:51px;
+  top:160px;
+  width:169px;
+  height:192px;
+  border-radius:62px 62px 34px 34px;
+  background:linear-gradient(160deg,#788564,#657353);
+  box-shadow:inset 0 20px 0 rgba(255,255,255,.08);
+}
+.logout-girl-dress:before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:22px;
+  width:59px;
+  height:78px;
+  transform:translateX(-50%);
+  border:2px solid rgba(255,250,243,.5);
+  border-radius:50%;
+}
+.logout-girl-dress span{
+  position:absolute;
+  left:50%;
+  top:128px;
+  width:8px;
+  height:8px;
+  transform:translateX(-50%) rotate(45deg);
+  background:#dfc29f;
+  box-shadow:0 25px 0 #dfc29f;
+}
+.logout-girl-arm{
+  position:absolute;
+  z-index:5;
+  top:169px;
+  width:34px;
+  height:138px;
+  border-radius:22px;
+  background:#c98564;
+}
+.logout-girl-arm-left{left:35px;transform:rotate(17deg);transform-origin:top center}
+.logout-girl-arm-right{right:22px;transform:rotate(-20deg);transform-origin:top center}
+.logout-girl-hand{
+  position:absolute;
+  z-index:6;
+  width:32px;
+  height:38px;
+  border-radius:50%;
+  background:#c98564;
+}
+.logout-girl-hand-left{left:20px;top:299px}
+.logout-girl-hand-right{right:5px;top:298px}
+.logout-girl-leg{
+  position:absolute;
+  z-index:2;
+  top:337px;
+  width:34px;
+  height:52px;
+  border-radius:18px;
+  background:#c98564;
+}
+.logout-girl-leg-left{left:76px}
+.logout-girl-leg-right{right:76px}
+.logout-girl-leg span{
+  position:absolute;
+  bottom:-9px;
+  left:-6px;
+  width:47px;
+  height:17px;
+  border-radius:50%;
+  background:#4a342b;
+}
+.logout-girl-spark{
+  position:absolute;
+  color:#a05e3e;
+  font-size:25px;
+  animation:logoutSpark 2.2s ease-in-out infinite;
+}
+.logout-girl-scene .spark-one{left:35px;top:105px}
+.logout-girl-scene .spark-two{right:28px;top:190px;animation-delay:.7s}
+.logout-confirm-copy{padding:10px 8px 0 0}
+.logout-confirm-copy h2{
+  margin:9px 0 16px;
+  color:#3c2920;
+  font:400 52px/1.04 Georgia,"Times New Roman",serif;
+  letter-spacing:-.025em;
+}
+.logout-confirm-copy>p:not(.dashboard-kicker){
+  max-width:470px;
+  margin:0;
+  color:#75665b;
+  font-size:16px;
+  line-height:1.7;
+}
+.logout-confirm-actions{
+  display:flex;
+  gap:14px;
+  margin-top:32px;
+}
+.logout-stay-button,.logout-go-button{
+  min-height:58px;
+  padding:0 25px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+}
+.logout-stay-button{
+  border:1px solid #cbb9a7;
+  background:#fffdf9;
+  color:#4d3b30;
+}
+.logout-stay-button:hover{background:#f2eadf}
+.logout-go-button{
+  min-width:145px;
+  border:0;
+  background:#6e7b5d;
+  color:#fff;
+}
+.logout-go-button:hover{background:#3c2920}
+.logout-go-button span{margin-left:8px;font-size:17px}
+@keyframes logoutOverlayIn{from{opacity:0}to{opacity:1}}
+@keyframes logoutCardIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes logoutGirlFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+@keyframes logoutTear{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(5px);opacity:1}}
+@keyframes logoutSpark{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-7px)}}
+@media(max-width:760px){
+  .logout-confirm-overlay{padding:18px}
+  .logout-confirm-card{
+    width:100%;
+    min-height:0;
+    grid-template-columns:1fr;
+    gap:0;
+    padding:32px 28px 28px;
+    text-align:center;
+  }
+  .logout-girl-scene{height:300px;transform:scale(.75);transform-origin:center bottom}
+  .logout-confirm-copy{padding:0}
+  .logout-confirm-copy h2{font-size:38px}
+  .logout-confirm-copy>p:not(.dashboard-kicker){font-size:14px}
+  .logout-confirm-actions{justify-content:center}
+}
