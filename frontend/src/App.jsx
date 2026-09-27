@@ -9,6 +9,7 @@ import Products from './pages/products/Products.jsx'
 import ProductDetails from './pages/products/ProductDetails.jsx'
 import Services from './pages/services/Services.jsx'
 import Booking from './pages/booking/Booking.jsx'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import AdminBookings from './pages/admin/AdminBookings.jsx'
 import AdminOrders from './pages/admin/AdminOrders.jsx'
 import AdminSupport from './pages/admin/AdminSupport.jsx'
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/booking" element={<Booking />} />
           <Route path="/booking/getting-there" element={<GettingThere />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/support" element={<AdminSupport />} />
