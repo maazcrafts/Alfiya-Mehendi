@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS payments (
   order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
   booking_id UUID REFERENCES bookings(id) ON DELETE SET NULL,
   provider VARCHAR(50) NOT NULL,
+  provider_order_id VARCHAR(255),
   provider_payment_id VARCHAR(255),
   amount_paise BIGINT NOT NULL CHECK (amount_paise >= 0),
   status VARCHAR(30) NOT NULL DEFAULT 'pending'
@@ -184,6 +185,9 @@ CREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, st
 CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_confirmed_slot ON bookings(booking_date, booking_time) WHERE status = 'confirmed';
 CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_booking ON payments(booking_id);
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS provider_order_id VARCHAR(255);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_payments_provider_order ON payments(provider, provider_order_id) WHERE provider_order_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_payments_provider_payment ON payments(provider, provider_payment_id) WHERE provider_payment_id IS NOT NULL;
 
 -- Initial business categories.
 INSERT INTO categories (name, slug, description)
