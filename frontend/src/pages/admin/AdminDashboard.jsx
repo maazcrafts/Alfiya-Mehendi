@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-function getUser() {
-  try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
-}
 function token() { return localStorage.getItem('alfiya_auth_token') || '' }
 function money(paise) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format((Number(paise) || 0) / 100)
@@ -20,7 +17,9 @@ const emptyService = { name: '', slug: '', level: 'basic', description: '', pric
 
 export default function AdminDashboard() {
   const navigate = useNavigate()
-  const admin = useMemo(getUser, [])
+  const [admin, setAdmin] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
+  })
   const [tab, setTab] = useState('overview')
   const [overview, setOverview] = useState(null)
   const [customers, setCustomers] = useState([])
@@ -40,12 +39,23 @@ export default function AdminDashboard() {
   const [notice, setNotice] = useState('')
 
   useEffect(() => {
-    if (admin?.role !== 'admin') {
-      navigate('/services', { replace: true })
-      return
-    }
     loadOverview()
   }, [])
+
+  async function loadCurrentAdmin() {
+    const response = await fetch(apiBase + '/api/users/me', {
+      headers: { Authorization: `Bearer ${token()}` },
+    })
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) throw new Error(data.message || 'Unable to verify administrator access.')
+    if (data.user?.role !== 'admin') {
+      navigate('/services', { replace: true })
+      throw new Error('Administrator access required.')
+    }
+    setAdmin(data.user)
+    localStorage.setItem('alfiya_user', JSON.stringify(data.user))
+    return data.user
+  }
 
   async function request(path, options = {}) {
     const response = await fetch(apiBase + path, {
@@ -64,6 +74,8 @@ export default function AdminDashboard() {
   async function loadOverview() {
     setLoading(true); setError('')
     try {
+      const currentAdmin = await loadCurrentAdmin()
+      if (!currentAdmin) return
       const data = await request('/api/admin/overview')
       setOverview(data)
     } catch (e) {
@@ -164,7 +176,7 @@ export default function AdminDashboard() {
   const filteredCustomers = customers.filter(c => !customerSearch || `${c.name} ${c.email}`.toLowerCase().includes(customerSearch.toLowerCase()))
   const filteredServices = services.filter(s => !serviceSearch || `${s.name} ${s.slug}`.toLowerCase().includes(serviceSearch.toLowerCase()))
 
-  if (admin?.role !== 'admin') return null
+
 
   return (
     <main className="shop-dashboard admin-dashboard">
