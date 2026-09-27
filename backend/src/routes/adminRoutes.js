@@ -46,14 +46,11 @@ router.get('/customers', async (_req, res) => {
     const result = await query(`
       SELECT
         u.id, u.name, u.email, u.avatar_url, u.role, u.created_at,
-        COUNT(DISTINCT o.id)::int AS order_count,
-        COUNT(DISTINCT b.id)::int AS booking_count,
-        COALESCE(SUM(o.total_paise) FILTER (WHERE o.status NOT IN ('cancelled','refunded')),0)::bigint AS lifetime_value_paise
+        (SELECT COUNT(*)::int FROM orders o WHERE o.user_id = u.id) AS order_count,
+        (SELECT COUNT(*)::int FROM bookings b WHERE b.user_id = u.id) AS booking_count,
+        COALESCE((SELECT SUM(o.total_paise) FROM orders o WHERE o.user_id = u.id AND o.status NOT IN ('cancelled','refunded')),0)::bigint AS lifetime_value_paise
       FROM users u
-      LEFT JOIN orders o ON o.user_id = u.id
-      LEFT JOIN bookings b ON b.user_id = u.id
       WHERE u.role = 'customer'
-      GROUP BY u.id
       ORDER BY u.created_at DESC
     `)
     return res.json({ customers: result.rows })
