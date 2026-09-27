@@ -74,8 +74,8 @@ const statusMeta = {
   completed: ['Completed','confirmed'],
   cancelled: ['Cancelled','rejected'],
 }
-function user(){try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
-function token(){return localStorage.getItem('alfiya_auth_token')||''}
+function user(){try{return JSON.parse(sessionStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
+function token(){return sessionStorage.getItem('alfiya_auth_token')||''}
 function today(){
   const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date())
   const get=t=>parts.find(p=>p.type===t)?.value||''
