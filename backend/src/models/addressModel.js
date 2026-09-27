@@ -1,4 +1,4 @@
-import { query } from '../config/pool.js'
+import { getClient, query } from '../config/pool.js'
 
 function serialize(row) {
   return {
@@ -26,7 +26,7 @@ export async function listUserAddresses(userId) {
 }
 
 export async function createUserAddress({ userId, label, fullName, phone, addressLine1, addressLine2, city, state, postalCode, country = 'India', isDefault = false }) {
-  const client = await (await import('../config/pool.js')).getClient()
+  const client = await getClient()
   try {
     await client.query('BEGIN')
     if (isDefault) {
