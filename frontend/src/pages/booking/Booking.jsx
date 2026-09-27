@@ -17,7 +17,14 @@ const statusMeta = {
 function user(){try{return JSON.parse(localStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
 function token(){return localStorage.getItem('alfiya_auth_token')||''}
 function today(){
-  return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())
+  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date())
+  const get=t=>parts.find(p=>p.type===t)?.value||''
+  return get('year')+'-'+get('month')+'-'+get('day')
+}
+function dateKey(value){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value||'')) return 0
+  const [y,m,d]=value.split('-').map(Number)
+  return y*10000+m*100+d
 }
 function isFutureAppointment(dateValue,timeValue){
   if(!dateValue||!timeValue)return false
@@ -48,11 +55,12 @@ export default function Booking(){
   useEffect(()=>{loadBookings()},[])
   useEffect(()=>{if(!date||!logged)return;setLoadingSlots(true);fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}}).then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])}).catch(e=>setError(e.message)).finally(()=>setLoadingSlots(false))},[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
-  const canNext=step===1?Boolean(date)&&date>=today():step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
+  const todayKey=dateKey(today())
+  const canNext=step===1?dateKey(date)>=todayKey:step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
   const continueStep=()=>{
     setError('')
     if(step===1){
-      if(!date||date<today()){setError('Please choose a future appointment date.');return}
+      if(!date||dateKey(date)<todayKey){setError('Please choose today or a future appointment date.');return}
       setStep(2);return
     }
     if(step===2){
@@ -76,7 +84,7 @@ export default function Booking(){
     finally{setCancelling('')}
   }
 
-  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose a future date and an available time slot.');setStep(date>=today()?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
+  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
 
   return <main className="shop-dashboard booking-dashboard">
     <DashboardSidebar active="bookings" />
