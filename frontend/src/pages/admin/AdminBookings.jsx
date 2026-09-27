@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-function getUser() {
-  try { return JSON.parse(localStorage.getItem('alfiya_user') || '{}') } catch { return {} }
-}
 
 function getToken() {
   return localStorage.getItem('alfiya_auth_token') || ''
@@ -112,7 +109,9 @@ export default function AdminBookings() {
             <span>{bookings.filter((booking) => booking.status === 'requested').length} pending</span>
           </section>
 
-          <div className="admin-control-row"><input className="admin-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search customer or service…" aria-label="Search bookings" /></div>\n          <div className="admin-filter-row">
+          <div className="admin-control-row"><input className="admin-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search customer or service…" aria-label="Search bookings" /></div>
+
+          <div className="admin-filter-row">
             {filters.map(([value, label]) => (
               <button key={value} type="button" className={filter === value ? 'active' : ''} onClick={() => setFilter(value)}>{label}</button>
             ))}
