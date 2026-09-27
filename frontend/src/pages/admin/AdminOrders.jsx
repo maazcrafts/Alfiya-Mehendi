@@ -43,6 +43,7 @@ export default function AdminOrders() {
   const [open, setOpen] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [saving, setSaving] = useState('')
 
   useEffect(() => {
     if (admin?.role !== 'admin') {
@@ -83,6 +84,20 @@ export default function AdminOrders() {
   })
 
   const pendingCount = orders.filter((o) => o.status === 'pending').length
+
+  async function updateStatus(id, status) {
+    setSaving(id); setError('')
+    try {
+      const response = await fetch(`${apiBase}/api/orders/admin/${id}/status`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` },
+        body: JSON.stringify({ status }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'Unable to update order.')
+      setOrders(current => current.map(order => order.id === id ? { ...order, status } : order))
+    } catch (err) { setError(err.message || 'Unable to update order.') }
+    finally { setSaving('') }
+  }
 
   return (
     <main className="shop-dashboard admin-dashboard">
@@ -176,6 +191,12 @@ export default function AdminOrders() {
                           ))}
                         </div>
                         <div className="admin-order-total"><span>Order total</span><strong>{money(order.total_paise)}</strong></div>
+                        <div className="admin-order-status-control">
+                          <label>Status</label>
+                          <select value={order.status} disabled={saving === order.id} onChange={e => updateStatus(order.id, e.target.value)}>
+                            {filters.filter(([value]) => value !== 'all').map(([value,label]) => <option key={value} value={value}>{label}</option>)}
+                          </select>
+                        </div>
                       </div>
                     )}
                   </article>
