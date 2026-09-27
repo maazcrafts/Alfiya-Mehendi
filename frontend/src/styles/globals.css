@@ -4318,3 +4318,61 @@ a { color: inherit; }
   .new-tour-bubble h2{font-size:33px!important}
   .new-tour-text{font-size:13px!important}
 }
+
+/* Final guide-body cleanup: continuous arms, no floating waist blobs, full legs */
+.new-tour-character-flight .tour-arm{
+  z-index:5!important;
+  top:151px!important;
+  width:40px!important;
+  height:190px!important;
+  border-radius:24px!important;
+}
+.new-tour-character-flight .tour-arm-left{
+  left:7px!important;
+  transform:rotate(18deg)!important;
+  transform-origin:top center!important;
+}
+.new-tour-character-flight .tour-arm-right{
+  right:-1px!important;
+  transform:rotate(-25deg)!important;
+  transform-origin:top center!important;
+}
+/* The old separate hand pieces caused the disconnected skin-colored shapes at the waist. */
+.new-tour-character-flight .tour-hand{
+  display:none!important;
+}
+
+/* Rebuild the lower silhouette so the legs emerge naturally from the skirt. */
+.new-tour-character-flight .tour-skirt{
+  z-index:6!important;
+  top:320px!important;
+  left:18px!important;
+  width:174px!important;
+  height:101px!important;
+  border-radius:22px 22px 48% 48%!important;
+}
+.new-tour-character-flight .tour-leg{
+  z-index:4!important;
+  top:392px!important;
+  width:39px!important;
+  height:91px!important;
+  border-radius:20px 20px 13px 13px!important;
+}
+.new-tour-character-flight .tour-leg-left{
+  left:57px!important;
+  transform:rotate(2deg)!important;
+}
+.new-tour-character-flight .tour-leg-right{
+  right:57px!important;
+  transform:rotate(-2deg)!important;
+}
+.new-tour-character-flight .tour-leg span{
+  bottom:-11px!important;
+  width:53px!important;
+  height:20px!important;
+}
+
+/* Keep the dress clean at the waist; no skin can appear beside it. */
+.new-tour-character-flight .tour-dress{
+  overflow:hidden!important;
+}
