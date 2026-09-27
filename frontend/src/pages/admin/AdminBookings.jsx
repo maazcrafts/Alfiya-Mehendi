@@ -82,7 +82,7 @@ export default function AdminBookings() {
       })
       const data = await response.json()
       if (!response.ok) throw new Error(data.message || 'Unable to update this booking.')
-      setNotice(status === 'confirmed' ? 'Appointment confirmed and the time slot is now locked.' : 'Booking request rejected.')
+      setNotice(status === 'confirmed' ? 'Appointment confirmed and the time slot is now locked.' : status === 'completed' ? 'Appointment marked completed.' : status === 'cancelled' ? 'Appointment cancelled.' : 'Booking request rejected.')
       await loadBookings()
     } catch (err) {
       setError(err.message || 'Unable to update this booking.')
@@ -169,7 +169,17 @@ export default function AdminBookings() {
                       </div>
                     </div>
                   ) : (
-                    booking.admin_note && <div className="admin-message"><small>Admin note</small><p>{booking.admin_note}</p></div>
+                    <>
+                      {booking.admin_note && <div className="admin-message"><small>Admin note</small><p>{booking.admin_note}</p></div>}
+                      {booking.status === 'confirmed' && (
+                        <div className="admin-decision admin-lifecycle-actions">
+                          <div>
+                            <button type="button" className="admin-reject" disabled={actionId === booking.id} onClick={() => updateStatus(booking.id, 'cancelled')}>Cancel appointment</button>
+                            <button type="button" className="admin-confirm" disabled={actionId === booking.id} onClick={() => updateStatus(booking.id, 'completed')}>{actionId === booking.id ? 'Saving…' : 'Mark completed'}</button>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </article>
               ))}
