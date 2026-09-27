@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const getApiBase = () => {
-  const configured = import.meta.env.VITE_API_URL?.trim().replace(/\\/$/, "");
+  const configured = import.meta.env.VITE_API_URL?.trim().replace(/\/$/, "");
   if (configured) return configured;
 
-  if (typeof window !== "undefined" && /^(localhost|127\\.0\\.0\\.1)$/.test(window.location.hostname)) {
+  if (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)) {
     return "http://localhost:5000";
   }
 
