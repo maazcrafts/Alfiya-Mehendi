@@ -70,6 +70,9 @@ function TourCharacter() {
         <div className="tour-arm tour-arm-right" />
         <div className="tour-hand tour-hand-left" />
         <div className="tour-hand tour-hand-right" />
+        <div className="tour-skirt" />
+        <div className="tour-leg tour-leg-left"><span /></div>
+        <div className="tour-leg tour-leg-right"><span /></div>
       </div>
       <div className="tour-character-tag">ALFIYA</div>
     </div>
