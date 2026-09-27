@@ -114,7 +114,7 @@ export default function Booking(){
   useEffect(()=>{if(!serviceSlug){setLoading(false);return} fetch(apiBase+'/api/services/'+encodeURIComponent(serviceSlug)).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message);setService(d.service)}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[serviceSlug])
   useEffect(()=>{loadBookings()},[])
   useEffect(()=>{
-    if(!logged || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {
+    if(!logged || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       setBooked([])
       setLoadingSlots(false)
       return
