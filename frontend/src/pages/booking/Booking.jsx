@@ -103,6 +103,9 @@ export default function Booking(){
   const u=useMemo(user,[]), first=u?.name?.split(' ')?.[0]||'there', logged=Boolean(token())
   const [service,setService]=useState(null),[bookings,setBookings]=useState([]),[booked,setBooked]=useState([])
   const [date,setDate]=useState(''),[time,setTime]=useState(''),[note,setNote]=useState('')
+  const [customerName,setCustomerName]=useState(u?.name||'')
+  const [customerPhone,setCustomerPhone]=useState('')
+  const [customerLocation,setCustomerLocation]=useState('')
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
   const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false),[showCelebration,setShowCelebration]=useState(false)
 
@@ -155,7 +158,34 @@ export default function Booking(){
     finally{setCancelling('')}
   }
 
-  const submit=async e=>{e.preventDefault();setError('');if(!logged){setError('Please log in before booking.');return}if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}setBusy(true);try{const r=await fetch(apiBase+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({serviceSlug,bookingDate:date,bookingTime:time,customerNote:note})});const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setSuccess(true);setShowCelebration(true);await loadBookings()}catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}}
+  const submit=async e=>{
+    e.preventDefault()
+    setError('')
+    if(!logged){setError('Please log in before booking.');return}
+    if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}
+    if(!customerName.trim() || customerName.trim().length<2){setError('Please enter your full name.');return}
+    if(!/^(?:\+91[-\s]?)?[6-9]\d{9}$/.test(customerPhone.trim().replace(/[()]/g,''))){setError('Please enter a valid Indian mobile number.');return}
+    if(!customerLocation.trim()){setError('Please enter your area or location.');return}
+    setBusy(true)
+    try{
+      const r=await fetch(apiBase+'/api/bookings',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},
+        body:JSON.stringify({
+          serviceSlug,
+          bookingDate:date,
+          bookingTime:time,
+          customerName:customerName.trim(),
+          customerPhone:customerPhone.trim(),
+          customerLocation:customerLocation.trim(),
+          customerNote:note
+        })
+      })
+      const d=await readApiResponse(r)
+      if(!r.ok)throw Error(d.message)
+      setSuccess(true);setShowCelebration(true);await loadBookings()
+    }catch(e){setError(e.message||'Unable to send booking request.')}finally{setBusy(false)}
+  }
 
   return <>
     <BookingErrorModal message={error} onClose={() => setError('')} />
@@ -237,8 +267,39 @@ export default function Booking(){
                 <div><small>Time</small><strong>{timeLabel(time)}</strong></div>
                 <div><small>Price</small><strong>{price(service.price_paise)}</strong></div>
               </div>
+
+              <div className="booking-contact-card">
+                <div className="booking-contact-heading">
+                  <div>
+                    <span className="booking-section-number">04</span>
+                    <h3>How can we reach you?</h3>
+                  </div>
+                  <span>Required for appointment</span>
+                </div>
+                <p className="booking-help">We’ll use these details to coordinate your appointment. Your account Gmail is used automatically.</p>
+                <div className="booking-contact-grid">
+                  <label className="booking-field">
+                    <span>Full name</span>
+                    <input value={customerName} onChange={e=>setCustomerName(e.target.value)} maxLength={120} placeholder="Your full name" autoComplete="name" required />
+                  </label>
+                  <label className="booking-field">
+                    <span>Mobile number</span>
+                    <input value={customerPhone} onChange={e=>setCustomerPhone(e.target.value)} maxLength={15} placeholder="+91 98765 43210" inputMode="tel" autoComplete="tel" required />
+                  </label>
+                  <label className="booking-field booking-contact-wide">
+                    <span>Gmail / account email</span>
+                    <input value={u?.email||''} readOnly aria-readonly="true" />
+                    <small className="booking-field-note">This is the email connected to your Alfiya account.</small>
+                  </label>
+                  <label className="booking-field booking-contact-wide">
+                    <span>Where do you live? <small>(area / locality)</small></span>
+                    <input value={customerLocation} onChange={e=>setCustomerLocation(e.target.value)} maxLength={300} placeholder="e.g. Govandi West, Mumbai" autoComplete="street-address" required />
+                  </label>
+                </div>
+              </div>
+
               <label className="booking-field"><span>Message to Alfiya <small>(optional)</small></span><textarea value={note} onChange={e=>setNote(e.target.value)} maxLength={500} placeholder="Anything we should know about your appointment?"/></label>
-              <div className="booking-confirm-note"><strong>What happens next?</strong><span>We send your request → Alfiya reviews it → You receive a confirmed or rejected status in your bookings.</span></div>
+              <div className="booking-confirm-note"><strong>What happens next?</strong><span>We send your request → Alfiya receives your contact details → Alfiya reviews it → You receive the final status in your bookings.</span></div>
             </div>}
 
             <div className="booking-wizard-actions">
