@@ -5360,3 +5360,9 @@ a { color: inherit; }
   left:-7px!important;
   bottom:-8px!important;
 }
+
+/* Logout character: remove the two detached circular hand shapes beside the waist. */
+.logout-girl .logout-girl-hand-left,
+.logout-girl .logout-girl-hand-right{
+  display:none!important;
+}
