@@ -3430,3 +3430,6 @@ a { color: inherit; }
   .booking-celebration-copy{padding:34px 24px 28px!important}
   .booking-celebration-copy h2{font-size:34px!important}
 }
+
+/* Getting there action inside confirmed bookings */
+.booking-getting-there-button{display:inline-flex;align-items:center;justify-content:space-between;gap:18px;width:min(100%,330px);min-height:52px;margin-top:18px;padding:0 17px;border:1px solid #b9c6aa;border-radius:10px;background:#eef2e9;color:#4f5d43;text-decoration:none;font-size:12px;font-weight:900;transition:.2s ease}.booking-getting-there-button span{font-size:18px}.booking-getting-there-button:hover{background:#6e7b5d;color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px rgba(60,41,32,.12)}
