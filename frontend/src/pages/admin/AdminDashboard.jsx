@@ -42,21 +42,6 @@ export default function AdminDashboard() {
     loadOverview()
   }, [])
 
-  async function loadCurrentAdmin() {
-    const response = await fetch(apiBase + '/api/users/me', {
-      headers: { Authorization: `Bearer ${token()}` },
-    })
-    const data = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(data.message || 'Unable to verify administrator access.')
-    if (data.user?.role !== 'admin') {
-      navigate('/services', { replace: true })
-      throw new Error('Administrator access required.')
-    }
-    setAdmin(data.user)
-    localStorage.setItem('alfiya_user', JSON.stringify(data.user))
-    return data.user
-  }
-
   async function request(path, options = {}) {
     const response = await fetch(apiBase + path, {
       ...options,
@@ -74,11 +59,20 @@ export default function AdminDashboard() {
   async function loadOverview() {
     setLoading(true); setError('')
     try {
-      const currentAdmin = await loadCurrentAdmin()
-      if (!currentAdmin) return
       const data = await request('/api/admin/overview')
       setOverview(data)
+      const profile = await fetch(apiBase + '/api/users/me', {
+        headers: { Authorization: `Bearer ${token()}` },
+      })
+      const profileData = await profile.json().catch(() => ({}))
+      if (profile.ok && profileData.user) {
+        setAdmin(profileData.user)
+        localStorage.setItem('alfiya_user', JSON.stringify(profileData.user))
+      }
     } catch (e) {
+      if (/administrator access required|authentication required|invalid or expired/i.test(e.message || '')) {
+        navigate('/services', { replace: true })
+      }
       setError(e.message)
     } finally { setLoading(false) }
   }
