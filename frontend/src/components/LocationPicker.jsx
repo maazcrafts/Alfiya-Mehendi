@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 
 const DEFAULT_CENTER = { lat: 19.0760, lng: 72.8777 }
 const LEAFLET_VERSION = '1.9.4'
-const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org'
+const PHOTON_BASE = 'https://photon.komoot.io'
 
 let leafletLoaderPromise = null
-let lastGeocodeRequestAt = 0
-
 function validPoint(latitude, longitude) {
   return Number.isFinite(Number(latitude)) &&
     Number.isFinite(Number(longitude)) &&
@@ -14,22 +12,24 @@ function validPoint(latitude, longitude) {
     Number(longitude) >= -180 && Number(longitude) <= 180
 }
 
-function waitForNominatimRateLimit() {
-  const wait = Math.max(0, 1050 - (Date.now() - lastGeocodeRequestAt))
-  return new Promise(resolve => setTimeout(resolve, wait))
+function formatPhotonFeature(feature) {
+  const properties = feature?.properties || {}
+  return [
+    properties.housenumber,
+    properties.street,
+    properties.name,
+    properties.locality,
+    properties.district,
+    properties.city,
+    properties.state,
+    properties.postcode,
+    properties.country,
+  ].filter(Boolean).filter((value, index, values) => values.indexOf(value) === index).join(', ')
 }
 
-async function nominatim(path, params) {
-  await waitForNominatimRateLimit()
-  lastGeocodeRequestAt = Date.now()
-
-  const query = new URLSearchParams({
-    format: 'jsonv2',
-    addressdetails: '1',
-    ...params,
-  })
-
-  const response = await fetch(NOMINATIM_BASE + path + '?' + query.toString(), {
+async function photon(pathname, params) {
+  const query = new URLSearchParams(params)
+  const response = await fetch(PHOTON_BASE + pathname + '?' + query.toString(), {
     headers: { Accept: 'application/json' },
   })
 
@@ -138,13 +138,13 @@ export default function LocationPicker({
           setError('')
 
           try {
-            const result = await nominatim('/reverse', {
+            const result = await photon('/reverse', {
               lat: String(point.lat),
               lon: String(point.lng),
               zoom: '18',
             })
             onChangeRef.current?.({
-              address: result.display_name || fallbackAddress || value,
+              address: formatPhotonFeature(result.features?.[0]) || fallbackAddress || value,
               latitude: point.lat,
               longitude: point.lng,
             })
@@ -213,18 +213,17 @@ export default function LocationPicker({
     setResults([])
 
     try {
-      const data = await nominatim('/search', {
+      const data = await photon('/api', {
         q: query,
-        countrycodes: 'in',
         limit: '5',
       })
 
-      if (!Array.isArray(data) || data.length === 0) {
+      if (!Array.isArray(data?.features) || data.features.length === 0) {
         setError('No matching location found. Try a more specific address.')
         return
       }
 
-      setResults(data)
+      setResults(data.features)
     } catch (requestError) {
       setError(requestError.message || 'We could not search that location.')
     } finally {
@@ -233,7 +232,7 @@ export default function LocationPicker({
   }
 
   async function chooseSearchResult(result) {
-    const point = { lat: Number(result.lat), lng: Number(result.lon) }
+    const point = { lat: Number(result.geometry?.coordinates?.[1]), lng: Number(result.geometry?.coordinates?.[0]) }
     if (!validPoint(point.lat, point.lng)) return
 
     const map = mapInstanceRef.current
@@ -247,12 +246,12 @@ export default function LocationPicker({
     }
 
     onChangeRef.current?.({
-      address: result.display_name || '',
+      address: formatPhotonFeature(result) || '',
       latitude: point.lat,
       longitude: point.lng,
     })
 
-    setSearch(result.display_name || search)
+    setSearch(formatPhotonFeature(result) || search)
     setResults([])
     setError('')
   }
@@ -286,18 +285,18 @@ export default function LocationPicker({
         if (marker) marker.setLatLng([point.lat, point.lng]).setOpacity(1)
 
         try {
-          const result = await nominatim('/reverse', {
+          const result = await photon('/reverse', {
             lat: String(point.lat),
             lon: String(point.lng),
             zoom: '18',
           })
 
           onChangeRef.current?.({
-            address: result.display_name || 'Current device location',
+            address: formatPhotonFeature(result.features?.[0]) || 'Current device location',
             latitude: point.lat,
             longitude: point.lng,
           })
-          setSearch(result.display_name || '')
+          setSearch(formatPhotonFeature(result.features?.[0]) || '')
         } catch {
           onChangeRef.current?.({
             address: 'Current device location',
