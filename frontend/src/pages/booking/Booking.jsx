@@ -204,7 +204,10 @@ export default function Booking(){
             <div>
               <span className="booking-breadcrumb">MEHENDI SERVICES <b>/</b> APPOINTMENT</span>
               <h2>{service.name}</h2>
-              <p>{service.description}</p>
+              <details className="booking-service-details">
+                <summary>View service details</summary>
+                <p>{service.description}</p>
+              </details>
             </div>
             <div className="booking-price"><small>Service price</small><strong>{price(service.price_paise)}</strong></div>
           </div>
