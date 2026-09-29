@@ -6344,16 +6344,34 @@ a { color: inherit; }
 }
 
 
-/* Mobile navigation: replace the desktop sidebar with a compact hamburger drawer. */
+/* Mobile navigation: dedicated header space for the hamburger menu. */
+.mobile-menu-slot,
 .mobile-menu-trigger,
 .mobile-menu-backdrop {
   display: none;
 }
 
 @media (max-width: 760px) {
+  .shop-dashboard {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    zoom: 1;
+  }
+
+  .mobile-menu-slot {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 76px;
+    background: #fbf8f1;
+    border-bottom: 1px solid #e3dbcf;
+  }
+
   .mobile-menu-trigger {
-    position: fixed;
-    top: 95px;
+    position: absolute;
+    top: 9px;
     left: 12px;
     z-index: 1200;
     width: 58px;
@@ -6366,10 +6384,9 @@ a { color: inherit; }
     padding: 0;
     border: 1px solid rgba(63, 52, 43, .16);
     border-radius: 16px;
-    background: rgba(255, 252, 246, .97);
+    background: #fffdf8;
     color: #332a24;
-    box-shadow: 0 9px 26px rgba(52, 39, 29, .14);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 7px 20px rgba(52, 39, 29, .10);
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -6379,7 +6396,12 @@ a { color: inherit; }
     height: 2.5px;
     border-radius: 999px;
     background: currentColor;
-    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  /* Always remain three lines. No X/close transformation. */
+  .mobile-menu-trigger[aria-expanded="true"] span {
+    transform: none;
+    opacity: 1;
   }
 
   .mobile-menu-backdrop {
@@ -6458,24 +6480,30 @@ a { color: inherit; }
 
   .shop-dashboard .dashboard-main {
     width: 100%;
+    margin-left: 0;
     min-width: 0;
+    min-height: 0;
   }
 
   .shop-dashboard .dashboard-topbar {
-    padding-left: 82px;
+    padding-left: 20px;
+    min-height: 92px;
   }
 }
 
 @media (max-width: 500px) {
+  .mobile-menu-slot {
+    height: 76px;
+  }
+
   .mobile-menu-trigger {
     width: 58px;
     height: 58px;
-    top: 95px;
+    top: 9px;
     left: 10px;
-    border-radius: 16px;
   }
 
   .shop-dashboard .dashboard-topbar {
-    padding-left: 76px;
+    padding-left: 20px;
   }
 }
