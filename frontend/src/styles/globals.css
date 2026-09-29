@@ -6353,11 +6353,11 @@ a { color: inherit; }
 @media (max-width: 760px) {
   .mobile-menu-trigger {
     position: fixed;
-    top: 14px;
-    left: 14px;
+    top: 150px;
+    left: 12px;
     z-index: 1200;
-    width: 54px;
-    height: 54px;
+    width: 58px;
+    height: 58px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6365,10 +6365,10 @@ a { color: inherit; }
     gap: 6px;
     padding: 0;
     border: 1px solid rgba(63, 52, 43, .16);
-    border-radius: 15px;
-    background: rgba(255, 252, 246, .96);
+    border-radius: 16px;
+    background: rgba(255, 252, 246, .97);
     color: #332a24;
-    box-shadow: 0 8px 24px rgba(52, 39, 29, .12);
+    box-shadow: 0 9px 26px rgba(52, 39, 29, .14);
     backdrop-filter: blur(10px);
     -webkit-tap-highlight-color: transparent;
   }
@@ -6426,7 +6426,7 @@ a { color: inherit; }
   }
 
   .shop-dashboard .dashboard-brand {
-    margin-top: 42px;
+    margin-top: 4px;
   }
 
   .shop-dashboard .dashboard-section-label {
@@ -6438,10 +6438,24 @@ a { color: inherit; }
     margin-top: 28px;
   }
 
+  .shop-dashboard .dashboard-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .shop-dashboard .dashboard-nav-item {
-    min-height: 50px;
+    width: 100%;
+    min-height: 52px;
     padding: 0 13px;
     font-size: 13px;
+    border-radius: 10px;
+    background: transparent;
+  }
+
+  .shop-dashboard .dashboard-nav-item.active {
+    background: #6f7f60;
+    color: #fffdf8;
   }
 
   .shop-dashboard .dashboard-nav-icon {
@@ -6466,11 +6480,11 @@ a { color: inherit; }
 
 @media (max-width: 500px) {
   .mobile-menu-trigger {
-    width: 50px;
-    height: 50px;
-    top: 12px;
-    left: 12px;
-    border-radius: 14px;
+    width: 58px;
+    height: 58px;
+    top: 145px;
+    left: 10px;
+    border-radius: 16px;
   }
 
   .shop-dashboard .dashboard-topbar {
