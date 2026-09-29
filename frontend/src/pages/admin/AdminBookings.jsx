@@ -241,8 +241,17 @@ export default function AdminBookings() {
                         <strong>{booking.customer_phone || 'No phone'}</strong>
                       </a>
                       <div>
-                        <small>Area / locality</small>
+                        <small>Appointment location</small>
                         <strong>{booking.customer_location || 'Not provided'}</strong>
+                        {booking.customer_latitude != null && booking.customer_longitude != null && (
+                          <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${booking.customer_latitude},${booking.customer_longitude}`)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Get directions ↗
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
