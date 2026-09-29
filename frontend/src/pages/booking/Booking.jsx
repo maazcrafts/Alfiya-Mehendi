@@ -1,4 +1,5 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
+import GoogleLocationPicker from '../../components/GoogleLocationPicker.jsx'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -106,6 +107,9 @@ export default function Booking(){
   const [customerName,setCustomerName]=useState(u?.name||'')
   const [customerPhone,setCustomerPhone]=useState('')
   const [customerLocation,setCustomerLocation]=useState('')
+  const [customerLatitude,setCustomerLatitude]=useState(null)
+  const [customerLongitude,setCustomerLongitude]=useState(null)
+  const [customerPlaceId,setCustomerPlaceId]=useState('')
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
   const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false),[showCelebration,setShowCelebration]=useState(false)
 
@@ -165,7 +169,7 @@ export default function Booking(){
     if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}
     if(!customerName.trim() || customerName.trim().length<2){setError('Please enter your full name.');return}
     if(!/^(?:\+91[-\s]?)?[6-9]\d{9}$/.test(customerPhone.trim().replace(/[()]/g,''))){setError('Please enter a valid Indian mobile number.');return}
-    if(!customerLocation.trim()){setError('Please enter your area or location.');return}
+    if(!customerLocation.trim() || !Number.isFinite(Number(customerLatitude)) || !Number.isFinite(Number(customerLongitude))){setError('Please choose the appointment location on the map.');return}
     setBusy(true)
     try{
       const r=await fetch(apiBase+'/api/bookings',{
@@ -178,6 +182,9 @@ export default function Booking(){
           customerName:customerName.trim(),
           customerPhone:customerPhone.trim(),
           customerLocation:customerLocation.trim(),
+          customerLatitude:Number(customerLatitude),
+          customerLongitude:Number(customerLongitude),
+          customerPlaceId:customerPlaceId || null,
           customerNote:note
         })
       })
@@ -269,6 +276,7 @@ export default function Booking(){
                 <div><small>Date</small><strong>{dateLabel(date)}</strong></div>
                 <div><small>Time</small><strong>{timeLabel(time)}</strong></div>
                 <div><small>Price</small><strong>{price(service.price_paise)}</strong></div>
+                <div className="booking-review-location"><small>Visit location</small><strong>{customerLocation || 'Not selected'}</strong></div>
               </div>
 
               <div className="booking-contact-card">
@@ -294,10 +302,21 @@ export default function Booking(){
                     <input value={u?.email||''} readOnly aria-readonly="true" />
                     <small className="booking-field-note">This is the email connected to your Alfiya account.</small>
                   </label>
-                  <label className="booking-field booking-contact-wide">
-                    <span>Where do you live? <small>(area / locality)</small></span>
-                    <input value={customerLocation} onChange={e=>setCustomerLocation(e.target.value)} maxLength={300} placeholder="e.g. Govandi West, Mumbai" autoComplete="street-address" required />
-                  </label>
+                  <div className="booking-contact-wide">
+                    <GoogleLocationPicker
+                      value={customerLocation}
+                      latitude={customerLatitude}
+                      longitude={customerLongitude}
+                      placeId={customerPlaceId}
+                      onChange={({ address, latitude, longitude, placeId }) => {
+                        setCustomerLocation(address || '')
+                        setCustomerLatitude(latitude)
+                        setCustomerLongitude(longitude)
+                        setCustomerPlaceId(placeId || '')
+                        setError('')
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
