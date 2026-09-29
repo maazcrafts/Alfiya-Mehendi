@@ -38,12 +38,9 @@ const faqs = [
 ]
 
 const quickHelp = [
-  { title: 'Order help', text: 'Track products, order status and order details.', href: '/orders', label: 'Open My Orders' },
-  { title: 'Appointment help', text: 'Check your booking status or cancel a pending request.', href: '/booking', label: 'Open My Bookings' },
-  { title: 'Shopping help', text: 'Browse mehendi powders, oils, tools and supplies.', href: '/products', label: 'Go to Shop' },
-  { title: 'Service help', text: 'Compare mehendi services and choose a design.', href: '/services', label: 'View Services' },
-  { title: 'Payment help', text: 'Need help with a payment or checkout issue?', href: '#contact-email', label: 'Email us' },
-  { title: 'Account help', text: 'Questions about login, password or your profile?', href: '/account', label: 'Open Profile' },
+  { title: 'Appointments', text: 'Check a booking or cancel a pending request.', href: '/booking', label: 'My Bookings' },
+  { title: 'Services', text: 'View available mehendi services and prices.', href: '/services', label: 'View Services' },
+  { title: 'Account', text: 'Manage your profile or account access.', href: '/account', label: 'My Profile' },
 ]
 
 export default function Contact() {
@@ -106,9 +103,8 @@ export default function Contact() {
             <div className="contact-section-heading">
               <div>
                 <p className="dashboard-kicker">Quick help</p>
-                <h2>Go straight to what you need.</h2>
+                <h2>Choose what you need.</h2>
               </div>
-              <span>Choose a path</span>
             </div>
             <div className="quick-help-grid">
               {quickHelp.map((item, index) => (
@@ -169,17 +165,8 @@ export default function Contact() {
             <div className="contact-email-copy">
               <p className="dashboard-kicker">Requests & complaints</p>
               <h2>Contact us by email.</h2>
-              <p>
-                For any order request, appointment issue, product question, payment issue
-                or complaint, email the Alfiya Mehendi team directly.
-              </p>
+              <p>For an appointment issue, account question, or anything that needs the Alfiya team, email us directly.</p>
               <div className="contact-email-address">{supportEmail}</div>
-              <div className="contact-form-note">
-                <span>01</span><p>Include your order or booking ID when relevant.</p>
-              </div>
-              <div className="contact-form-note">
-                <span>02</span><p>Describe the request or complaint clearly so the team can respond.</p>
-              </div>
             </div>
 
             <div className="contact-email-action">
