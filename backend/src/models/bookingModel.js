@@ -1,21 +1,21 @@
 import { query, getClient } from '../config/pool.js'
 
-export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerPlaceId, customerNote }) {
+export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerNote }) {
   const result = await query(
     `
       INSERT INTO bookings (
         user_id, service_id, booking_date, booking_time, status,
         customer_name, customer_phone, customer_location,
-        customer_latitude, customer_longitude, customer_place_id, customer_note
+        customer_latitude, customer_longitude, customer_note
       )
-      VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8, $9, $10, $11)
+      VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8, $9, $10)
       RETURNING id, user_id, service_id, booking_date, booking_time, status,
         customer_name, customer_phone, customer_location,
-        customer_latitude, customer_longitude, customer_place_id,
+        customer_latitude, customer_longitude,
         customer_note, admin_note,
         created_at, updated_at
     `,
-    [userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerPlaceId || null, customerNote || null],
+    [userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerNote || null],
   )
   return result.rows[0]
 }
