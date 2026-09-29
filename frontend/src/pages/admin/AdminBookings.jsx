@@ -1,4 +1,5 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
+import LocationMapPreview from '../../components/LocationMapPreview.jsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -240,19 +241,11 @@ export default function AdminBookings() {
                         <small>Phone</small>
                         <strong>{booking.customer_phone || 'No phone'}</strong>
                       </a>
-                      <div>
-                        <small>Appointment location</small>
-                        <strong>{booking.customer_location || 'Not provided'}</strong>
-                        {booking.customer_latitude != null && booking.customer_longitude != null && (
-                          <a
-                            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${booking.customer_latitude},${booking.customer_longitude}`)}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Get directions ↗
-                          </a>
-                        )}
-                      </div>
+                      <LocationMapPreview
+                        latitude={booking.customer_latitude}
+                        longitude={booking.customer_longitude}
+                        address={booking.customer_location || ''}
+                      />
                     </div>
                   </div>
 
