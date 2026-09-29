@@ -6295,3 +6295,50 @@ a { color: inherit; }
   font-size: 11px;
   line-height: 1.6;
 }
+
+
+/* Normal browser zoom refinement
+   Keep the customer/admin dashboard composition visually close to the
+   intentional 85% desktop presentation, without asking users to zoom out. */
+.shop-dashboard {
+  zoom: 0.85;
+  width: 117.6470588%;
+  min-height: 117.6470588vh;
+}
+
+@media (max-width: 760px) {
+  .shop-dashboard {
+    zoom: 0.80;
+    width: 125%;
+    min-height: 125vh;
+  }
+}
+
+@media (max-width: 500px) {
+  .shop-dashboard {
+    zoom: 0.78;
+    width: 128.2051282%;
+    min-height: 128.2051282vh;
+  }
+}
+
+@supports not (zoom: 1) {
+  .shop-dashboard {
+    width: 100%;
+    min-height: 100vh;
+    transform: scale(.85);
+    transform-origin: top left;
+  }
+
+  @media (max-width: 760px) {
+    .shop-dashboard {
+      transform: scale(.80);
+    }
+  }
+
+  @media (max-width: 500px) {
+    .shop-dashboard {
+      transform: scale(.78);
+    }
+  }
+}
