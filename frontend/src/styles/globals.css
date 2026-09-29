@@ -6507,3 +6507,162 @@ a { color: inherit; }
     padding-left: 20px;
   }
 }
+
+
+/* Google Maps appointment location picker */
+.booking-location-picker {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 16px;
+  border: 1px solid #e0d5c9;
+  border-radius: 12px;
+  background: #fffdf9;
+}
+
+.booking-location-picker-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.booking-field-label {
+  display: block;
+  color: #3d3028;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.booking-location-picker-head p {
+  margin: 5px 0 0;
+  color: #82766b;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.booking-current-location {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid #cfc1b2;
+  border-radius: 8px;
+  background: #fffaf3;
+  color: #5e4738;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.booking-current-location:hover:not(:disabled) {
+  border-color: #a98e76;
+  background: #f8efe3;
+}
+
+.booking-current-location:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.booking-google-search {
+  min-height: 48px;
+}
+
+.booking-google-search gmp-place-autocomplete {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+}
+
+.booking-map-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ded2c6;
+  border-radius: 10px;
+  background: #eee8df;
+}
+
+.booking-map {
+  width: 100%;
+  height: 330px;
+}
+
+.booking-map-hint {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(224, 213, 201, .95);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, .94);
+  color: #6e6157;
+  font-size: 9px;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
+.booking-location-value {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border-radius: 9px;
+  background: #f6f1e9;
+}
+
+.booking-location-value small {
+  color: #8a7d72;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.booking-location-value strong {
+  color: #3d3028;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.booking-location-value span {
+  color: #8a7d72;
+  font-size: 8px;
+}
+
+.booking-location-error {
+  margin: 0;
+  color: #9a4e3d;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.booking-review-location {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 760px) {
+  .booking-location-picker {
+    padding: 12px;
+  }
+
+  .booking-location-picker-head {
+    display: grid;
+  }
+
+  .booking-current-location {
+    width: 100%;
+  }
+
+  .booking-map {
+    height: 290px;
+  }
+
+  .booking-map-hint {
+    position: static;
+    border: 0;
+    border-top: 1px solid #ded2c6;
+    border-radius: 0;
+    background: #fffdf9;
+  }
+}
