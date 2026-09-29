@@ -67,10 +67,10 @@ export default function Orders(){
         {logged&&error&&<div className="booking-alert booking-alert-error">{error}</div>}
         {logged&&!loading&&!error&&orders.length===0&&<section className="orders-empty-state">
           <div className="orders-empty-visual"><div className="orders-box"><i></i><b></b></div></div>
-          <p className="dashboard-kicker">Your order space</p>
-          <h2>Your shopping story starts here.</h2>
-          <p>You don't have any orders yet. Explore our mehendi powders, oils, tools and cone supplies, then your purchases will appear here with their delivery status.</p>
-          <Link to="/products" className="booking-primary-cta">Start shopping <span>→</span></Link>
+          <p className="dashboard-kicker">Orders</p>
+          <h2>No orders yet.</h2>
+          <p>The product shop is not open yet.</p>
+          <Link to="/products" className="booking-primary-cta">View shop status <span>→</span></Link>
         </section>}
         {logged&&!loading&&!error&&orders.length>0&&<>
           <section className="orders-overview">
