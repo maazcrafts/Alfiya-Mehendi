@@ -95,7 +95,7 @@ export default function Signup() {
 
   return (
     <>
-      {showSuccess && <AuthSuccessOverlay mode="signup" onDone={() => navigate("/products")} />}
+      {showSuccess && <AuthSuccessOverlay mode="signup" onDone={() => navigate("/services")} />}
       <main className="signup-page">
       <section className="signup-shell">
         <div className="signup-story">
