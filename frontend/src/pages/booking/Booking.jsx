@@ -54,10 +54,10 @@ function BookingErrorModal({ message, onClose }) {
       <div className="booking-error-modal" role="alertdialog" aria-modal="true" aria-labelledby="booking-error-title" onClick={event => event.stopPropagation()}>
         <button type="button" className="booking-error-modal-close" aria-label="Close" onClick={onClose}>×</button>
         <div className="booking-error-modal-icon">!</div>
-        <p className="dashboard-kicker">Appointment date</p>
-        <h2 id="booking-error-title">That date has already passed.</h2>
+        <p className="dashboard-kicker">Appointment</p>
+        <h2 id="booking-error-title">Please check your selection.</h2>
         <p>{message}</p>
-        <button type="button" className="booking-error-modal-action" onClick={onClose}>Choose another date</button>
+        <button type="button" className="booking-error-modal-action" onClick={onClose}>Okay, got it</button>
       </div>
     </div>
   )
@@ -87,10 +87,20 @@ function dateKey(value){
   const [y,m,d]=value.split('-').map(Number)
   return y*10000+m*100+d
 }
+function istNowParts() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(new Date())
+  const get = type => parts.find(part => part.type === type)?.value || ''
+  return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` }
+}
 function isFutureAppointment(dateValue,timeValue){
-  if(!dateValue||!timeValue)return false
-  const requested=new Date(dateValue+'T'+timeValue+':00+05:30')
-  return Number.isFinite(requested.getTime()) && requested.getTime()>Date.now()
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateValue||'') || !/^\d{2}:\d{2}$/.test(timeValue||'')) return false
+  const now = istNowParts()
+  if(dateValue > now.date) return true
+  if(dateValue < now.date) return false
+  return timeValue > now.time
 }
 function price(p){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((p||0)/100)}
 function dateLabel(v){return v?new Intl.DateTimeFormat('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00')):''}
@@ -132,7 +142,8 @@ export default function Booking(){
       .finally(()=>setLoadingSlots(false))
   },[date,logged])
   const available=slots.filter(s=>!booked.includes(s.value))
-  const todayKey=dateKey(today())
+  const todayValue=today()
+  const todayKey=dateKey(todayValue)
   const canNext=step===1?dateKey(date)>=todayKey:step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
   const continueStep=()=>{
     setError('')
@@ -141,7 +152,9 @@ export default function Booking(){
       setStep(2);return
     }
     if(step===2){
+      if(!date || dateKey(date) < todayKey){setError('That appointment date is no longer available. Please choose another date.');setStep(1);return}
       if(!time||!slots.some(s=>s.value===time)||booked.includes(time)){setError('Please choose an available time slot.');return}
+      if(!isFutureAppointment(date,time)){setError('That time has already passed. Please choose a later slot.');return}
       setStep(3)
     }
   }
@@ -165,7 +178,9 @@ export default function Booking(){
     e.preventDefault()
     setError('')
     if(!logged){setError('Please log in before booking.');return}
-    if(!isFutureAppointment(date,time)){setError('Please choose today or a future date and an available time slot.');setStep(dateKey(date)>=todayKey?2:1);return}
+    if(!date || dateKey(date)<todayKey){setError('Please choose today or a future appointment date.');setStep(1);return}
+    if(!time||!slots.some(s=>s.value===time)||booked.includes(time)){setError('Please choose an available time slot.');setStep(2);return}
+    if(!isFutureAppointment(date,time)){setError('That time has already passed. Please choose a later slot.');setStep(2);return}
     if(!customerName.trim() || customerName.trim().length<2){setError('Please enter your full name.');return}
     if(!/^(?:\+91[-\s]?)?[6-9]\d{9}$/.test(customerPhone.trim().replace(/[()]/g,''))){setError('Please enter a valid Indian mobile number.');return}
     if(!customerLocation.trim() || !Number.isFinite(Number(customerLatitude)) || !Number.isFinite(Number(customerLongitude))){setError('Please choose the appointment location on the map.');return}
@@ -249,7 +264,7 @@ export default function Booking(){
               <span className="booking-section-number">01</span>
               <h2>When should we see you?</h2>
               <p className="booking-help">Choose the day that works for you. You can change it later before sending the request.</p>
-              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={today()} value={date} onChange={e=>{
+              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={todayValue} value={date} onChange={e=>{
   const value=e.target.value
   setError('')
   setDate(value)
