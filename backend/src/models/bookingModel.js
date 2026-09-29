@@ -66,7 +66,7 @@ export async function listUserBookings(userId) {
       SELECT
         b.id, b.booking_date, b.booking_time, b.status,
         b.customer_name, b.customer_phone, b.customer_location,
-        b.customer_latitude, b.customer_longitude, b.customer_place_id,
+        b.customer_latitude, b.customer_longitude,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
         s.name AS service_name, s.slug AS service_slug,
         s.price_paise, s.level
@@ -91,7 +91,7 @@ export async function listAdminBookings(status = 'all') {
         b.id, b.booking_date, b.booking_time, b.status,
         COALESCE(b.customer_name, u.name) AS customer_name,
         b.customer_phone, b.customer_location,
-        b.customer_latitude, b.customer_longitude, b.customer_place_id,
+        b.customer_latitude, b.customer_longitude,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
         u.id AS user_id, u.email AS customer_email,
         s.name AS service_name, s.slug AS service_slug,
