@@ -564,12 +564,16 @@ The implementation focuses on:
 - [x] Production frontend deployment
 - [x] Production backend deployment
 
-### Next iterations
+### Deferred after the appointment release
 
 - [x] OpenStreetMap appointment location selection
-- [ ] Rich production product imagery
+- [ ] Product catalogue expansion
+- [ ] Product imagery
 - [ ] Expanded product-shopping experience
 - [ ] Complete checkout/payment workflow
+- [ ] Push notifications
+- [ ] Android customer app
+- [ ] Android admin app
 - [ ] Further commerce automation
 - [ ] Production email delivery
 - [ ] Additional business analytics
@@ -578,11 +582,13 @@ The implementation focuses on:
 
 ## 📌 Current status
 
-**Core mehendi service and appointment platform: operational.**
+**Core mehendi service and appointment platform: ready for final QA and client handoff.**
 
 The main customer-to-admin booking workflow is implemented, including authentication, service discovery, availability, customer contact capture, appointment location selection, booking submission and administrative booking management.
 
-The repository also contains a growing commerce layer for products, cart and orders. Additional shopping and payment capabilities are being developed separately from the core appointment experience.
+The product/shop area is intentionally presented as a coming-soon experience for the current release. Product expansion, checkout/payment completion and Android apps are deferred to the next phase.
+
+Final handoff and QA guidance is documented in **[docs/client-handoff.md](docs/client-handoff.md)**.
 
 ---
 
