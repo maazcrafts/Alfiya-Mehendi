@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
 const icons = {
   shop: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>,
@@ -17,6 +18,7 @@ function getUser() {
 
 export default function DashboardSidebar({ active = 'shop', adminOnly = false }) {
   const user = getUser()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const firstName = user?.name?.split(' ')?.[0] || 'there'
 
   const workspace = [
@@ -28,7 +30,7 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
 
   return (
     <aside className="dashboard-sidebar">
-      <Link to="/products" className="dashboard-brand">
+      <Link to="/products" className="dashboard-brand" onClick={closeMobileMenu}>
         <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
         <span><strong>Alfiya</strong><small>MEHENDI</small></span>
       </Link>
@@ -37,26 +39,26 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
       <nav className="dashboard-nav" aria-label="Dashboard navigation">
         {adminOnly ? (
           <>
-            <Link to="/admin" className={`dashboard-nav-item ${active === 'admin-dashboard' ? 'active' : ''}`}>
+            <Link to="/admin" className={`dashboard-nav-item ${active === 'admin-dashboard' ? 'active' : ''}`} onClick={closeMobileMenu}>
               <span className="dashboard-nav-icon">{icons.admin}</span>Dashboard
             </Link>
             <Link to="/services" className="dashboard-nav-item">
               <span className="dashboard-nav-icon">{icons.services}</span>Customer view
             </Link>
-            <Link to="/admin/bookings" className={`dashboard-nav-item ${active === 'admin' ? 'active' : ''}`}>
+            <Link to="/admin/bookings" className={`dashboard-nav-item ${active === 'admin' ? 'active' : ''}`} onClick={closeMobileMenu}>
               <span className="dashboard-nav-icon">{icons.bookings}</span>Appointments
             </Link>
-            <Link to="/admin/orders" className={`dashboard-nav-item ${active === 'admin-orders' ? 'active' : ''}`}>
+            <Link to="/admin/orders" className={`dashboard-nav-item ${active === 'admin-orders' ? 'active' : ''}`} onClick={closeMobileMenu}>
               <span className="dashboard-nav-icon">{icons.orders}</span>Customer Orders
             </Link>
-            <Link to="/admin/support" className={`dashboard-nav-item ${active === 'admin-support' ? 'active' : ''}`}>
+            <Link to="/admin/support" className={`dashboard-nav-item ${active === 'admin-support' ? 'active' : ''}`} onClick={closeMobileMenu}>
               <span className="dashboard-nav-icon">{icons.support}</span>Support Requests
             </Link>
           </>
         ) : (
           <>
             {workspace.map(([key, href, label]) => (
-              <Link key={key} to={href} className={`dashboard-nav-item ${active === key ? 'active' : ''}`}>
+              <Link key={key} to={href} className={`dashboard-nav-item ${active === key ? 'active' : ''}`} onClick={closeMobileMenu}>
                 <span className="dashboard-nav-icon">{icons[key]}</span>{label}
               </Link>
             ))}
@@ -72,10 +74,10 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
       {!adminOnly && <>
         <div className="dashboard-section-label">Account</div>
         <nav className="dashboard-nav">
-          <Link to="/account" className={`dashboard-nav-item ${active === 'profile' ? 'active' : ''}`}>
+          <Link to="/account" className={`dashboard-nav-item ${active === 'profile' ? 'active' : ''}`} onClick={closeMobileMenu}>
             <span className="dashboard-nav-icon">{icons.profile}</span>Profile
           </Link>
-          <Link to="/contact" className={`dashboard-nav-item ${active === 'help' ? 'active' : ''}`}>
+          <Link to="/contact" className={`dashboard-nav-item ${active === 'help' ? 'active' : ''}`} onClick={closeMobileMenu}>
             <span className="dashboard-nav-icon">{icons.help}</span>Help & Contact
           </Link>
         </nav>
