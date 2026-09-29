@@ -63,7 +63,7 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
       )}
 
       <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
-        <Link to="/products" className="dashboard-brand" onClick={closeMobileMenu}>
+        <Link to={adminOnly ? "/admin" : "/services"} className="dashboard-brand" onClick={closeMobileMenu}>
           <img className="dashboard-brand-logo" src="/alfiya-logo.svg" alt="Alfiya Mehendi" />
           <span><strong>Alfiya</strong><small>MEHENDI</small></span>
         </Link>
