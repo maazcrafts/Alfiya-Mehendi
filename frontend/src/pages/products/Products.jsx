@@ -2,13 +2,6 @@ import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-const comingSoonCategories = [
-  { title: 'Mehendi Powders', text: 'Fine, carefully selected powders for smooth application.' },
-  { title: 'Mehendi Oils', text: 'Aftercare and finishing oils for your mehendi routine.' },
-  { title: 'Application Tools', text: 'Useful tools and supplies for clean application.' },
-  { title: 'Cone & Supplies', text: 'Cone paper, cellophane and other essentials.' },
-]
-
 function getUser() {
   try {
     return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}')
@@ -79,34 +72,7 @@ export default function Products() {
             </div>
           </section>
 
-          <section className="products-coming-soon-categories" aria-labelledby="products-preview-title">
-            <div className="products-section-heading">
-              <div>
-                <p className="dashboard-kicker">Future collection</p>
-                <h2 id="products-preview-title">What may be coming</h2>
-              </div>
-              <span>Details will be announced later</span>
-            </div>
 
-            <div className="products-preview-grid">
-              {comingSoonCategories.map((category, index) => (
-                <article className="products-preview-card" key={category.title}>
-                  <span className="products-preview-number">0{index + 1}</span>
-                  <div>
-                    <h3>{category.title}</h3>
-                    <p>{category.text}</p>
-                  </div>
-                  <span className="products-preview-status">Coming soon</span>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <p className="products-coming-soon-footer">
-            {firstName}, the service booking experience is already available.
-          </p>
-        </div>
-      </section>
     </main>
   )
 }
