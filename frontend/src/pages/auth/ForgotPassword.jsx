@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import '../../styles/auth-recovery.css'
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
