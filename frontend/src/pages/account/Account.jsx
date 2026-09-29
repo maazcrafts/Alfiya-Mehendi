@@ -148,7 +148,7 @@ export default function Account() {
   if (loading) {
     return (
       <main className="shop-dashboard account-dashboard">
-        <DashboardSidebar active="account" />
+        <DashboardSidebar active="profile" />
         <section className="dashboard-main">
           <header className="dashboard-topbar"><div><p className="dashboard-kicker">Your account</p><h1>Profile</h1></div></header>
           <div className="dashboard-content"><div className="profile-loading">Loading your profile…</div></div>
