@@ -205,11 +205,7 @@ export default function Account() {
               <div><strong>{activity.bookings}</strong><small>Appointments</small></div>
               <Link to="/booking">View bookings →</Link>
             </div>
-            <div className="profile-stat-card">
-              <span className="profile-stat-index">03</span>
-              <div><strong>{activity.cart}</strong><small>Items in cart</small></div>
-              <Link to="/cart">Open cart →</Link>
-            </div>
+            
           </section>
 
           <section className="profile-grid">
@@ -243,7 +239,7 @@ export default function Account() {
               </div>
               <div className="profile-security-row">
                 <div className="profile-security-icon">✓</div>
-                <div><strong>{profile.provider === 'google' ? 'Google sign-in' : 'Password protected'}</strong><p>Your account is authenticated securely.</p></div>
+                <div><strong>{profile.provider === 'google' ? 'Google sign-in' : 'Password protected'}</strong></div>
               </div>
               {profile.provider !== 'google' && (
                 <Link className="profile-security-link" to="/forgot-password">Reset your password <span>→</span></Link>
@@ -251,21 +247,10 @@ export default function Account() {
             </article>
           </section>
 
-          <section className="profile-quick-section">
-            <div className="profile-section-heading">
-              <div><p className="dashboard-kicker">Your activity</p><h2>Keep everything in one place.</h2></div>
-              <p>Jump back into the parts of Alfiya you use most.</p>
-            </div>
-            <div className="profile-quick-grid">
-              <Link to="/orders" className="profile-quick-card"><span>01</span><div><strong>My Orders</strong><p>Track your product purchases and order status.</p></div><b>→</b></Link>
-              <Link to="/booking" className="profile-quick-card"><span>02</span><div><strong>My Bookings</strong><p>Review appointments and booking requests.</p></div><b>→</b></Link>
-              <Link to="/cart" className="profile-quick-card"><span>03</span><div><strong>My Cart</strong><p>Continue with the products you selected.</p></div><b>→</b></Link>
-              <Link to="/contact" className="profile-quick-card"><span>04</span><div><strong>Help & Contact</strong><p>Find answers or email the Alfiya team.</p></div><b>→</b></Link>
-            </div>
-          </section>
+          
 
           <section className="profile-danger-zone">
-            <div><p className="dashboard-kicker">Session</p><h3>Sign out of this device</h3><p>You can sign back in anytime with your account credentials.</p></div>
+            <div><p className="dashboard-kicker">Session</p><h3>Sign out of this device</h3></div>
             <button type="button" onClick={logout}>Log out <span>→</span></button>
           </section>
         </div>
