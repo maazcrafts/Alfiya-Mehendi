@@ -31,14 +31,13 @@ function isPastDateTime(date, time) {
 
 router.post('/', requireAuth, async (req, res) => {
   try {
-    const { serviceSlug, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerPlaceId, customerNote } = req.body
+    const { serviceSlug, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerNote } = req.body
 
     const cleanName = String(customerName || '').trim()
     const cleanPhone = String(customerPhone || '').trim()
     const cleanLocation = String(customerLocation || '').trim()
     const latitude = Number(customerLatitude)
     const longitude = Number(customerLongitude)
-    const cleanPlaceId = String(customerPlaceId || '').trim()
 
     if (!serviceSlug || !bookingDate || !bookingTime || !cleanName || !cleanPhone || !cleanLocation) {
       return res.status(400).json({ message: 'Name, phone number, area/location, service, date and time are required.' })
@@ -58,10 +57,6 @@ router.post('/', requireAuth, async (req, res) => {
 
     if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
       return res.status(400).json({ message: 'Please choose the appointment location on the map.' })
-    }
-
-    if (cleanPlaceId.length > 255) {
-      return res.status(400).json({ message: 'The selected map location is invalid. Please choose it again.' })
     }
 
     if (!isValidDate(bookingDate)) {
@@ -106,7 +101,6 @@ router.post('/', requireAuth, async (req, res) => {
       customerLocation: cleanLocation,
       customerLatitude: latitude,
       customerLongitude: longitude,
-      customerPlaceId: cleanPlaceId || null,
       customerNote: customerNote?.trim(),
     })
 
