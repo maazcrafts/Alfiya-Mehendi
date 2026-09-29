@@ -48,7 +48,7 @@ It also provides the foundation for a product catalogue, cart, orders and future
 | **Authentication** | Email/password signup & login + Google authentication |
 | **Services** | Browse mehendi services, pricing and service levels |
 | **Appointments** | Select date, check availability and request a booking |
-| **Booking details** | Capture name, phone, locality, account email and optional message |
+| **Booking details** | Capture name, phone, appointment address, map pin, account email and optional message |
 | **Booking history** | View personal booking activity and statuses |
 | **Products** | Browse mehendi products and product details |
 | **Cart** | Add products, change quantities and remove items |
@@ -95,6 +95,9 @@ SELECT DATE
    │
    ▼
 CHECK AVAILABLE TIME
+   │
+   ▼
+SELECT VISIT LOCATION
    │
    ▼
 ENTER CONTACT DETAILS
@@ -434,6 +437,7 @@ Frontend:
 ```env
 VITE_API_URL=http://localhost:5000
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_GOOGLE_MAPS_API_KEY=your_restricted_maps_browser_key
 ```
 
 **Never commit real credentials or secrets.**
@@ -557,7 +561,7 @@ The implementation focuses on:
 
 ### Next iterations
 
-- [ ] Google Maps / location experience
+- [x] Google Maps appointment location selection
 - [ ] Rich production product imagery
 - [ ] Expanded product-shopping experience
 - [ ] Complete checkout/payment workflow
