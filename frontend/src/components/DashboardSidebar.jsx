@@ -13,6 +13,8 @@ const icons = {
   admin: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.8-2.8 8.2-7 10-4.2-1.8-7-5.2-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>,
 }
 
+
+
 function getUser() {
   try { return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}') } catch { return {} }
 }
@@ -26,8 +28,20 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
     if (!mobileMenuOpen) return undefined
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    const mobileControls = (
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [mobileMenuOpen])
 
+  const closeMobileMenu = () => setMobileMenuOpen(false)
+
+  const workspace = [
+    ['shop', '/products', 'Shop'],
+    ['services', '/services', 'Mehendi Services'],
+    ['orders', '/orders', 'My Orders'],
+    ['bookings', '/booking', 'My Bookings'],
+  ]
+
+  const mobileControls = (
+    <>
       <button
         type="button"
         className="mobile-menu-trigger"
@@ -49,39 +63,8 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
     </>
   )
 
-  return () => { document.body.style.overflow = previousOverflow }
-  }, [mobileMenuOpen])
-
-  const closeMobileMenu = () => setMobileMenuOpen(false)
-
-  const workspace = [
-    ['shop', '/products', 'Shop'],
-    ['services', '/services', 'Mehendi Services'],
-    ['orders', '/orders', 'My Orders'],
-    ['bookings', '/booking', 'My Bookings'],
-  ]
-
   return (
     <>
-      <button
-        type="button"
-        className="mobile-menu-trigger"
-        aria-label="Open navigation menu"
-        aria-expanded={mobileMenuOpen}
-        onClick={() => setMobileMenuOpen((open) => !open)}
-      >
-        <span></span><span></span><span></span>
-      </button>
-
-      {mobileMenuOpen && (
-        <button
-          type="button"
-          className="mobile-menu-backdrop"
-          aria-label="Close navigation menu"
-          onClick={closeMobileMenu}
-        />
-      )}
-
       {typeof document !== 'undefined' ? createPortal(mobileControls, document.body) : null}
 
       <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
