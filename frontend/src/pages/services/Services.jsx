@@ -135,7 +135,10 @@ export default function Services() {
                       <span className="service-level-label">{levelMeta[group.level].label}</span>
                     </div>
                     <h3>{service.name}</h3>
-                    <p>{service.description || levelMeta[group.level].intro}</p>
+                    <details className="service-card-details">
+  <summary>View details</summary>
+  <p>{service.description || levelMeta[group.level].intro}</p>
+</details>
                     <div className="service-card-bottom">
                       <strong>{formatPrice(service.price_paise)}</strong>
                       {service.duration_minutes && <span>{service.duration_minutes} min</span>}
