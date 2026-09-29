@@ -6509,7 +6509,7 @@ a { color: inherit; }
 }
 
 
-/* Google Maps appointment location picker */
+/* Appointment location picker */
 .booking-location-picker {
   display: grid;
   gap: 12px;
@@ -6564,14 +6564,75 @@ a { color: inherit; }
   cursor: not-allowed;
 }
 
-.booking-google-search {
-  min-height: 48px;
+.booking-location-search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
 }
 
-.booking-google-search gmp-place-autocomplete {
+.booking-location-search input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid #d8cbbd;
+  border-radius: 9px;
+  background: #fff;
+  color: #3d3028;
+  font: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.booking-location-search input:focus {
+  border-color: #9f8b77;
+  box-shadow: 0 0 0 3px rgba(159, 139, 119, .12);
+}
+
+.booking-location-search button {
+  min-width: 84px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 9px;
+  background: #6f7f60;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.booking-location-search button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.booking-location-results {
+  display: grid;
+  gap: 5px;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid #e0d5c9;
+  border-radius: 9px;
+  background: #f8f4ee;
+}
+
+.booking-location-result {
   display: block;
   width: 100%;
-  min-height: 48px;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #51443a;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+}
+
+.booking-location-result:hover {
+  background: #ece5db;
 }
 
 .booking-map-wrap {
@@ -6592,6 +6653,7 @@ a { color: inherit; }
   left: 12px;
   right: 12px;
   bottom: 12px;
+  z-index: 400;
   padding: 9px 11px;
   border: 1px solid rgba(224, 213, 201, .95);
   border-radius: 8px;
@@ -6637,6 +6699,17 @@ a { color: inherit; }
   line-height: 1.5;
 }
 
+.booking-location-attribution {
+  margin: 0;
+  color: #8a7d72;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.booking-location-attribution a {
+  color: inherit;
+}
+
 .booking-review-location {
   grid-column: 1 / -1;
 }
@@ -6651,6 +6724,14 @@ a { color: inherit; }
   }
 
   .booking-current-location {
+    width: 100%;
+  }
+
+  .booking-location-search {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-location-search button {
     width: 100%;
   }
 
