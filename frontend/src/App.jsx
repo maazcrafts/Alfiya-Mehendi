@@ -29,7 +29,7 @@ function Placeholder({ title }) {
 
 function RootRedirect() {
   const token = sessionStorage.getItem('alfiya_auth_token')
-  return <Navigate to={token ? '/products' : '/signup'} replace />
+  return <Navigate to={token ? '/services' : '/signup'} replace />
 }
 
 export default function App() {
