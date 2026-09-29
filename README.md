@@ -57,6 +57,12 @@ It also provides the foundation for a product catalogue, cart, orders and future
 | **Support** | Search help/FAQ content and submit support requests |
 | **Network UX** | Clear online/offline and connection-state feedback |
 
+### Appointment location selection
+
+Customers can search for an address, use their device location, or select/drag a pin on an OpenStreetMap-powered map. The selected address and coordinates are stored with the booking so the admin can plan the visit.
+
+The public Nominatim service is used only for user-triggered address search/reverse geocoding; the UI does not implement autocomplete. Its public service has usage limits and is intended for moderate, end-user-triggered use. urlNominatim usage policyhttps://operations.osmfoundation.org/policies/nominatim/
+
 ### For the business
 
 The admin workspace turns the application into an operational tool rather than only a customer-facing website.
@@ -437,7 +443,6 @@ Frontend:
 ```env
 VITE_API_URL=http://localhost:5000
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_GOOGLE_MAPS_API_KEY=your_restricted_maps_browser_key
 ```
 
 **Never commit real credentials or secrets.**
@@ -561,7 +566,7 @@ The implementation focuses on:
 
 ### Next iterations
 
-- [x] Google Maps appointment location selection
+- [x] OpenStreetMap appointment location selection
 - [ ] Rich production product imagery
 - [ ] Expanded product-shopping experience
 - [ ] Complete checkout/payment workflow
@@ -575,9 +580,9 @@ The implementation focuses on:
 
 **Core mehendi service and appointment platform: operational.**
 
-The main customer-to-admin booking workflow is implemented, including authentication, service discovery, availability, customer contact capture, booking submission and administrative booking management.
+The main customer-to-admin booking workflow is implemented, including authentication, service discovery, availability, customer contact capture, appointment location selection, booking submission and administrative booking management.
 
-The repository also contains a growing commerce layer for products, cart and orders. Additional shopping, location and payment capabilities are being developed separately from the core appointment experience.
+The repository also contains a growing commerce layer for products, cart and orders. Additional shopping and payment capabilities are being developed separately from the core appointment experience.
 
 ---
 
