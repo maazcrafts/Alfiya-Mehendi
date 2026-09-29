@@ -3318,6 +3318,7 @@ a { color: inherit; }
   flex-wrap:wrap!important;
 }
 .booking-dashboard .booking-success-panel .service-book-button{
+  box-sizing:border-box!important;
   min-height:52px!important;
   min-width:155px!important;
   display:inline-flex!important;
@@ -3329,6 +3330,7 @@ a { color: inherit; }
   font-size:12px!important;
 }
 .booking-dashboard .booking-success-panel .services-shop-link{
+  box-sizing:border-box!important;
   min-height:52px!important;
   display:inline-flex!important;
   align-items:center!important;
