@@ -1,18 +1,21 @@
 import { query, getClient } from '../config/pool.js'
 
-export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerNote }) {
+export async function createBooking({ userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerPlaceId, customerNote }) {
   const result = await query(
     `
       INSERT INTO bookings (
         user_id, service_id, booking_date, booking_time, status,
-        customer_name, customer_phone, customer_location, customer_note
+        customer_name, customer_phone, customer_location,
+        customer_latitude, customer_longitude, customer_place_id, customer_note
       )
-      VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8)
+      VALUES ($1, $2, $3, $4, 'requested', $5, $6, $7, $8, $9, $10, $11)
       RETURNING id, user_id, service_id, booking_date, booking_time, status,
-        customer_name, customer_phone, customer_location, customer_note, admin_note,
+        customer_name, customer_phone, customer_location,
+        customer_latitude, customer_longitude, customer_place_id,
+        customer_note, admin_note,
         created_at, updated_at
     `,
-    [userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerNote || null],
+    [userId, serviceId, bookingDate, bookingTime, customerName, customerPhone, customerLocation, customerLatitude, customerLongitude, customerPlaceId || null, customerNote || null],
   )
   return result.rows[0]
 }
@@ -62,6 +65,8 @@ export async function listUserBookings(userId) {
     `
       SELECT
         b.id, b.booking_date, b.booking_time, b.status,
+        b.customer_name, b.customer_phone, b.customer_location,
+        b.customer_latitude, b.customer_longitude, b.customer_place_id,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
         s.name AS service_name, s.slug AS service_slug,
         s.price_paise, s.level
@@ -86,6 +91,7 @@ export async function listAdminBookings(status = 'all') {
         b.id, b.booking_date, b.booking_time, b.status,
         COALESCE(b.customer_name, u.name) AS customer_name,
         b.customer_phone, b.customer_location,
+        b.customer_latitude, b.customer_longitude, b.customer_place_id,
         b.customer_note, b.admin_note, b.created_at, b.updated_at,
         u.id AS user_id, u.email AS customer_email,
         s.name AS service_name, s.slug AS service_slug,
