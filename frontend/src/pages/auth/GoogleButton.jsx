@@ -71,7 +71,7 @@ export default function GoogleButton({ mode = "signin" }) {
                 localStorage.setItem("alfiya_new_user_tour", "pending");
                 localStorage.removeItem("alfiya_new_user_tour_step");
               }
-              navigate("/products");
+              navigate("/services");
             } catch (err) {
               setError(err.message);
             }
