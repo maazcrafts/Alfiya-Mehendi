@@ -61,7 +61,7 @@ It also provides the foundation for a product catalogue, cart, orders and future
 
 Customers can search for an address, use their device location, or select/drag a pin on an OpenStreetMap-powered map. The selected address and coordinates are stored with the booking so the admin can plan the visit.
 
-The public Nominatim service is used only for user-triggered address search/reverse geocoding; the UI does not implement autocomplete. Its public service has usage limits and is intended for moderate, end-user-triggered use. urlNominatim usage policyhttps://operations.osmfoundation.org/policies/nominatim/
+The public Photon geocoder is used for address search and reverse geocoding. It requires no API key and is intended for fair, moderate usage; its public demo can be throttled or changed without notice. urlPhoton project and usage noteshttps://github.com/komoot/photon
 
 ### For the business
 
