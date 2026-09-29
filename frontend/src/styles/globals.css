@@ -7156,3 +7156,30 @@ a { color: inherit; }
     z-index:20!important;
   }
 }
+
+
+/* Celebration popup — phone-only character sizing. Do not affect the character anywhere else. */
+@media (max-width: 480px) {
+  .booking-celebration-modal .booking-celebration-character-body {
+    left: 43% !important;
+    bottom: 2px !important;
+    transform: translateX(-50%) scale(.44) !important;
+    transform-origin: bottom center !important;
+  }
+
+  .booking-celebration-modal .celebration-bubble {
+    width: 190px !important;
+    top: 28px !important;
+    right: 12px !important;
+    padding: 12px 14px !important;
+  }
+
+  .booking-celebration-modal .celebration-bubble span {
+    font-size: 8px !important;
+  }
+
+  .booking-celebration-modal .celebration-bubble strong {
+    font-size: 15px !important;
+    line-height: 1.15 !important;
+  }
+}
