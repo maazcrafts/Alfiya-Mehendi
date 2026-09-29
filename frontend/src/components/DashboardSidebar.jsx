@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 
 const icons = {
   shop: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>,
@@ -40,17 +39,19 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
     ['bookings', '/booking', 'My Bookings'],
   ]
 
-  const mobileControls = (
+  return (
     <>
-      <button
-        type="button"
-        className="mobile-menu-trigger"
-        aria-label="Open navigation menu"
-        aria-expanded={mobileMenuOpen}
-        onClick={() => setMobileMenuOpen((open) => !open)}
-      >
-        <span></span><span></span><span></span>
-      </button>
+      <div className="mobile-menu-slot">
+        <button
+          type="button"
+          className="mobile-menu-trigger"
+          aria-label="Open navigation menu"
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
 
       {mobileMenuOpen && (
         <button
@@ -60,12 +61,6 @@ export default function DashboardSidebar({ active = 'shop', adminOnly = false })
           onClick={closeMobileMenu}
         />
       )}
-    </>
-  )
-
-  return (
-    <>
-      {typeof document !== 'undefined' ? createPortal(mobileControls, document.body) : null}
 
       <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
         <Link to="/products" className="dashboard-brand" onClick={closeMobileMenu}>
