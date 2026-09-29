@@ -1,34 +1,37 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [resetLink, setResetLink] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setMessage("");
-    setResetLink("");
-    setLoading(true);
+  async function handleSubmit(event) {
+    event.preventDefault()
+    const normalizedEmail = email.trim().toLowerCase()
+    if (!normalizedEmail) return
+
+    setLoading(true)
+    setError('')
+
     try {
-      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const response = await fetch(apiBase + "/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Unable to process the request.");
-      setMessage(data.message);
-      if (data.resetUrl) setResetLink(data.resetUrl);
-    } catch (error) {
-      setMessage(error.message || "Unable to process the request.");
+      const response = await fetch(apiBase + '/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: normalizedEmail }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data.message || 'Unable to send a verification code.')
+      navigate('/reset-password?email=' + encodeURIComponent(normalizedEmail))
+    } catch (err) {
+      setError(err.message || 'Unable to send a verification code.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <main className="signup-page auth-split-page">
@@ -38,38 +41,31 @@ export default function ForgotPassword() {
           <div className="story-overlay" />
           <div className="story-content">
             <p className="story-eyebrow">Account recovery</p>
-            <h1>Return to Your<br />Alfiya Account</h1>
-            <p className="story-description">
-              Request a secure password reset link for your account.
-            </p>
+            <h1>Return to your<br />Alfiya account.</h1>
+            <p className="story-description">We’ll send a six-digit verification code to your registered email address.</p>
           </div>
         </div>
         <div className="signup-form-panel login-form-panel">
           <div className="signup-form-inner login-form-inner">
             <p className="form-eyebrow">Forgot password</p>
-            <h2>Reset Password</h2>
-            <p className="form-intro">Enter your account email and we'll generate a secure reset link.</p>
+            <h2>Reset access.</h2>
+            <p className="form-intro">Enter the email linked to your Alfiya Mehendi account.</p>
             <form className="signup-form" onSubmit={handleSubmit}>
               <label className="input-group">
                 <span>Email Address</span>
                 <div className="input-shell">
-                  <input type="email" placeholder="Enter your email address" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  <input type="email" placeholder="Enter your email address" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required />
                 </div>
               </label>
               <button type="submit" className="signup-submit" disabled={loading}>
-                <span>{loading ? "Generating..." : "Generate Reset Link"}</span>
+                <span>{loading ? 'Sending code…' : 'Send verification code'}</span>
               </button>
             </form>
-            {message && <p className="auth-form-error" role="status">{message}</p>}
-            {resetLink && (
-              <p className="login-prompt">
-                <a href={resetLink}>Open secure reset page</a>
-              </p>
-            )}
+            {error && <p className="auth-form-error" role="alert">{error}</p>}
             <p className="login-prompt"><Link to="/login">Back to Login</Link></p>
           </div>
         </div>
       </section>
     </main>
-  );
+  )
 }
