@@ -10,26 +10,6 @@ function BookingCelebrationModal({ onClose, serviceName }) {
       <div className="booking-celebration-modal" role="dialog" aria-modal="true" aria-labelledby="booking-celebration-title" onClick={event => event.stopPropagation()}>
         <button type="button" className="booking-celebration-close" aria-label="Close" onClick={onClose}>×</button>
 
-        <div className="booking-celebration-character" aria-hidden="true">
-          <div className="celebration-spark spark-one">✦</div>
-          <div className="celebration-spark spark-two">✦</div>
-          <div className="celebration-spark spark-three">·</div>
-          <div className="celebration-bubble">
-            <span>YOU DID IT!</span>
-            <strong>Your request is in.</strong>
-          </div>
-          <div className="celebration-character-body">
-            <div className="celebration-hair"></div>
-            <div className="celebration-face"><span></span><i></i></div>
-            <div className="celebration-neck"></div>
-            <div className="celebration-torso"></div>
-            <div className="celebration-arm celebration-arm-left"></div>
-            <div className="celebration-arm celebration-arm-right"></div>
-            <div className="celebration-hand"></div>
-          </div>
-          <div className="celebration-ground"></div>
-        </div>
-
         <div className="booking-celebration-copy">
           <p className="dashboard-kicker">Alfiya appointment studio</p>
           <h2 id="booking-celebration-title">You’re officially on the list.</h2>
