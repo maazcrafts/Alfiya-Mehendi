@@ -8,7 +8,8 @@ import { initializeDatabase } from './config/database.js'
 import { upsertGoogleUser } from './models/userModel.js'
 import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.js'
 import { hashPassword, verifyPassword } from './services/passwordService.js'
-import { createPasswordResetToken, resetPasswordWithToken } from './services/passwordResetService.js'
+import { createPasswordResetOtp, getPasswordResetOtpConfig, verifyPasswordResetOtp, resetPasswordWithVerifiedToken } from './services/passwordResetService.js'
+import { isPasswordResetEmailConfigured, sendPasswordResetOtp } from './services/emailService.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
@@ -188,46 +189,91 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.post('/api/auth/forgot-password', async (req, res) => {
   try {
-    const { email } = req.body
-    if (!email?.trim()) {
-      return res.status(400).json({ message: 'Email address is required.' })
+    const email = String(req.body?.email || '').trim().toLowerCase()
+    if (!email) return res.status(400).json({ message: 'Email address is required.' })
+
+    if (!isPasswordResetEmailConfigured()) {
+      return res.status(503).json({ message: 'Password recovery email is not configured on the server yet.' })
     }
 
-    const reset = await createPasswordResetToken(email.trim())
-    const genericMessage = 'If an account exists for that email, a password reset link has been generated.'
+    const reset = await createPasswordResetOtp(email)
+    const genericMessage = 'If an account exists for that email, a 6-digit verification code has been sent.'
 
-    if (!reset) {
-      return res.json({ message: genericMessage })
+    if (!reset) return res.json({ message: genericMessage })
+
+    if (reset.throttled) {
+      return res.status(429).json({
+        message: 'A verification code was sent recently. Please wait before requesting another code.',
+        retryAfterSeconds: reset.retryAfterSeconds,
+      })
     }
 
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${reset.token}`
-    console.log('Password reset link generated:', resetUrl)
-
-    const response = { message: genericMessage }
-    if (process.env.NODE_ENV !== 'production') {
-      response.resetUrl = resetUrl
+    try {
+      await sendPasswordResetOtp({ to: reset.email, otp: reset.otp, expiryMinutes: reset.expiryMinutes })
+    } catch (error) {
+      console.error('Password reset email delivery error:', error)
+      return res.status(503).json({ message: 'We could not send the verification code right now. Please try again shortly.' })
     }
-    return res.json(response)
+
+    return res.json({
+      message: genericMessage,
+      expiresInMinutes: reset.expiryMinutes,
+      resendCooldownSeconds: getPasswordResetOtpConfig().resendCooldownSeconds,
+    })
   } catch (error) {
     console.error('Forgot password error:', error)
     return res.status(500).json({ message: 'Unable to process the password reset request.' })
   }
 })
 
+app.post('/api/auth/verify-reset-otp', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim().toLowerCase()
+    const otp = String(req.body?.otp || '').trim()
+    if (!email || !otp) return res.status(400).json({ message: 'Email and verification code are required.' })
+
+    const result = await verifyPasswordResetOtp(email, otp)
+
+    if (result.kind === 'locked') {
+      return res.status(429).json({ message: 'Too many incorrect verification attempts. Please request a new code.' })
+    }
+
+    if (result.kind !== 'verified') {
+      return res.status(400).json({
+        message: result.attemptsRemaining
+          ? `Incorrect verification code. ${result.attemptsRemaining} attempt(s) remaining.`
+          : 'The verification code is invalid or expired.',
+      })
+    }
+
+    return res.json({
+      message: 'Verification code accepted.',
+      resetToken: result.resetToken,
+      expiresInMinutes: result.expiresInMinutes,
+    })
+  } catch (error) {
+    console.error('Verify reset OTP error:', error)
+    return res.status(500).json({ message: 'Unable to verify the code right now.' })
+  }
+})
+
 app.post('/api/auth/reset-password', async (req, res) => {
   try {
-    const { token, password } = req.body
-    if (!token || !password) {
-      return res.status(400).json({ message: 'Reset token and new password are required.' })
+    const resetToken = String(req.body?.resetToken || '').trim()
+    const password = String(req.body?.password || '')
+
+    if (!resetToken || !password) {
+      return res.status(400).json({ message: 'Verification and a new password are required.' })
     }
+
     if (password.length < 8) {
       return res.status(400).json({ message: 'Password must be at least 8 characters.' })
     }
 
     const passwordHash = await hashPassword(password)
-    const updated = await resetPasswordWithToken(token, passwordHash)
+    const updated = await resetPasswordWithVerifiedToken(resetToken, passwordHash)
     if (!updated) {
-      return res.status(400).json({ message: 'This reset link is invalid or expired.' })
+      return res.status(400).json({ message: 'Your password reset session is invalid or expired. Please start again.' })
     }
 
     return res.json({ message: 'Password updated successfully. You can now log in.' })
@@ -236,7 +282,6 @@ app.post('/api/auth/reset-password', async (req, res) => {
     return res.status(500).json({ message: 'Unable to reset the password right now.' })
   }
 })
-
 app.post('/api/auth/google', async (req, res) => {
   try {
     const { credential } = req.body
