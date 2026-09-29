@@ -7076,3 +7076,75 @@ a { color: inherit; }
     padding: 10px 11px;
   }
 }
+
+
+/* Final mobile celebration layout override */
+@media(max-width:480px){
+  .booking-celebration-modal{
+    width:calc(100vw - 20px)!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 20px)!important;
+    overflow-y:auto!important;
+    grid-template-columns:1fr!important;
+  }
+  .booking-celebration-character{
+    min-height:270px!important;
+    height:270px!important;
+    overflow:hidden!important;
+  }
+  .booking-celebration-character-body{
+    left:42%!important;
+    bottom:4px!important;
+    width:190px!important;
+    height:355px!important;
+    transform:translateX(-50%) scale(.56)!important;
+    transform-origin:bottom center!important;
+  }
+  .celebration-ground{
+    width:210px!important;
+    height:20px!important;
+    bottom:24px!important;
+  }
+  .celebration-bubble{
+    width:158px!important;
+    top:18px!important;
+    right:12px!important;
+    padding:12px 13px!important;
+    border-radius:15px 15px 4px 15px!important;
+  }
+  .celebration-bubble span{font-size:8px!important}
+  .celebration-bubble strong{font-size:15px!important;line-height:1.15!important}
+  .celebration-spark.spark-one{top:84px!important;left:14px!important;font-size:19px!important}
+  .celebration-spark.spark-two{top:128px!important;right:12px!important;font-size:16px!important}
+  .celebration-spark.spark-three{top:184px!important;left:14px!important;font-size:25px!important}
+  .booking-celebration-copy{
+    padding:27px 22px 24px!important;
+  }
+  .booking-celebration-copy h2{
+    font-size:32px!important;
+    line-height:1.03!important;
+  }
+  .booking-celebration-message{
+    margin-top:15px!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+  .booking-celebration-note{
+    margin-top:15px!important;
+    padding:12px 13px!important;
+    font-size:11px!important;
+  }
+  .booking-celebration-action{
+    width:100%!important;
+    min-width:0!important;
+    min-height:50px!important;
+    margin-top:18px!important;
+  }
+  .booking-celebration-close{
+    width:44px!important;
+    height:44px!important;
+    top:12px!important;
+    right:12px!important;
+    z-index:20!important;
+  }
+}
