@@ -7183,3 +7183,45 @@ a { color: inherit; }
     line-height: 1.15 !important;
   }
 }
+
+
+/* Booking success modal — text-only layout after removing the mobile character. */
+.booking-celebration-modal {
+  grid-template-columns: 1fr !important;
+  width: min(720px, calc(100vw - 34px)) !important;
+  min-height: 0 !important;
+}
+
+.booking-celebration-copy {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 64px 72px 58px !important;
+}
+
+@media (max-width: 480px) {
+  .booking-celebration-modal {
+    width: calc(100vw - 32px) !important;
+    border-radius: 24px !important;
+  }
+
+  .booking-celebration-copy {
+    padding: 42px 28px 30px !important;
+  }
+
+  .booking-celebration-copy h2 {
+    font-size: 36px !important;
+    line-height: 1.04 !important;
+  }
+
+  .booking-celebration-message {
+    font-size: 14px !important;
+  }
+
+  .booking-celebration-note {
+    font-size: 12px !important;
+  }
+
+  .booking-celebration-action {
+    width: 100% !important;
+  }
+}
