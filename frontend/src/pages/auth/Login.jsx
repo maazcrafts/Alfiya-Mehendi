@@ -45,7 +45,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -68,8 +67,6 @@ export default function Login() {
 
       sessionStorage.setItem("alfiya_auth_token", data.token);
       sessionStorage.setItem("alfiya_user", JSON.stringify(data.user));
-      if (rememberMe) sessionStorage.setItem("alfiya_remember_me", "true");
-      else sessionStorage.removeItem("alfiya_remember_me");
       setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to log in.");
@@ -80,7 +77,7 @@ export default function Login() {
 
   return (
     <>
-      {showSuccess && <AuthSuccessOverlay mode="login" onDone={() => navigate("/products")} />}
+      {showSuccess && <AuthSuccessOverlay mode="login" onDone={() => navigate("/services")} />}
       <main className="signup-page auth-split-page">
       <section className="signup-shell">
         <div className="signup-story">
@@ -144,10 +141,6 @@ export default function Login() {
               </label>
 
               <div className="login-options">
-                <label className="remember-row">
-                  <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
-                  <span>Remember me</span>
-                </label>
                 <Link to="/forgot-password">Forgot password?</Link>
               </div>
 
