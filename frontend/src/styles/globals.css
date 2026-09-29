@@ -6261,3 +6261,37 @@ a { color: inherit; }
     font-size: 11px;
   }
 }
+
+
+.booking-service-details {
+  margin-top: 8px;
+}
+
+.booking-service-details summary {
+  width: fit-content;
+  color: #775641;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.booking-service-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.booking-service-details summary::after {
+  content: " +";
+}
+
+.booking-service-details[open] summary::after {
+  content: " −";
+}
+
+.booking-service-details p {
+  margin: 8px 0 0;
+  max-width: 620px;
+  color: #776b61;
+  font-size: 11px;
+  line-height: 1.6;
+}
