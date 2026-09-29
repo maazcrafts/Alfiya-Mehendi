@@ -3354,6 +3354,77 @@ a { color: inherit; }
   .booking-dashboard .booking-success-panel .services-shop-link{width:100%!important}
 }
 
+/* Mobile celebration: keep the character and speech bubble visually separate. */
+@media(max-width:480px){
+  .booking-celebration-backdrop{
+    padding:10px;
+    place-items:center;
+  }
+  .booking-celebration-modal{
+    width:calc(100vw - 20px)!important;
+    max-height:calc(100dvh - 20px);
+    overflow-y:auto;
+    border-radius:24px!important;
+  }
+  .booking-celebration-character{
+    min-height:270px!important;
+    height:270px;
+  }
+  .booking-celebration-character-body{
+    left:50%;
+    bottom:4px;
+    transform:translateX(-50%) scale(.60)!important;
+    transform-origin:bottom center!important;
+  }
+  .celebration-bubble{
+    width:158px!important;
+    top:18px!important;
+    right:14px!important;
+    padding:12px 13px!important;
+    border-radius:15px 15px 4px 15px;
+  }
+  .celebration-bubble span{
+    font-size:9px!important;
+  }
+  .celebration-bubble strong{
+    font-size:16px!important;
+    line-height:1.15!important;
+  }
+  .celebration-spark.spark-one{top:82px;left:18px;font-size:20px!important}
+  .celebration-spark.spark-two{top:126px;right:20px;font-size:17px!important}
+  .celebration-spark.spark-three{top:178px;left:18px;font-size:27px!important}
+  .booking-celebration-copy{
+    padding:27px 22px 24px!important;
+  }
+  .booking-celebration-copy h2{
+    font-size:32px!important;
+    line-height:1.03!important;
+  }
+  .booking-celebration-message{
+    margin-top:15px!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+  .booking-celebration-note{
+    margin-top:15px!important;
+    padding:12px 13px!important;
+    font-size:11px!important;
+  }
+  .booking-celebration-action{
+    width:100%!important;
+    min-width:0!important;
+    min-height:50px!important;
+    margin-top:18px!important;
+  }
+  .booking-celebration-close{
+    width:44px!important;
+    height:44px!important;
+    top:12px!important;
+    right:12px!important;
+    z-index:20;
+  }
+}
+
 /* Celebration modal — larger, calmer, less text */
 .booking-celebration-modal{
   width:min(1080px,calc(100vw - 80px))!important;
@@ -5508,11 +5579,13 @@ a { color: inherit; }
 .admin-contact-actions{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:start;
   gap:9px;
 }
 .admin-contact-actions>a,
 .admin-contact-actions>div{
   min-width:0;
+  align-self:start;
   display:flex;
   flex-direction:column;
   gap:5px;
