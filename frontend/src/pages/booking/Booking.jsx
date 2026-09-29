@@ -1,5 +1,5 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
-import GoogleLocationPicker from '../../components/GoogleLocationPicker.jsx'
+import LocationPicker from '../../components/LocationPicker.jsx'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -109,7 +109,6 @@ export default function Booking(){
   const [customerLocation,setCustomerLocation]=useState('')
   const [customerLatitude,setCustomerLatitude]=useState(null)
   const [customerLongitude,setCustomerLongitude]=useState(null)
-  const [customerPlaceId,setCustomerPlaceId]=useState('')
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
   const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false),[showCelebration,setShowCelebration]=useState(false)
 
@@ -184,7 +183,6 @@ export default function Booking(){
           customerLocation:customerLocation.trim(),
           customerLatitude:Number(customerLatitude),
           customerLongitude:Number(customerLongitude),
-          customerPlaceId:customerPlaceId || null,
           customerNote:note
         })
       })
@@ -303,16 +301,14 @@ export default function Booking(){
                     <small className="booking-field-note">This is the email connected to your Alfiya account.</small>
                   </label>
                   <div className="booking-contact-wide">
-                    <GoogleLocationPicker
+                    <LocationPicker
                       value={customerLocation}
                       latitude={customerLatitude}
                       longitude={customerLongitude}
-                      placeId={customerPlaceId}
-                      onChange={({ address, latitude, longitude, placeId }) => {
+                      onChange={({ address, latitude, longitude }) => {
                         setCustomerLocation(address || '')
                         setCustomerLatitude(latitude)
                         setCustomerLongitude(longitude)
-                        setCustomerPlaceId(placeId || '')
                         setError('')
                       }}
                     />
