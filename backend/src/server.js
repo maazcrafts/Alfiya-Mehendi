@@ -10,6 +10,7 @@ import { createPasswordUser, findUserByEmail } from './models/passwordAuthModel.
 import { hashPassword, verifyPassword } from './services/passwordService.js'
 import { createPasswordResetOtp, getPasswordResetOtpConfig, verifyPasswordResetOtp, resetPasswordWithVerifiedToken } from './services/passwordResetService.js'
 import { isPasswordResetEmailConfigured, sendPasswordResetOtp } from './services/emailService.js'
+import { applySecurityMiddleware, apiRateLimiter, authRateLimiter, recoveryRateLimiter } from './middleware/securityMiddleware.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
@@ -23,6 +24,14 @@ import adminRoutes from './routes/adminRoutes.js'
 
 const app = express()
 const port = process.env.PORT || 5000
+
+if (process.env.NODE_ENV === 'production') {
+  // Render sits behind a reverse proxy. This makes req.ip represent the client
+  // IP so rate limiting is effective instead of limiting Render's proxy IP.
+  app.set('trust proxy', 1)
+}
+
+applySecurityMiddleware(app)
 
 async function applyConfiguredAdminRole(user) {
   const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase()
@@ -40,19 +49,19 @@ const allowedOrigins = (process.env.FRONTEND_URL || '')
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean)
 
-if (!allowedOrigins.length && process.env.NODE_ENV === 'production') {
-  allowedOrigins.push('https://frontend-pi-one-14.vercel.app')
-}
-
 if (process.env.NODE_ENV !== 'production') {
   allowedOrigins.push('http://localhost:5173')
 }
 
+const nativeOrigins = new Set(['https://localhost', 'capacitor://localhost'])
+
 app.use(cors({
   origin(origin, callback) {
     const normalizedOrigin = origin?.replace(/\/$/, '')
-    const isVercelOrigin = normalizedOrigin && /^https:\/\/([a-z0-9-]+\.)?vercel\.app$/i.test(normalizedOrigin)
-    const isAllowed = !normalizedOrigin || allowedOrigins.includes(normalizedOrigin) || isVercelOrigin
+    const isAllowed =
+      !normalizedOrigin ||
+      allowedOrigins.includes(normalizedOrigin) ||
+      nativeOrigins.has(normalizedOrigin)
 
     if (isAllowed) {
       return callback(null, true)
@@ -63,7 +72,10 @@ app.use(cors({
   },
   credentials: false,
 }))
-app.use(express.json())
+
+// Keep request bodies deliberately small. The API currently accepts JSON only.
+app.use(express.json({ limit: '100kb' }))
+app.use('/api', apiRateLimiter)
 app.use('/api/products', productRoutes)
 app.use('/api/services', serviceRoutes)
 app.use('/api/bookings', bookingRoutes)
@@ -94,7 +106,7 @@ app.get('/api/health', async (_req, res) => {
   }
 })
 
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', authRateLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body
 
@@ -149,7 +161,7 @@ app.post('/api/auth/signup', async (req, res) => {
   }
 })
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authRateLimiter, async (req, res) => {
   try {
     const { email, password } = req.body
 
@@ -187,7 +199,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 })
 
-app.post('/api/auth/forgot-password', async (req, res) => {
+app.post('/api/auth/forgot-password', recoveryRateLimiter, async (req, res) => {
   try {
     const email = String(req.body?.email || '').trim().toLowerCase()
     if (!email) return res.status(400).json({ message: 'Email address is required.' })
@@ -226,7 +238,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   }
 })
 
-app.post('/api/auth/verify-reset-otp', async (req, res) => {
+app.post('/api/auth/verify-reset-otp', recoveryRateLimiter, async (req, res) => {
   try {
     const email = String(req.body?.email || '').trim().toLowerCase()
     const otp = String(req.body?.otp || '').trim()
@@ -257,7 +269,7 @@ app.post('/api/auth/verify-reset-otp', async (req, res) => {
   }
 })
 
-app.post('/api/auth/reset-password', async (req, res) => {
+app.post('/api/auth/reset-password', recoveryRateLimiter, async (req, res) => {
   try {
     const resetToken = String(req.body?.resetToken || '').trim()
     const password = String(req.body?.password || '')
@@ -282,7 +294,7 @@ app.post('/api/auth/reset-password', async (req, res) => {
     return res.status(500).json({ message: 'Unable to reset the password right now.' })
   }
 })
-app.post('/api/auth/google', async (req, res) => {
+app.post('/api/auth/google', authRateLimiter, async (req, res) => {
   try {
     const { credential } = req.body
 
@@ -290,11 +302,11 @@ app.post('/api/auth/google', async (req, res) => {
       return res.status(400).json({ message: 'Google credential is required.' })
     }
 
-    if (!(process.env.GOOGLE_CLIENT_ID || "37574893420-so4mu6u3uuunkil58nek24nardjm46q4.apps.googleusercontent.com") || !process.env.JWT_SECRET) {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.JWT_SECRET) {
       return res.status(500).json({ message: 'Google authentication is not configured on the server.' })
     }
 
-    const googleClientId = process.env.GOOGLE_CLIENT_ID || "37574893420-so4mu6u3uuunkil58nek24nardjm46q4.apps.googleusercontent.com"
+    const googleClientId = process.env.GOOGLE_CLIENT_ID
     const client = new OAuth2Client(googleClientId)
     const ticket = await client.verifyIdToken({
       idToken: credential,
@@ -343,7 +355,16 @@ app.use('/api', (_req, res) => {
 
 async function startServer() {
   try {
-    if (!process.env.DATABASE_URL) {
+    const requiredProductionEnv = ['DATABASE_URL', 'JWT_SECRET', 'FRONTEND_URL']
+    if (process.env.NODE_ENV === 'production') {
+      const missing = requiredProductionEnv.filter((name) => !process.env[name]?.trim())
+      if (missing.length) {
+        throw new Error('Missing required production environment variables: ' + missing.join(', '))
+      }
+      if (process.env.JWT_SECRET.trim().length < 32) {
+        throw new Error('JWT_SECRET must be at least 32 characters in production.')
+      }
+    } else if (!process.env.DATABASE_URL) {
       throw new Error('DATABASE_URL is not configured.')
     }
 
