@@ -31,13 +31,4 @@ export const recoveryRateLimiter = rateLimit({
 export function applySecurityMiddleware(app) {
   app.disable('x-powered-by')
   app.use(helmet())
-  app.use(expressJsonLimit())
-}
-
-function expressJsonLimit() {
-  return (req, res, next) => {
-    // This is intentionally applied through Express' built-in parser by server.js.
-    // Kept as a named hook so security middleware stays centralized.
-    next()
-  }
 }
