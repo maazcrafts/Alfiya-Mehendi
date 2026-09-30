@@ -353,6 +353,17 @@ app.use('/api', (_req, res) => {
   return res.status(404).json({ message: 'API route not found.' })
 })
 
+// Keep rejected CORS requests and unexpected errors from exposing Express's
+// default HTML stack-trace response.
+app.use((error, _req, res, _next) => {
+  if (error?.message === 'CORS origin not allowed') {
+    return res.status(403).json({ message: 'CORS origin not allowed.' })
+  }
+
+  console.error('Unhandled API error:', error)
+  return res.status(500).json({ message: 'Internal server error.' })
+})
+
 async function startServer() {
   try {
     const requiredProductionEnv = ['DATABASE_URL', 'JWT_SECRET', 'FRONTEND_URL']
