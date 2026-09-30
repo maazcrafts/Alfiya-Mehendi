@@ -110,7 +110,15 @@ app.post('/api/auth/signup', authRateLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body
 
-    if (!name?.trim() || !email?.trim() || !password) {
+    if (
+      typeof name !== 'string' ||
+      typeof email !== 'string' ||
+      typeof password !== 'string'
+    ) {
+      return res.status(400).json({ message: 'Name, email and password must be text values.' })
+    }
+
+    if (!name.trim() || !email.trim() || !password) {
       return res.status(400).json({ message: 'Name, email and password are required.' })
     }
 
@@ -165,7 +173,11 @@ app.post('/api/auth/login', authRateLimiter, async (req, res) => {
   try {
     const { email, password } = req.body
 
-    if (!email?.trim() || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ message: 'Email and password must be text values.' })
+    }
+
+    if (!email.trim() || !password) {
       return res.status(400).json({ message: 'Email and password are required.' })
     }
 
@@ -298,8 +310,8 @@ app.post('/api/auth/google', authRateLimiter, async (req, res) => {
   try {
     const { credential } = req.body
 
-    if (!credential) {
-      return res.status(400).json({ message: 'Google credential is required.' })
+    if (typeof credential !== 'string' || !credential.trim()) {
+      return res.status(400).json({ message: 'Google credential must be a text value.' })
     }
 
     if (!process.env.GOOGLE_CLIENT_ID || !process.env.JWT_SECRET) {
