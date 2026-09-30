@@ -37,6 +37,29 @@ export default function ResetPassword() {
     return () => window.clearInterval(timer)
   }, [resendCooldown])
 
+  async function pasteOtp() {
+    setError('')
+    setMessage('')
+
+    try {
+      if (!navigator.clipboard?.readText) {
+        throw new Error('Clipboard access is not available on this device.')
+      }
+
+      const clipboardText = await navigator.clipboard.readText()
+      const pastedOtp = clipboardText.replace(/\\D/g, '').slice(0, OTP_LENGTH)
+
+      if (pastedOtp.length !== OTP_LENGTH) {
+        throw new Error('No complete 6-digit code was found in your clipboard.')
+      }
+
+      setOtp(pastedOtp)
+      setMessage('Verification code pasted.')
+    } catch (err) {
+      setError(err.message || 'Unable to read the verification code from your clipboard.')
+    }
+  }
+
   async function verifyOtp(event) {
     event.preventDefault()
     const cleanOtp = otp.replace(/\D/g, '')
@@ -179,6 +202,9 @@ export default function ResetPassword() {
                         aria-label="6-digit verification code"
                       />
                     </div>
+                    <button type="button" className="paste-otp-button" onClick={pasteOtp} disabled={loading}>
+                      Paste code from clipboard
+                    </button>
                   </label>
 
                   <button type="submit" className="signup-submit" disabled={loading || otp.length !== OTP_LENGTH}>
