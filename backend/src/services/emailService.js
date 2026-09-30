@@ -86,13 +86,7 @@ export async function sendPasswordResetOtp({ to, otp, expiryMinutes }) {
     'If you did not request a password reset, you can safely ignore this email.',
   ].join('\\n')
 
-  const digitCells = String(otp).split('').map((digit) => `
-    <td width="44" height="56" align="center" valign="middle"
-      style="background:#f1ede4;border:1px solid #ddd3c8;border-radius:8px;font-family:Arial,sans-serif;font-size:28px;font-weight:700;color:#394633;">
-      ${digit}
-    </td>
-    <td width="8" style="font-size:0;line-height:0;">&nbsp;</td>
-  `).join('')
+  const otpDisplay = String(otp)
 
   const html = `
 <!doctype html>
@@ -126,11 +120,7 @@ export async function sendPasswordResetOtp({ to, otp, expiryMinutes }) {
                     <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#8a7d72;margin-bottom:16px;">
                       VERIFICATION CODE
                     </div>
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                      <tr>
-                        ${digitCells}
-                      </tr>
-                    </table>
+                    <div style="display:inline-block;padding:14px 20px;background:#f1ede4;border:1px solid #ddd3c8;border-radius:8px;font-family:Arial,sans-serif;font-size:30px;line-height:34px;font-weight:700;letter-spacing:8px;color:#394633;user-select:text;-webkit-user-select:text;">${otpDisplay}</div>
                     <div style="margin-top:16px;font-family:Arial,sans-serif;font-size:13px;color:#6e6157;">
                       This code expires in <strong>${expiryMinutes} minutes</strong>.
                     </div>
