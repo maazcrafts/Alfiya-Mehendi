@@ -353,11 +353,19 @@ app.use('/api', (_req, res) => {
   return res.status(404).json({ message: 'API route not found.' })
 })
 
-// Keep rejected CORS requests and unexpected errors from exposing Express's
+// Keep rejected CORS requests and parser errors from exposing Express's
 // default HTML stack-trace response.
 app.use((error, _req, res, _next) => {
   if (error?.message === 'CORS origin not allowed') {
     return res.status(403).json({ message: 'CORS origin not allowed.' })
+  }
+
+  if (error?.type === 'entity.too.large') {
+    return res.status(413).json({ message: 'Request body is too large.' })
+  }
+
+  if (error?.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'Invalid JSON request body.' })
   }
 
   console.error('Unhandled API error:', error)
