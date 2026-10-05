@@ -619,6 +619,12 @@ ONE DIGITAL WORKSPACE
 
 ---
 
+## 📝 Documentation maintenance
+
+The README is kept aligned with the repository's current architecture, setup flow and deployment structure.
+
+---
+
 ## 👨‍💻 Built by
 
 **Maaz Khan**
