@@ -672,3 +672,4 @@ GitHub: **[maazcrafts](https://github.com/maazcrafts)**
 <!-- maintenance-20: Refresh documentation reference marker -->
 <!-- maintenance-21: Update README project note -->
 <!-- maintenance-22: Refresh README maintenance reference -->
+<!-- maintenance-23: Update documentation project note -->
