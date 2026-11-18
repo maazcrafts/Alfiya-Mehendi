@@ -30,32 +30,12 @@ function Placeholder({ title }) {
 function RootRedirect() {
   const token = sessionStorage.getItem('alfiya_auth_token')
   const returnTo = sessionStorage.getItem('alfiya_return_to') || '/services'
-  return <Navigate to={token ? returnTo : '/signup'} replace />
+  if (token) {
+    return <Navigate to={returnTo} replace />
+  }
+  // Unauthenticated visitors: show the customer-facing services homepage
+  return <Services />
 }
-
-// Clear invalid session on app start
-useEffect(() => {
-  const token = sessionStorage.getItem('alfiya_auth_token')
-  if (!token) return
-  ;(async () => {
-    try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-      const response = await fetch(apiBase + '/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      const data = await response.json()
-      if (!response.ok || data.message?.includes('authentication required') || data.message?.includes('invalid or expired')) {
-        sessionStorage.removeItem('alfiya_auth_token')
-        sessionStorage.removeItem('alfiya_user')
-        sessionStorage.removeItem('alfiya_return_to')
-      }
-    } catch {
-      sessionStorage.removeItem('alfiya_auth_token')
-      sessionStorage.removeItem('alfiya_user')
-      sessionStorage.removeItem('alfiya_return_to')
-    }
-  })()
-}, [])
 
 export default function App() {
   return (
