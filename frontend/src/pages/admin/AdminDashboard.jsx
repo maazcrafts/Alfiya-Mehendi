@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const [admin, setAdmin] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem('alfiya_user') || '{}') } catch { return {} }
   })
+  const returnTo = sessionStorage.getItem('alfiya_return_to') || '/admin'
   const [tab, setTab] = useState('overview')
   const [overview, setOverview] = useState(null)
   const [customers, setCustomers] = useState([])
@@ -76,7 +77,7 @@ export default function AdminDashboard() {
       }
     } catch (e) {
       if (/administrator access required|authentication required|invalid or expired/i.test(e.message || '')) {
-        navigate('/services', { replace: true })
+        navigate(returnTo, { replace: true })
       }
       setError(e.message)
     } finally { setLoading(false) }

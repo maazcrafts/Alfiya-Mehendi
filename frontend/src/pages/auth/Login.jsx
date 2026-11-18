@@ -67,6 +67,7 @@ export default function Login() {
 
       sessionStorage.setItem("alfiya_auth_token", data.token);
       sessionStorage.setItem("alfiya_user", JSON.stringify(data.user));
+      const returnTo = sessionStorage.getItem('alfiya_return_to') || '/services'
       setShowSuccess(true);
     } catch (err) {
       setError(err.message || "Unable to log in.");
@@ -77,7 +78,7 @@ export default function Login() {
 
   return (
     <>
-      {showSuccess && <AuthSuccessOverlay mode="login" onDone={() => navigate("/services")} />}
+      {showSuccess && <AuthSuccessOverlay mode="login" onDone={() => navigate(returnTo)} />}
       <main className="signup-page auth-split-page">
       <section className="signup-shell">
         <div className="signup-story">

@@ -29,8 +29,33 @@ function Placeholder({ title }) {
 
 function RootRedirect() {
   const token = sessionStorage.getItem('alfiya_auth_token')
-  return <Navigate to={token ? '/services' : '/signup'} replace />
+  const returnTo = sessionStorage.getItem('alfiya_return_to') || '/services'
+  return <Navigate to={token ? returnTo : '/signup'} replace />
 }
+
+// Clear invalid session on app start
+useEffect(() => {
+  const token = sessionStorage.getItem('alfiya_auth_token')
+  if (!token) return
+  ;(async () => {
+    try {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const response = await fetch(apiBase + '/api/users/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await response.json()
+      if (!response.ok || data.message?.includes('authentication required') || data.message?.includes('invalid or expired')) {
+        sessionStorage.removeItem('alfiya_auth_token')
+        sessionStorage.removeItem('alfiya_user')
+        sessionStorage.removeItem('alfiya_return_to')
+      }
+    } catch {
+      sessionStorage.removeItem('alfiya_auth_token')
+      sessionStorage.removeItem('alfiya_user')
+      sessionStorage.removeItem('alfiya_return_to')
+    }
+  })()
+}, [])
 
 export default function App() {
   return (
@@ -42,6 +67,8 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<RootRedirect />} />
+
+        {/* Public routes - no auth required }}
         <Route path="/products" element={<Products />} />
         <Route path="/products/:slug" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
@@ -49,10 +76,14 @@ export default function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/booking" element={<Booking />} />
           <Route path="/booking/getting-there" element={<GettingThere />} />
+
+        {/* Admin routes - auth checked inside AdminDashboard component }}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/support" element={<AdminSupport />} />
+
+        {/* Customer/account routes */}
         <Route path="/account" element={<Account />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
