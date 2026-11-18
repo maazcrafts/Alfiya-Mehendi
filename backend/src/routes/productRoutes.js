@@ -6,6 +6,9 @@ import {
   listProducts,
   setProductActive,
   updateProduct,
+  archiveProduct,
+  restoreProduct,
+  listArchivedProducts,
 } from '../models/productModel.js'
 import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js'
 
@@ -144,12 +147,34 @@ router.patch('/:id', requireAuth, requireAdmin, async (req, res) => {
 
 router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const product = await setProductActive(req.params.id, false)
-    if (!product) return res.status(404).json({ message: 'Product not found.' })
-    return res.json({ product, message: 'Product deactivated.' })
+    const adminId = req.auth.userId || req.auth.sub
+    const product = await archiveProduct(req.params.id, adminId)
+    if (!product) return res.status(404).json({ message: 'Product not found or already archived.' })
+    return res.json({ product, message: 'Product archived.' })
   } catch (error) {
-    console.error('Deactivate product error:', error)
-    return res.status(500).json({ message: 'Unable to deactivate the product.' })
+    console.error('Archive product error:', error)
+    return res.status(500).json({ message: 'Unable to archive the product.' })
+  }
+})
+
+router.post('/:id/restore', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const product = await restoreProduct(req.params.id)
+    if (!product) return res.status(404).json({ message: 'Product not found or not archived.' })
+    return res.json({ product, message: 'Product restored.' })
+  } catch (error) {
+    console.error('Restore product error:', error)
+    return res.status(500).json({ message: 'Unable to restore the product.' })
+  }
+})
+
+router.get('/admin/archived', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const products = await listArchivedProducts()
+    return res.json({ products })
+  } catch (error) {
+    console.error('List archived products error:', error)
+    return res.status(500).json({ message: 'Unable to load archived products.' })
   }
 })
 

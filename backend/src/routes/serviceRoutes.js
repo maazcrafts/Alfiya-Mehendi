@@ -6,6 +6,9 @@ import {
   listAllServices,
   createService,
   updateService,
+  archiveService,
+  restoreService,
+  listArchivedServices,
 } from '../models/serviceModel.js'
 
 const router = Router()
@@ -84,6 +87,39 @@ router.get('/:slug', async (req, res) => {
   } catch (error) {
     console.error('Failed to load service:', error)
     res.status(500).json({ message: 'Unable to load service.' })
+  }
+})
+
+router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const adminId = req.auth.userId || req.auth.sub
+    const service = await archiveService(req.params.id, adminId)
+    if (!service) return res.status(404).json({ message: 'Service not found or already archived.' })
+    return res.json({ service, message: 'Service archived.' })
+  } catch (error) {
+    console.error('Archive service error:', error)
+    return res.status(500).json({ message: 'Unable to archive the service.' })
+  }
+})
+
+router.post('/:id/restore', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const service = await restoreService(req.params.id)
+    if (!service) return res.status(404).json({ message: 'Service not found or not archived.' })
+    return res.json({ service, message: 'Service restored.' })
+  } catch (error) {
+    console.error('Restore service error:', error)
+    return res.status(500).json({ message: 'Unable to restore the service.' })
+  }
+})
+
+router.get('/admin/archived', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const services = await listArchivedServices()
+    return res.json({ services })
+  } catch (error) {
+    console.error('List archived services error:', error)
+    return res.status(500).json({ message: 'Unable to load archived services.' })
   }
 })
 

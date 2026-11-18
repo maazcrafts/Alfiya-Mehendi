@@ -10,6 +10,8 @@ const productSelect = `
     p.price_paise,
     p.stock_quantity,
     p.is_active,
+    p.deleted_at,
+    p.deleted_by,
     p.created_at,
     p.updated_at,
     c.name AS category_name,
@@ -43,6 +45,8 @@ function normalizeProduct(row) {
     pricePaise: Number(row.price_paise),
     stockQuantity: row.stock_quantity,
     isActive: row.is_active,
+    deletedAt: row.deleted_at,
+    deletedBy: row.deleted_by,
     images: row.images || [],
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -231,4 +235,35 @@ export async function setProductActive(id, isActive) {
 
   if (!result.rowCount) return null
   return findProductById(id, { includeInactive: true })
+}
+
+export async function archiveProduct(id, deletedBy) {
+  const result = await query(
+    'UPDATE products SET is_active = FALSE, deleted_at = NOW(), deleted_by = $2, updated_at = NOW() WHERE id = $1 AND deleted_at IS NULL RETURNING id',
+    [id, deletedBy],
+  )
+
+  if (!result.rowCount) return null
+  return findProductById(id, { includeInactive: true })
+}
+
+export async function restoreProduct(id) {
+  const result = await query(
+    'UPDATE products SET is_active = TRUE, deleted_at = NULL, deleted_by = NULL, updated_at = NOW() WHERE id = $1 AND deleted_at IS NOT NULL RETURNING id',
+    [id],
+  )
+
+  if (!result.rowCount) return null
+  return findProductById(id, { includeInactive: true })
+}
+
+export async function listArchivedProducts() {
+  const result = await query(
+    `${productSelect}
+     WHERE p.deleted_at IS NOT NULL
+     GROUP BY p.id, c.id
+     ORDER BY p.deleted_at DESC`,
+  )
+
+  return result.rows.map(normalizeProduct)
 }

@@ -35,11 +35,43 @@ export async function findServiceBySlug(slug) {
 }
 
 
-export async function listAllServices() {
+export async function listAllServices({ includeArchived = false } = {}) {
+  const where = includeArchived ? '' : 'WHERE deleted_at IS NULL'
   const result = await query(`
-    SELECT id, name, slug, level, description, price_paise, duration_minutes, is_active, created_at, updated_at
+    SELECT id, name, slug, level, description, price_paise, duration_minutes, is_active, deleted_at, deleted_by, created_at, updated_at
     FROM services
+    ${where}
     ORDER BY created_at DESC
+  `)
+  return result.rows
+}
+
+export async function archiveService(id, deletedBy) {
+  const result = await query(
+    'UPDATE services SET is_active = FALSE, deleted_at = NOW(), deleted_by = $2, updated_at = NOW() WHERE id = $1 AND deleted_at IS NULL RETURNING id',
+    [id, deletedBy],
+  )
+
+  if (!result.rowCount) return null
+  return listAllServices({ includeArchived: true }).then(services => services.find(s => s.id === id))
+}
+
+export async function restoreService(id) {
+  const result = await query(
+    'UPDATE services SET is_active = TRUE, deleted_at = NULL, deleted_by = NULL, updated_at = NOW() WHERE id = $1 AND deleted_at IS NOT NULL RETURNING id',
+    [id],
+  )
+
+  if (!result.rowCount) return null
+  return listAllServices({ includeArchived: true }).then(services => services.find(s => s.id === id))
+}
+
+export async function listArchivedServices() {
+  const result = await query(`
+    SELECT id, name, slug, level, description, price_paise, duration_minutes, is_active, deleted_at, deleted_by, created_at, updated_at
+    FROM services
+    WHERE deleted_at IS NOT NULL
+    ORDER BY deleted_at DESC
   `)
   return result.rows
 }

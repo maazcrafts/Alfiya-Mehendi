@@ -25,6 +25,8 @@ export default function AdminDashboard() {
   const [customers, setCustomers] = useState([])
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
+  const [archivedProducts, setArchivedProducts] = useState([])
+  const [archivedServices, setArchivedServices] = useState([])
   const [productForm, setProductForm] = useState(emptyProduct)
   const [serviceForm, setServiceForm] = useState(emptyService)
   const [editingProduct, setEditingProduct] = useState(null)
@@ -37,6 +39,9 @@ export default function AdminDashboard() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [confirmDialog, setConfirmDialog] = useState(null)
+  const [productFilter, setProductFilter] = useState('active')
+  const [serviceFilter, setServiceFilter] = useState('active')
 
   useEffect(() => {
     loadOverview()
@@ -86,15 +91,23 @@ export default function AdminDashboard() {
 
   async function loadProducts() {
     try {
-      const data = await request('/api/products/admin/all')
-      setProducts(data.products || [])
+      const [activeData, archivedData] = await Promise.all([
+        request('/api/products/admin/all'),
+        request('/api/products/admin/archived'),
+      ])
+      setProducts(activeData.products || [])
+      setArchivedProducts(archivedData.products || [])
     } catch (e) { setError(e.message) }
   }
 
   async function loadServices() {
     try {
-      const data = await request('/api/services/admin/all')
-      setServices(data.services || [])
+      const [activeData, archivedData] = await Promise.all([
+        request('/api/services/admin/all'),
+        request('/api/services/admin/archived'),
+      ])
+      setServices(activeData.services || [])
+      setArchivedServices(archivedData.services || [])
     } catch (e) { setError(e.message) }
   }
 
@@ -123,10 +136,28 @@ export default function AdminDashboard() {
     finally { setSaving(false) }
   }
 
-  async function toggleProduct(product) {
-    if (product.isActive && !window.confirm('Hide this product from the shop?')) return
-    try { await request(`/api/products/${product.id}`, { method: 'PATCH', body: JSON.stringify({ isActive: !product.isActive }) }); await loadProducts(); flash(product.isActive ? 'Product hidden.' : 'Product restored.') }
-    catch (e) { setError(e.message) }
+  async function archiveProduct(product) {
+    setConfirmDialog({
+      type: 'archive',
+      resourceType: 'product',
+      id: product.id,
+      name: product.name,
+      action: async () => {
+        try {
+          await request(`/api/products/${product.id}`, { method: 'DELETE' })
+          await loadProducts()
+          flash('Product archived.')
+        } catch (e) { setError(e.message) }
+      },
+    })
+  }
+
+  async function restoreProduct(product) {
+    try {
+      await request(`/api/products/${product.id}/restore`, { method: 'POST' })
+      await loadProducts()
+      flash('Product restored.')
+    } catch (e) { setError(e.message) }
   }
 
   function editProduct(product) {
@@ -159,18 +190,46 @@ export default function AdminDashboard() {
     finally { setSaving(false) }
   }
 
-  async function toggleService(service) {
+  async function archiveService(service) {
+    setConfirmDialog({
+      type: 'archive',
+      resourceType: 'service',
+      id: service.id,
+      name: service.name,
+      action: async () => {
+        try {
+          await request(`/api/services/${service.id}`, { method: 'DELETE' })
+          await loadServices()
+          flash('Service archived.')
+        } catch (e) { setError(e.message) }
+      },
+    })
+  }
+
+  async function restoreService(service) {
     try {
-      await request(`/api/services/${service.id}`, { method: 'PATCH', body: JSON.stringify({ isActive: !service.is_active }) })
-      await loadServices(); flash(service.is_active ? 'Service hidden.' : 'Service restored.')
+      await request(`/api/services/${service.id}/restore`, { method: 'POST' })
+      await loadServices()
+      flash('Service restored.')
     } catch (e) { setError(e.message) }
   }
 
-  const filteredProducts = products.filter(p => !productSearch || `${p.name} ${p.slug}`.toLowerCase().includes(productSearch.toLowerCase()))
+  const activeProducts = products.filter(p => !productSearch || `${p.name} ${p.slug}`.toLowerCase().includes(productSearch.toLowerCase()))
+  const archivedProductsFiltered = archivedProducts.filter(p => !productSearch || `${p.name} ${p.slug}`.toLowerCase().includes(productSearch.toLowerCase()))
   const filteredCustomers = customers.filter(c => !customerSearch || `${c.name} ${c.email}`.toLowerCase().includes(customerSearch.toLowerCase()))
-  const filteredServices = services.filter(s => !serviceSearch || `${s.name} ${s.slug}`.toLowerCase().includes(serviceSearch.toLowerCase()))
+  const activeServices = services.filter(s => !serviceSearch || `${s.name} ${s.slug}`.toLowerCase().includes(serviceSearch.toLowerCase()))
+  const archivedServicesFiltered = archivedServices.filter(s => !serviceSearch || `${s.name} ${s.slug}`.toLowerCase().includes(serviceSearch.toLowerCase()))
 
+  function handleConfirm() {
+    if (confirmDialog?.action) {
+      confirmDialog.action()
+    }
+    setConfirmDialog(null)
+  }
 
+  function handleCancel() {
+    setConfirmDialog(null)
+  }
 
   return (
     <main className="shop-dashboard admin-dashboard">
@@ -199,6 +258,24 @@ export default function AdminDashboard() {
 
           {error && <div className="booking-alert booking-alert-error">{error}</div>}
           {notice && <div className="booking-alert booking-alert-success">{notice}</div>}
+
+          {confirmDialog && (
+            <div className="admin-confirm-backdrop" onClick={handleCancel}>
+              <div className="admin-confirm-modal" onClick={e => e.stopPropagation()}>
+                <p className="admin-confirm-title">{confirmDialog.type === 'archive' ? 'Archive' : 'Restore'} {confirmDialog.resourceType}</p>
+                <p className="admin-confirm-message">Are you sure you want to {confirmDialog.type === 'archive' ? 'archive' : 'restore'} <strong>"{confirmDialog.name}"</strong>?</p>
+                <p className="admin-confirm-hint">{confirmDialog.type === 'archive'
+                  ? 'Archived items are hidden from customers but preserved for historical records.'
+                  : 'Restored items will be available for new orders and bookings.'}</p>
+                <div className="admin-confirm-actions">
+                  <button className="admin-secondary" onClick={handleCancel}>Cancel</button>
+                  <button className={confirmDialog.type === 'archive' ? 'admin-primary admin-danger' : 'admin-primary'} onClick={handleConfirm} disabled={saving}>
+                    {saving ? 'Processing…' : confirmDialog.type === 'archive' ? 'Archive' : 'Restore'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {loading && tab === 'overview' ? <div className="services-state">Loading dashboard…</div> : null}
 
@@ -243,13 +320,42 @@ export default function AdminDashboard() {
                 <select value={productForm.categoryId} onChange={e=>setProductForm({...productForm,categoryId:e.target.value})}><option value="">No category</option>{(overview?.categories||[]).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select>
                 <label className="admin-check"><input type="checkbox" checked={productForm.isActive} onChange={e=>setProductForm({...productForm,isActive:e.target.checked})}/> Visible in shop</label>
                 <textarea className="wide" placeholder="Description" value={productForm.description} onChange={e=>setProductForm({...productForm,description:e.target.value})}/>
-                <div className="wide admin-image-row"><input placeholder="Product image URL" value={imageUrl} onChange={e=>setImageUrl(e.target.value)}/><button type="button" onClick={addImage}>Add image</button></div>
-                {productForm.images.length>0 && <div className="wide admin-image-list">{productForm.images.map((image,i)=><div key={i}><span>{image.imageUrl}</span><button type="button" onClick={()=>setProductForm({...productForm,images:productForm.images.filter((_,x)=>x!==i)})}>Remove</button></div>)}</div>}
-                <div className="wide admin-form-actions"><button className="admin-primary" disabled={saving}>{saving ? 'Saving…' : editingProduct ? 'Save changes' : 'Create product'}</button>{editingProduct&&<button type="button" onClick={()=>{setEditingProduct(null);setProductForm(emptyProduct)}}>Cancel</button>}</div>
+                <div className="wide admin-image-row"><input placeholder="Product image URL" value={imageUrl} onChange={e=>setImageUrl(e.target.value)}/><button type="button" className="admin-secondary" onClick={addImage}>Add image</button></div>
+                {productForm.images.length>0 && <div className="wide admin-image-list">{productForm.images.map((image,i)=><div key={i}><span>{image.imageUrl}</span><button type="button" className="admin-secondary" onClick={()=>setProductForm({...productForm,images:productForm.images.filter((_,x)=>x!==i)})}>Remove</button></div>)}</div>}
+                <div className="wide admin-form-actions"><button className="admin-primary" disabled={saving}>{saving ? 'Saving…' : editingProduct ? 'Save changes' : 'Create product'}</button>{editingProduct&&<button type="button" className="admin-secondary" onClick={()=>{setEditingProduct(null);setProductForm(emptyProduct)}}>Cancel</button>}</div>
               </form>
 
-              <div className="admin-panel-head admin-list-head"><div><p className="dashboard-kicker">Inventory</p><h2>Products</h2></div><input className="admin-search" placeholder="Search products…" value={productSearch} onChange={e=>setProductSearch(e.target.value)}/></div>
-              <div className="admin-management-list">{filteredProducts.map(p=><article key={p.id}><div><strong>{p.name}</strong><span>{p.categoryName||'Uncategorised'} · {money(p.pricePaise)} · {p.stockQuantity} in stock</span></div><span className={p.isActive?'admin-pill':'admin-pill muted'}>{p.isActive?'Active':'Hidden'}</span><button onClick={()=>editProduct(p)}>Edit</button><button onClick={()=>toggleProduct(p)}>{p.isActive ? 'Hide' : 'Restore'}</button></article>)}</div>
+              <div className="admin-panel-head admin-list-head">
+                <div><p className="dashboard-kicker">Inventory</p><h2>Products</h2></div>
+                <div className="admin-filter-group">
+                  <input className="admin-search" placeholder="Search products…" value={productSearch} onChange={e=>setProductSearch(e.target.value)}/>
+                  <div className="admin-filter-tabs">
+                    <button className={productFilter === 'active' ? 'active' : ''} onClick={() => setProductFilter('active')}>Active</button>
+                    <button className={productFilter === 'archived' ? 'active' : ''} onClick={() => setProductFilter('archived')}>Archived</button>
+                  </div>
+                </div>
+              </div>
+              <div className="admin-management-list">
+                {(productFilter === 'active' ? activeProducts : archivedProductsFiltered).map(p=>
+                  <article key={p.id} className="admin-list-item">
+                    <div className="admin-list-info">
+                      <strong>{p.name}</strong>
+                      <span>{p.categoryName||'Uncategorised'} · {money(p.pricePaise)} · {p.stockQuantity} in stock</span>
+                    </div>
+                    <span className={(p.isActive && !p.deletedAt) ? 'admin-pill active' : 'admin-pill archived'}>
+                      {p.deletedAt ? 'Archived' : p.isActive ? 'Active' : 'Hidden'}
+                    </span>
+                    <div className="admin-list-actions">
+                      <button className="admin-action-btn" onClick={()=>editProduct(p)}>Edit</button>
+                      {p.deletedAt ? (
+                        <button className="admin-action-btn admin-restore" onClick={()=>restoreProduct(p)}>Restore</button>
+                      ) : (
+                        <button className="admin-action-btn admin-archive" onClick={()=>archiveProduct(p)}>Archive</button>
+                      )}
+                    </div>
+                  </article>
+                )}
+              </div>
             </section>
           )}
 
@@ -264,10 +370,39 @@ export default function AdminDashboard() {
                 <input type="number" min="0" placeholder="Duration in minutes" value={serviceForm.durationMinutes} onChange={e=>setServiceForm({...serviceForm,durationMinutes:e.target.value})}/>
                 <label className="admin-check"><input type="checkbox" checked={serviceForm.isActive} onChange={e=>setServiceForm({...serviceForm,isActive:e.target.checked})}/> Available for booking</label>
                 <textarea className="wide" placeholder="Description" value={serviceForm.description} onChange={e=>setServiceForm({...serviceForm,description:e.target.value})}/>
-                <div className="wide admin-form-actions"><button className="admin-primary" disabled={saving}>{saving?'Saving…':editingService?'Save changes':'Create service'}</button>{editingService&&<button type="button" onClick={()=>{setEditingService(null);setServiceForm(emptyService)}}>Cancel</button>}</div>
+                <div className="wide admin-form-actions"><button className="admin-primary" disabled={saving}>{saving?'Saving…':editingService?'Save changes':'Create service'}</button>{editingService&&<button type="button" className="admin-secondary" onClick={()=>{setEditingService(null);setServiceForm(emptyService)}}>Cancel</button>}</div>
               </form>
-              <div className="admin-panel-head admin-list-head"><div><p className="dashboard-kicker">Service catalogue</p><h2>Services</h2></div><input className="admin-search" placeholder="Search services…" value={serviceSearch} onChange={e=>setServiceSearch(e.target.value)}/></div>
-              <div className="admin-management-list">{filteredServices.map(s=><article key={s.id}><div><strong>{s.name}</strong><span>{s.level} · {money(s.price_paise)} · {s.duration_minutes || '—'} min</span></div><span className={s.is_active?'admin-pill':'admin-pill muted'}>{s.is_active?'Active':'Hidden'}</span><button onClick={()=>{setEditingService(s.id);setServiceForm({name:s.name,slug:s.slug,level:s.level,description:s.description||'',pricePaise:(Number(s.price_paise)/100).toFixed(2),durationMinutes:s.duration_minutes||'',isActive:s.is_active})}}>Edit</button><button onClick={()=>toggleService(s)}>{s.is_active?'Hide':'Restore'}</button></article>)}</div>
+              <div className="admin-panel-head admin-list-head">
+                <div><p className="dashboard-kicker">Service catalogue</p><h2>Services</h2></div>
+                <div className="admin-filter-group">
+                  <input className="admin-search" placeholder="Search services…" value={serviceSearch} onChange={e=>setServiceSearch(e.target.value)}/>
+                  <div className="admin-filter-tabs">
+                    <button className={serviceFilter === 'active' ? 'active' : ''} onClick={() => setServiceFilter('active')}>Active</button>
+                    <button className={serviceFilter === 'archived' ? 'active' : ''} onClick={() => setServiceFilter('archived')}>Archived</button>
+                  </div>
+                </div>
+              </div>
+              <div className="admin-management-list">
+                {(serviceFilter === 'active' ? activeServices : archivedServicesFiltered).map(s=>
+                  <article key={s.id} className="admin-list-item">
+                    <div className="admin-list-info">
+                      <strong>{s.name}</strong>
+                      <span>{s.level} · {money(s.price_paise)} · {s.duration_minutes || '—'} min</span>
+                    </div>
+                    <span className={(s.is_active && !s.deletedAt) ? 'admin-pill active' : 'admin-pill archived'}>
+                      {s.deletedAt ? 'Archived' : s.is_active ? 'Active' : 'Hidden'}
+                    </span>
+                    <div className="admin-list-actions">
+                      <button className="admin-action-btn" onClick={()=>{setEditingService(s.id);setServiceForm({name:s.name,slug:s.slug,level:s.level,description:s.description||'',pricePaise:(Number(s.price_paise)/100).toFixed(2),durationMinutes:s.duration_minutes||'',isActive:s.is_active})}}>Edit</button>
+                      {s.deletedAt ? (
+                        <button className="admin-action-btn admin-restore" onClick={()=>restoreService(s)}>Restore</button>
+                      ) : (
+                        <button className="admin-action-btn admin-archive" onClick={()=>archiveService(s)}>Archive</button>
+                      )}
+                    </div>
+                  </article>
+                )}
+              </div>
             </section>
           )}
 
