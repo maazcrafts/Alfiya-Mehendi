@@ -14,6 +14,7 @@ import AdminBookings from './pages/admin/AdminBookings.jsx'
 import AdminOrders from './pages/admin/AdminOrders.jsx'
 import AdminSupport from './pages/admin/AdminSupport.jsx'
 import Orders from './pages/orders/Orders.jsx'
+import NotFound from './pages/not-found/NotFound.jsx'
 import Cart from './pages/cart/Cart.jsx'
 import Contact from './pages/contact/Contact.jsx'
 import Account from './pages/account/Account.jsx'
@@ -48,7 +49,7 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<RootRedirect />} />
 
-        {/* Public routes - no auth required }}
+        {/* Public routes - no auth required */}}
         <Route path="/products" element={<Products />} />
         <Route path="/products/:slug" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
@@ -57,7 +58,7 @@ export default function App() {
         <Route path="/booking" element={<Booking />} />
           <Route path="/booking/getting-there" element={<GettingThere />} />
 
-        {/* Admin routes - auth checked inside AdminDashboard component }}
+        {/* Admin routes - auth checked inside AdminDashboard component */}}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/about" element={<Placeholder title="About" />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <NewUserTour />
     </BrowserRouter>
