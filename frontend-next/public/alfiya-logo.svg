@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<rect width="800" height="800" rx="80" fill="#f8f0e2"/>
+<g fill="none" stroke="#8b5a35" stroke-width="3" stroke-linecap="round">
+<path d="M115 335C160 150 330 80 490 120C615 151 690 245 684 355"/>
+<path d="M130 465C155 630 310 710 480 680C590 660 660 590 680 500"/>
+</g>
+<g fill="#596548" stroke="#8b5a35" stroke-width="2">
+<path d="M615 160c-48 15-68 48-72 84 38-7 67-31 72-84Z"/>
+<path d="M660 220c-50 3-77 29-88 62 38 5 70-13 88-62Z"/>
+<path d="M690 275c-44-4-72 15-88 43 34 11 65 1 88-43Z"/>
+<path d="M690 540c-43 4-69 27-81 56 35 4 64-13 81-56Z"/>
+<path d="M150 635c38-1 66 18 80 45-32 8-61-6-80-45Z"/>
+<path d="M190 680c35-3 61 13 75 36-30 8-55-3-75-36Z"/>
+</g>
+<g fill="none" stroke="#8b5a35" stroke-width="3" stroke-linecap="round">
+<path d="M615 160c-10 55-6 94 28 132 32 37 35 77 8 125"/>
+<path d="M190 635c55-4 91-23 122-57"/>
+</g>
+<g fill="#8b5a35">
+<circle cx="595" cy="147" r="6"/><circle cx="615" cy="137" r="4"/><circle cx="705" cy="285" r="5"/>
+<circle cx="708" cy="306" r="3"/><circle cx="155" cy="630" r="5"/><circle cx="175" cy="646" r="3"/>
+</g>
+<g fill="#563018">
+<text x="400" y="425" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="154" font-style="italic" font-weight="500">Alfiya</text>
+</g>
+<path d="M110 430C225 465 260 445 320 405" fill="none" stroke="#563018" stroke-width="5" stroke-linecap="round"/>
+<g fill="#8b5a35">
+<path d="M405 292c-10-18-30-20-38-3 8 4 16 12 19 24 4-10 10-16 19-21Z"/>
+<path d="M360 475l7 14 14 7-14 7-7 14-7-14-14-7 14-7Z"/>
+<path d="M440 475l7 14 14 7-14 7-7 14-7-14-14-7 14-7Z"/>
+</g>
+<text x="400" y="520" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="34" letter-spacing="12" fill="#563018">MEHENDI</text>
+<g fill="#8b5a35"><rect x="175" y="507" width="70" height="2"/><rect x="555" y="507" width="70" height="2"/></g>
+</svg>
