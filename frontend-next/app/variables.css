@@ -1,0 +1,111 @@
+:root {
+  /* Color palette — Modern Mehendi Atelier */
+  --color-porcelain: #F5F2EC;
+  --color-espresso: #292622;
+  --color-terracotta: #A66549;
+  --color-terracotta-dark: #8c4f37;
+  --color-warm-sand: #D9CABC;
+  --color-warm-sand-light: #EADDCC;
+  --color-stone: #77796B;
+  --color-stone-light: #9A9C8E;
+  --color-white: #FFFFFF;
+
+  /* Semantic color mapping */
+  --background: var(--color-porcelain);
+  --surface: var(--color-white);
+  --surface-secondary: var(--color-porcelain);
+  --text-primary: var(--color-espresso);
+  --text-secondary: var(--color-stone);
+  --text-muted: var(--color-stone-light);
+  --border: var(--color-warm-sand);
+  --border-light: var(--color-warm-sand-light);
+  --accent: var(--color-terracotta);
+  --accent-hover: var(--color-terracotta-dark);
+  --accent-surface: rgba(166, 101, 73, 0.10);
+  --ink: var(--color-espresso);
+
+  /* Typography */
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Font sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 21px;
+  --text-2xl: 26px;
+  --text-3xl: 32px;
+  --text-4xl: 40px;
+  --text-5xl: 52px;
+
+  /* Line heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.75;
+
+  /* Letter spacing */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.04em;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Container widths */
+  --container: 960px;
+  --container-wide: 1200px;
+  --container-read: 660px;
+
+  /* Borders */
+  --border-width: 1px;
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(41, 38, 34, 0.06);
+  --shadow: 0 4px 12px rgba(41, 38, 34, 0.08);
+  --shadow-md: 0 8px 24px rgba(41, 38, 34, 0.10);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 220ms ease;
+  --transition-slow: 320ms ease;
+
+  /* Z-index */
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-popover: 300;
+
+  /* Header */
+  --header-height: 88px;
+  --header-mobile-height: 64px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-normal: 0ms;
+    --transition-slow: 0ms;
+  }
+}
