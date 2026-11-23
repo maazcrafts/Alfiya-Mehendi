@@ -1,0 +1,409 @@
+/* BookingSlotCalendar — Combined date + time slot booking component styles */
+
+.booking-slot-calendar {
+  --bsc-bg: #f7f4ed;
+  --bsc-text: #2e2924;
+  --bsc-text-muted: #756e67;
+  --bsc-accent: #a05e3e;
+  --bsc-accent-soft: #e8dfd1;
+  --bsc-olive: #4e5a48;
+  --bsc-olive-light: #dce5d3;
+  --bsc-olive-soft: #e1e9da;
+  --bsc-border: #ded7cc;
+  --bsc-border-soft: #e2d4c5;
+  --bsc-slot-bg: #fffaf5;
+  --bsc-slot-hover: #f0e8de;
+  --bsc-slot-selected-bg: #4e5a48;
+  --bsc-slot-selected-text: #fffaf5;
+  --bsc-slot-booked-bg: #eee9e2;
+  --bsc-slot-booked-text: #c9c2b8;
+  --bsc-slot-disabled-opacity: 0.45;
+  --bsc-radius: 14px;
+  --bsc-radius-sm: 10px;
+  --bsc-transition: 0.18s ease;
+  --bsc-focus-ring: #4e5a48;
+
+  background: var(--bsc-bg);
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius);
+  padding: 24px 20px;
+  font-family: inherit;
+  color: var(--bsc-text);
+}
+
+/* Section spacing */
+.booking-slot-calendar__date-section {
+  margin-bottom: 28px;
+}
+
+.booking-slot-calendar__time-section {
+  /* Time section styles */
+}
+
+/* Time header */
+.booking-slot-calendar__time-header {
+  margin-bottom: 18px;
+}
+
+.booking-slot-calendar__time-title {
+  margin: 0 0 6px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+  color: var(--bsc-text);
+  line-height: 1.2;
+}
+
+.booking-slot-calendar__time-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--bsc-text-muted);
+  line-height: 1.5;
+}
+
+.booking-slot-calendar__time-subtitle strong {
+  color: var(--bsc-text);
+}
+
+/* Slot grid */
+.booking-slot-calendar__slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+/* Slot button */
+.booking-slot-calendar__slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 12px;
+  min-height: 76px;
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-sm);
+  background: var(--bsc-slot-bg);
+  color: var(--bsc-text);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--bsc-transition), border-color var(--bsc-transition),
+    color var(--bsc-transition), transform var(--bsc-transition),
+    box-shadow var(--bsc-transition);
+  position: relative;
+}
+
+.booking-slot-calendar__slot:hover:not(.booking-slot-calendar__slot--disabled) {
+  background: var(--bsc-slot-hover);
+  border-color: var(--bsc-accent-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(78, 90, 72, 0.08);
+}
+
+.booking-slot-calendar__slot:active:not(.booking-slot-calendar__slot--disabled) {
+  transform: translateY(0);
+}
+
+/* Selected slot */
+.booking-slot-calendar__slot--selected {
+  background: var(--bsc-slot-selected-bg);
+  border-color: var(--bsc-slot-selected-bg);
+  color: var(--bsc-slot-selected-text);
+  box-shadow: 0 4px 16px rgba(78, 90, 72, 0.2);
+}
+
+.booking-slot-calendar__slot--selected .booking-slot-calendar__slot-time,
+.booking-slot-calendar__slot--selected .booking-slot-calendar__slot-status {
+  color: inherit;
+}
+
+/* Booked slot */
+.booking-slot-calendar__slot--booked {
+  opacity: var(--bsc-slot-disabled-opacity);
+  cursor: not-allowed;
+  background: var(--bsc-slot-booked-bg);
+  border-color: var(--bsc-border);
+  color: var(--bsc-slot-booked-text);
+  text-decoration: line-through;
+}
+
+.booking-slot-calendar__slot--booked .booking-slot-calendar__slot-time {
+  color: inherit;
+}
+
+/* Past slot (not booked but in the past) */
+.booking-slot-calendar__slot--past {
+  opacity: var(--bsc-slot-disabled-opacity);
+  cursor: not-allowed;
+  background: #f5f2eb;
+  border-color: var(--bsc-border);
+  color: var(--bsc-text-muted);
+}
+
+.booking-slot-calendar__slot--past .booking-slot-calendar__slot-time {
+  color: inherit;
+}
+
+/* Disabled (combined state) */
+.booking-slot-calendar__slot--disabled {
+  opacity: var(--bsc-slot-disabled-opacity);
+  cursor: not-allowed;
+}
+
+/* Focus states */
+.booking-slot-calendar__slot:focus-visible {
+  outline: 2px solid var(--bsc-focus-ring);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Slot time label */
+.booking-slot-calendar__slot-time {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--bsc-text);
+}
+
+.booking-slot-calendar__slot--selected .booking-slot-calendar__slot-time {
+  color: var(--bsc-slot-selected-text);
+}
+
+/* Slot status (Booked / Past) */
+.booking-slot-calendar__slot-status {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bsc-text-muted);
+  line-height: 1;
+}
+
+.booking-slot-calendar__slot--booked .booking-slot-calendar__slot-status {
+  color: var(--bsc-slot-booked-text);
+}
+
+.booking-slot-calendar__slot--past .booking-slot-calendar__slot-status {
+  color: var(--bsc-text-muted);
+}
+
+/* Selected checkmark */
+.booking-slot-calendar__slot-check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 250, 245, 0.25);
+  color: var(--bsc-slot-selected-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Loading state */
+.booking-slot-calendar__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--bsc-text-muted);
+}
+
+.booking-slot-calendar__loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--bsc-border);
+  border-top-color: var(--bsc-olive);
+  border-radius: 50%;
+  animation: bsc-spin 0.8s linear infinite;
+}
+
+@keyframes bsc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.booking-slot-calendar__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  background: #fffaf5;
+  border: 1px dashed var(--bsc-border-soft);
+  border-radius: var(--bsc-radius-sm);
+}
+
+.booking-slot-calendar__empty-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.booking-slot-calendar__empty-title {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  color: var(--bsc-text);
+}
+
+.booking-slot-calendar__empty-message {
+  margin: 0;
+  max-width: 280px;
+  font-size: 0.875rem;
+  color: var(--bsc-text-muted);
+  line-height: 1.5;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .booking-slot-calendar__slot {
+    transition: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .booking-slot-calendar {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .booking-slot-calendar__date-section {
+    margin-bottom: 24px;
+  }
+
+  .booking-slot-calendar__time-title {
+    font-size: 1.125rem;
+  }
+
+  .booking-slot-calendar__slot-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  .booking-slot-calendar__slot {
+    padding: 14px 10px;
+    min-height: 68px;
+    border-radius: 8px;
+  }
+
+  .booking-slot-calendar__slot-time {
+    font-size: 0.9rem;
+  }
+
+  .booking-slot-calendar__slot-status {
+    font-size: 0.6rem;
+  }
+
+  .booking-slot-calendar__slot-check {
+    width: 16px;
+    height: 16px;
+    font-size: 0.7rem;
+  }
+
+  .booking-slot-calendar__empty-state {
+    padding: 32px 16px;
+  }
+
+  .booking-slot-calendar__empty-icon {
+    font-size: 2rem;
+  }
+
+  .booking-slot-calendar__empty-title {
+    font-size: 1rem;
+  }
+
+  .booking-slot-calendar__empty-message {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-slot-calendar {
+    padding: 18px 12px;
+  }
+
+  .booking-slot-calendar__date-section {
+    margin-bottom: 20px;
+  }
+
+  .booking-slot-calendar__time-header {
+    margin-bottom: 14px;
+  }
+
+  .booking-slot-calendar__time-title {
+    font-size: 1rem;
+  }
+
+  .booking-slot-calendar__time-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .booking-slot-calendar__slot-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+
+  .booking-slot-calendar__slot {
+    padding: 12px 8px;
+    min-height: 62px;
+    gap: 4px;
+  }
+
+  .booking-slot-calendar__slot-time {
+    font-size: 0.85rem;
+  }
+
+  .booking-slot-calendar__slot-status {
+    font-size: 0.55rem;
+  }
+
+  .booking-slot-calendar__slot-check {
+    top: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    font-size: 0.65rem;
+  }
+
+  .booking-slot-calendar__empty-state {
+    padding: 28px 12px;
+  }
+}
+
+/* Landscape mobile: more columns */
+@media (max-width: 600px) and (orientation: landscape) {
+  .booking-slot-calendar__slot-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .booking-slot-calendar__slot {
+    min-height: 58px;
+  }
+}
+
+/* Small desktop: 5 columns */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .booking-slot-calendar__slot-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Large desktop: 6 columns */
+@media (min-width: 1025px) {
+  .booking-slot-calendar__slot-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
