@@ -1,7 +1,10 @@
 import DashboardSidebar from '../../components/DashboardSidebar.jsx'
 import LocationPicker from '../../components/LocationPicker.jsx'
+import BookingSlotCalendar from '../../components/BookingSlotCalendar.jsx'
+import { generateBookingSlots, getISTToday, dateKey, isFutureAppointment } from '../../utils/dateUtils.js'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import '../../styles/booking-slot-calendar.css'
 
 
 function BookingCelebrationModal({ onClose, serviceName }) {
@@ -44,10 +47,7 @@ function BookingErrorModal({ message, onClose }) {
 }
 
 const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-const slots = Array.from({ length: 21 }, (_, i) => {
-  const minutes = 600 + i * 30, h = Math.floor(minutes / 60), m = minutes % 60
-  return { value: `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`, label: `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}` }
-})
+const slots = generateBookingSlots()
 const statusMeta = {
   requested: ['Pending approval','pending'],
   confirmed: ['Booked successfully','confirmed'],
@@ -57,31 +57,6 @@ const statusMeta = {
 }
 function user(){try{return JSON.parse(sessionStorage.getItem('alfiya_user')||'{}')}catch{return {}}}
 function token(){return sessionStorage.getItem('alfiya_auth_token')||''}
-function today(){
-  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date())
-  const get=t=>parts.find(p=>p.type===t)?.value||''
-  return get('year')+'-'+get('month')+'-'+get('day')
-}
-function dateKey(value){
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(value||'')) return 0
-  const [y,m,d]=value.split('-').map(Number)
-  return y*10000+m*100+d
-}
-function istNowParts() {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', hour12: false,
-  }).formatToParts(new Date())
-  const get = type => parts.find(part => part.type === type)?.value || ''
-  return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` }
-}
-function isFutureAppointment(dateValue,timeValue){
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateValue||'') || !/^\d{2}:\d{2}$/.test(timeValue||'')) return false
-  const now = istNowParts()
-  if(dateValue > now.date) return true
-  if(dateValue < now.date) return false
-  return timeValue > now.time
-}
 function price(p){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((p||0)/100)}
 function dateLabel(v){return v?new Intl.DateTimeFormat('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(v+'T00:00:00')):''}
 function timeLabel(v){if(!v)return '';const [h,m]=v.slice(0,5).split(':').map(Number);return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
@@ -101,6 +76,8 @@ export default function Booking(){
   const [customerLongitude,setCustomerLongitude]=useState(null)
   const [step,setStep]=useState(1),[loading,setLoading]=useState(Boolean(serviceSlug)),[loadingSlots,setLoadingSlots]=useState(false)
   const [busy,setBusy]=useState(false),[cancelling,setCancelling]=useState(''),[error,setError]=useState(''),[success,setSuccess]=useState(false),[showCelebration,setShowCelebration]=useState(false)
+  const availabilityDateRef = useRef(null)
+  const requestIdRef = useRef(0)
 
   async function loadBookings(){
     if(!logged)return
@@ -115,27 +92,42 @@ export default function Booking(){
       setLoadingSlots(false)
       return
     }
+    // New request: clear previous booked slots, increment request ID
+    setBooked([])
+    const currentRequestId = ++requestIdRef.current
+    availabilityDateRef.current = date
     setLoadingSlots(true)
     fetch(apiBase+'/api/bookings/availability?date='+encodeURIComponent(date),{headers:{Authorization:'Bearer '+token()}})
-      .then(async r=>{const d=await readApiResponse(r);if(!r.ok)throw Error(d.message);setBooked(d.bookedSlots||[])})
-      .catch(e=>setError(e.message))
-      .finally(()=>setLoadingSlots(false))
+      .then(async r=>{
+        const d=await readApiResponse(r)
+        if(!r.ok) throw Error(d.message)
+        // Only update if this is still the latest request
+        if (requestIdRef.current === currentRequestId && availabilityDateRef.current === date) {
+          setBooked(d.bookedSlots||[])
+        }
+      })
+      .catch(e=>{
+        if (requestIdRef.current === currentRequestId && availabilityDateRef.current === date) {
+          setError(e.message)
+        }
+      })
+      .finally(()=>{
+        if (requestIdRef.current === currentRequestId && availabilityDateRef.current === date) {
+          setLoadingSlots(false)
+        }
+      })
   },[date,logged])
-  const available=slots.filter(s=>!booked.includes(s.value))
-  const todayValue=today()
-  const todayKey=dateKey(todayValue)
-  const canNext=step===1?dateKey(date)>=todayKey:step===2?Boolean(time)&&slots.some(s=>s.value===time)&&!booked.includes(time):true
-  const continueStep=()=>{
+
+  const todayValue = getISTToday()
+  const todayKey = dateKey(todayValue)
+  const canNext = step === 1 ? dateKey(date) >= todayKey : Boolean(time) && !booked.includes(time)
+  const continueStep = () => {
     setError('')
-    if(step===1){
-      if(!date||dateKey(date)<todayKey){setError('Please choose today or a future appointment date.');return}
-      setStep(2);return
-    }
-    if(step===2){
-      if(!date || dateKey(date) < todayKey){setError('That appointment date is no longer available. Please choose another date.');setStep(1);return}
-      if(!time||!slots.some(s=>s.value===time)||booked.includes(time)){setError('Please choose an available time slot.');return}
-      if(!isFutureAppointment(date,time)){setError('That time has already passed. Please choose a later slot.');return}
-      setStep(3)
+    if (step === 1) {
+      if (!date || dateKey(date) < todayKey) { setError('Please choose today or a future appointment date.'); return }
+      if (!time || booked.includes(time)) { setError('Please choose an available time slot.'); return }
+      if (!isFutureAppointment(date, time)) { setError('That time has already passed. Please choose a later slot.'); return }
+      setStep(2); return
     }
   }
   const cancelBooking=async bookingId=>{
@@ -216,15 +208,15 @@ export default function Booking(){
             <div className="booking-journey-heading">
               <div>
                 <span className="dashboard-kicker">Your appointment</span>
-                <h3>{step===1?'Choose a date':step===2?'Choose a time':'Review your details'}</h3>
+                <h3>{step===1?'Select date & time':step===2?'Review your details':'Appointment confirmed'}</h3>
               </div>
-              <span className="booking-count">Step {step} of 3</span>
+              <span className="booking-count">Step {step} of 2</span>
             </div>
             <div className="booking-progress" aria-label="Appointment steps">
-              {[1,2,3].map(n=>{
+              {[1,2].map(n=>{
                 const done=step>n, current=step===n, locked=n>step;
-                const label=n===1?'Date':n===2?'Time':'Review';
-                const hint=n===1?'Pick your day':n===2?'Select a slot':'Confirm details';
+                const label=n===1?'Date & time':'Review';
+                const hint=n===1?'Pick day and slot':'Confirm details';
                 return <button type="button" key={n} className={current?'current':done?'done':'upcoming'} disabled={locked} onClick={()=>done&&setStep(n)} aria-current={current?'step':undefined}>
                   <b>{done?'✓':('0'+n)}</b>
                   <span><strong>{label}</strong><small>{current?'Current step':done?'Completed':hint}</small></span>
@@ -233,35 +225,36 @@ export default function Booking(){
             </div>
             <div className="booking-next-hint">
               <span className="booking-step-dot"></span>
-              <span><strong>{step===1?'First, choose the day of your appointment.':step===2?'Now choose an available time.':'Everything looks right? Send your request.'}</strong></span>
+              <span><strong>{step===1?'Choose your appointment date and preferred time.':'Everything looks right? Send your request.'}</strong></span>
               <span className="booking-next-arrow">→</span>
-              <span>{step===1?'Then: Time':step===2?'Then: Review':'Then: Await approval'}</span>
+              <span>{step===1?'Then: Review':'Then: Await approval'}</span>
             </div>
           </div>
 
           <section className="booking-wizard-card">
             {step===1&&<div>
               <span className="booking-section-number">01</span>
-              <h2>When should we see you?</h2>
-              <p className="booking-help">Choose the day that works for you. You can change it later before sending the request.</p>
-              <label className="booking-field booking-date-field"><span>Appointment date</span><input type="date" min={todayValue} value={date} onChange={e=>{
-  const value=e.target.value
-  setError('')
-  setDate(value)
-  setTime('')
-}} required/></label>
-              {date&&<div className="booking-selected-banner"><div><small>Selected date</small><strong>{dateLabel(date)}</strong></div><span>✓ Date selected</span></div>}
+              <h2>Select your appointment</h2>
+              <p className="booking-help">Choose a date and preferred time. Booked and past slots are unavailable.</p>
+              <BookingSlotCalendar
+                selectedDate={date}
+                onDateChange={(newDate) => {
+                  setError('')
+                  setDate(newDate)
+                  setTime('')
+                }}
+                selectedTime={time}
+                onTimeChange={(newTime) => {
+                  setError('')
+                  setTime(newTime)
+                }}
+                bookedSlots={booked}
+                loadingSlots={loadingSlots}
+              />
             </div>}
 
             {step===2&&<div>
               <span className="booking-section-number">02</span>
-              <h2>What time works for you?</h2>
-              <p className="booking-help">Only confirmed appointments are marked as booked. Select any available slot below.</p>
-              {loadingSlots?<div className="services-state">Checking availability…</div>:<div className="booking-time-grid upgraded">{slots.map(s=><button type="button" key={s.value} disabled={booked.includes(s.value)} className={time===s.value?'selected':''} onClick={()=>setTime(s.value)}><strong>{s.label}</strong><small>{booked.includes(s.value)?'Booked':time===s.value?'Selected':'Available'}</small></button>)}</div>}
-            </div>}
-
-            {step===3&&<div>
-              <span className="booking-section-number">03</span>
               <h2>Check everything before you send.</h2>
               <p className="booking-help">Review your appointment details. Your request will be sent to Alfiya for approval.</p>
               <div className="booking-review">
@@ -317,9 +310,9 @@ export default function Booking(){
 
             <div className="booking-wizard-actions">
               {step>1?<button type="button" className="booking-back" onClick={()=>setStep(step-1)}>← Back</button>:<span/>}
-              {step<3?<button type="button" className="booking-submit" disabled={step===2?( !canNext || loadingSlots ):false} onClick={continueStep}>Continue to {step===1?'time':'review'} <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
+              {step<2?<button type="button" className="booking-submit" disabled={!canNext || loadingSlots} onClick={continueStep}>Continue to review <span>→</span></button>:<button className="booking-submit" disabled={busy}>{busy?'Sending request…':'Send appointment request →'}</button>}
             </div>
-            {step===3&&<p className="booking-disclaimer">Your appointment is not confirmed until Alfiya approves the request.</p>}
+            {step===2&&<p className="booking-disclaimer">Your appointment is not confirmed until Alfiya approves the request.</p>}
           </section>
         </section>
       </form>}
