@@ -1,0 +1,335 @@
+/* WeekStripCalendar — Weekly date selector component styles */
+
+.week-strip-calendar {
+  --ws-bg: #f7f4ed;
+  --ws-text: #2e2924;
+  --ws-text-muted: #756e67;
+  --ws-accent: #a05e3e;
+  --ws-accent-soft: #e8dfd1;
+  --ws-selected-bg: #4e5a48;
+  --ws-selected-text: #fffaf5;
+  --ws-today-ring: #a05e3e;
+  --ws-border: #ded7cc;
+  --ws-disabled: #c9c2b8;
+  --ws-nav-bg: #fffaf5;
+  --ws-nav-hover: #f0e8de;
+  --ws-nav-disabled: #e8e2d9;
+  --ws-focus-ring: #4e5a48;
+  --ws-radius: 12px;
+  --ws-radius-sm: 10px;
+  --ws-transition: 0.18s ease;
+
+  background: var(--ws-bg);
+  border: 1px solid var(--ws-border);
+  border-radius: var(--ws-radius);
+  padding: 20px 16px;
+  font-family: inherit;
+  color: var(--ws-text);
+}
+
+/* Header: month label + navigation */
+.week-strip-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.week-strip-calendar__month {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  color: var(--ws-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+  text-align: center;
+}
+
+/* Navigation buttons */
+.week-strip-calendar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ws-border);
+  border-radius: 50%;
+  background: var(--ws-nav-bg);
+  color: var(--ws-text);
+  cursor: pointer;
+  transition: background var(--ws-transition), border-color var(--ws-transition),
+    color var(--ws-transition), transform var(--ws-transition);
+  flex-shrink: 0;
+}
+
+.week-strip-calendar__nav:hover:not(:disabled) {
+  background: var(--ws-nav-hover);
+  border-color: var(--ws-accent);
+  color: var(--ws-accent);
+  transform: scale(1.05);
+}
+
+.week-strip-calendar__nav:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.week-strip-calendar__nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: var(--ws-nav-disabled);
+  border-color: var(--ws-border);
+  color: var(--ws-disabled);
+}
+
+.week-strip-calendar__nav:focus-visible {
+  outline: 2px solid var(--ws-focus-ring);
+  outline-offset: 2px;
+}
+
+.week-strip-calendar__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Week grid: 7 day buttons */
+.week-strip-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px; /* space for scrollbar if needed */
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+/* Hide scrollbar but keep scrolling */
+.week-strip-calendar__grid::-webkit-scrollbar {
+  height: 6px;
+}
+.week-strip-calendar__grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.week-strip-calendar__grid::-webkit-scrollbar-thumb {
+  background: var(--ws-border);
+  border-radius: 3px;
+}
+
+/* Day button */
+.week-strip-calendar__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  min-height: 72px;
+  border: 1px solid var(--ws-border);
+  border-radius: var(--ws-radius-sm);
+  background: #fffaf5;
+  color: var(--ws-text);
+  cursor: pointer;
+  transition: background var(--ws-transition), border-color var(--ws-transition),
+    color var(--ws-transition), transform var(--ws-transition), box-shadow var(--ws-transition);
+  position: relative;
+  scroll-snap-align: center;
+  min-width: 56px;
+}
+
+.week-strip-calendar__day:hover:not(.week-strip-calendar__day--disabled):not(.week-strip-calendar__day--selected) {
+  background: var(--ws-nav-hover);
+  border-color: var(--ws-accent-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(78, 90, 72, 0.08);
+}
+
+.week-strip-calendar__day:active:not(.week-strip-calendar__day--disabled):not(.week-strip-calendar__day--selected) {
+  transform: translateY(0);
+}
+
+/* Selected day */
+.week-strip-calendar__day--selected {
+  background: var(--ws-selected-bg);
+  border-color: var(--ws-selected-bg);
+  color: var(--ws-selected-text);
+  box-shadow: 0 4px 16px rgba(78, 90, 72, 0.2);
+}
+
+.week-strip-calendar__day--selected .week-strip-calendar__weekday,
+.week-strip-calendar__day--selected .week-strip-calendar__date {
+  color: inherit;
+}
+
+/* Today indicator (when not selected) */
+.week-strip-calendar__day--today {
+  border-color: var(--ws-today-ring);
+}
+
+.week-strip-calendar__day--today:not(.week-strip-calendar__day--selected) {
+  background: #fffaf5;
+}
+
+.week-strip-calendar__today-indicator {
+  position: absolute;
+  bottom: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ws-today-ring);
+  opacity: 0.8;
+}
+
+/* Disabled (past) dates */
+.week-strip-calendar__day--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f5f2eb;
+  border-color: var(--ws-border);
+  color: var(--ws-disabled);
+}
+
+.week-strip-calendar__day--disabled .week-strip-calendar__weekday,
+.week-strip-calendar__day--disabled .week-strip-calendar__date {
+  color: inherit;
+}
+
+/* Focus states */
+.week-strip-calendar__day:focus-visible {
+  outline: 2px solid var(--ws-focus-ring);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Weekday label */
+.week-strip-calendar__weekday {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+  line-height: 1;
+}
+
+.week-strip-calendar__day--selected .week-strip-calendar__weekday {
+  color: rgba(255, 250, 245, 0.85);
+}
+
+/* Day number */
+.week-strip-calendar__date {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ws-text);
+}
+
+.week-strip-calendar__day--selected .week-strip-calendar__date {
+  color: var(--ws-selected-text);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .week-strip-calendar__nav,
+  .week-strip-calendar__day {
+    transition: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .week-strip-calendar {
+    padding: 16px 12px;
+    border-radius: 10px;
+  }
+
+  .week-strip-calendar__header {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .week-strip-calendar__month {
+    font-size: 1rem;
+  }
+
+  .week-strip-calendar__nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .week-strip-calendar__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .week-strip-calendar__grid {
+    gap: 6px;
+    margin: 0 -2px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .week-strip-calendar__day {
+    padding: 12px 6px;
+    min-height: 64px;
+    min-width: 48px;
+    border-radius: 8px;
+  }
+
+  .week-strip-calendar__weekday {
+    font-size: 0.65rem;
+  }
+
+  .week-strip-calendar__date {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .week-strip-calendar {
+    padding: 14px 8px;
+  }
+
+  .week-strip-calendar__nav {
+    width: 32px;
+    height: 32px;
+  }
+
+  .week-strip-calendar__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .week-strip-calendar__day {
+    padding: 10px 4px;
+    min-height: 58px;
+    min-width: 44px;
+    gap: 4px;
+  }
+
+  .week-strip-calendar__weekday {
+    font-size: 0.6rem;
+  }
+
+  .week-strip-calendar__date {
+    font-size: 1.1rem;
+  }
+}
+
+/* Landscape mobile: ensure horizontal scroll works well */
+@media (max-width: 600px) and (orientation: landscape) {
+  .week-strip-calendar__grid {
+    gap: 8px;
+  }
+
+  .week-strip-calendar__day {
+    min-width: 52px;
+  }
+}
