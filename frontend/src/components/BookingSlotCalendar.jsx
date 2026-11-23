@@ -37,7 +37,13 @@ export default function BookingSlotCalendar({
   const activeSlots = slots || defaultSlots;
 
   const nowParts = useMemo(() => getISTNowParts(), []);
-  const isTodaySelected = selectedDate === nowParts.date;
+
+  // Guard against empty/invalid selectedDate
+  const validSelectedDate = (selectedDate && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate))
+    ? selectedDate
+    : nowParts.date;
+
+  const isTodaySelected = validSelectedDate === nowParts.date;
 
   // Determine which slots are available for the selected date
   const slotStates = useMemo(() => {
@@ -90,9 +96,9 @@ export default function BookingSlotCalendar({
           <h2 id="time-heading" className="booking-slot-calendar__time-title">
             Choose your preferred time
           </h2>
-          {selectedDate && (
+          {validSelectedDate && (
             <p className="booking-slot-calendar__time-subtitle" aria-live="polite">
-              Showing availability for <strong>{selectedDate}</strong>
+              Showing availability for <strong>{validSelectedDate}</strong>
             </p>
           )}
         </div>

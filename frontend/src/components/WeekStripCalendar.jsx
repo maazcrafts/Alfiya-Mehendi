@@ -33,8 +33,13 @@ export default function WeekStripCalendar({
   const today = useMemo(() => getISTToday(), []);
   const effectiveMinDate = minDate || today;
 
+  // Guard: if selectedDate is empty or invalid, default to today's week
+  const validSelectedDate = (selectedDate && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate))
+    ? selectedDate
+    : today;
+
   // Compute the week start (Sunday) for the selected date
-  const weekStart = useMemo(() => startOfWeek(selectedDate), [selectedDate]);
+  const weekStart = useMemo(() => startOfWeek(validSelectedDate), [validSelectedDate]);
 
   // Get the 7 dates for this week
   const weekDates = useMemo(() => getWeekDates(weekStart), [weekStart]);
@@ -139,7 +144,7 @@ export default function WeekStripCalendar({
 
       <div className="week-strip-calendar__grid" role="listbox" aria-label="Days of the week">
         {weekDates.map((dateStr) => {
-          const selected = isSameDate(dateStr, selectedDate);
+          const selected = isSameDate(dateStr, validSelectedDate);
           const todayFlag = isToday(dateStr);
           const disabled = isBeforeDate(dateStr, effectiveMinDate);
           const weekdayLabel = showNarrowWeekday
